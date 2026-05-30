@@ -321,11 +321,20 @@ def validate_primvars(
         indices = primvar.GetIndices()
         indices_len = attr_length(indices)
         is_indexed = indices is not None and indices_len > 0
-        element_size = primvar.GetElementSize()
-        effective_value_len = value_len * max(1, int(element_size or 1))
+        element_size = max(1, int(primvar.GetElementSize() or 1))
+        value_element_count = value_len // element_size if element_size else value_len
+        if value_len and value_len % element_size:
+            issues.append(
+                {
+                    "primvar": name,
+                    "issue": "primvar_element_size_mismatch",
+                    "value_count": value_len,
+                    "element_size": element_size,
+                }
+            )
 
         if expected is not None:
-            authored_len = indices_len if is_indexed else effective_value_len
+            authored_len = indices_len if is_indexed else value_element_count
             if authored_len != expected:
                 issues.append(
                     {
@@ -341,13 +350,13 @@ def validate_primvars(
                 )
 
         if is_indexed and value_len:
-            bad_indices = [int(i) for i in indices if int(i) < 0 or int(i) >= value_len]
+            bad_indices = [int(i) for i in indices if int(i) < 0 or int(i) >= value_element_count]
             if bad_indices:
                 issues.append(
                     {
                         "primvar": name,
                         "issue": "primvar_index_out_of_range",
-                        "value_count": value_len,
+                        "value_count": value_element_count,
                         "bad_index_examples": bad_indices[:10],
                     }
                 )
@@ -401,7 +410,7 @@ def transform_determinant(prim: Usd.Prim, xform_cache: UsdGeom.XformCache) -> fl
     """Return local-to-world transform determinant, if computable."""
     try:
         transform = xform_cache.GetLocalToWorldTransform(prim)
-        return float(transform.ExtractRotationMatrix().GetDeterminant())
+        return float(transform.GetDeterminant())
     except Exception:
         return None
 
@@ -536,6 +545,7 @@ def seriousness_score(record: dict[str, Any]) -> int:
         "faces_with_repeated_vertices": 50,
         "zero_area_triangles": 20,
         "primvar_length_mismatch": 100,
+        "primvar_element_size_mismatch": 100,
         "primvar_index_out_of_range": 100,
         "normals_length_mismatch": 50,
         "authored_extent_mismatch": 10,
