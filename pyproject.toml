@@ -1,0 +1,23 @@
+[project]
+name = "usd-asset-audit"
+version = "0.1.0"
+description = "Command-line USD scene, naming, hierarchy, and geometry audit tools."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=2.0",
+    "usd-core>=25.5",
+]
+
+[project.scripts]
+usd-geometry-audit = "usd_asset_audit.geometry:main"
+usd-names-hierarchy-audit = "usd_asset_audit.names_hierarchy:main"
+usd-scene-audit = "usd_asset_audit.scene:main"
+
+[build-system]
+requires = ["uv_build>=0.9.0,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
