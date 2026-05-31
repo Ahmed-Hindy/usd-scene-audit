@@ -56,7 +56,7 @@ Every report records `audit_mode` so downstream comparisons can tell exact and r
 
 ## Acceleration
 
-The expensive part of the audit is the exact per-face geometry pass: repeated vertex checks and fan-triangulated zero-area triangle checks. The measured default is `--geometry-engine numpy`; Numba is available as an opt-in engine for assets where compiled streaming loops beat NumPy batching.
+The expensive part of the audit is the exact per-face geometry pass: repeated vertex checks and fan-triangulated zero-area triangle checks. The default `--geometry-engine auto` uses Numba when the optional extra is installed and falls back to NumPy otherwise.
 
 Install the optional extra with:
 
@@ -73,7 +73,7 @@ uv run usd-geometry-audit scene.usd --geometry-engine numpy
 
 The JSON report includes both `geometry_engine`, the requested mode, and `face_analysis_engine`, the engine actually used. Numba only accelerates numeric mesh-array checks; USD composition, prototype traversal, attribute reads, JSON writing, normal validation, and primvar validation still run through the Python/OpenUSD path.
 
-On the full `kb3d_stadiums.usd` audit, Numba matched the NumPy findings but was slightly slower overall. It remains useful for isolated large face-array kernels, but it should be benchmarked per asset before being treated as a default.
+On the optimized full `kb3d_stadiums.usd` audit, Numba matched the NumPy findings and reduced exact audit time from about 68 seconds to about 44 seconds. Keep benchmarking per asset, because the speedup only applies to the face-check portion of the run.
 
 ## Timing And Caching
 
@@ -94,6 +94,8 @@ The `kb3d_stadiums.usd` audit showed that the original bottleneck was not Numba-
 Measured full-stage timings after optimization:
 
 - `--audit-mode fast`: about 26 seconds; reduced-scope triage, no findings on this asset.
-- `--audit-mode standard`: about 62 seconds; same `32` zero-area render-triangle findings as exhaustive for this asset.
-- `--audit-mode exhaustive`: about 68 seconds; exact full audit.
+- `--audit-mode standard --geometry-engine numpy`: about 62 seconds; same `32` zero-area render-triangle findings as exhaustive for this asset.
+- `--audit-mode standard --geometry-engine numba`: about 45 seconds; same findings as NumPy.
+- `--audit-mode exhaustive --geometry-engine numpy`: about 68 seconds; exact full audit.
+- `--audit-mode exhaustive --geometry-engine numba`: about 44 seconds; exact full audit with same findings as NumPy.
 - `--audit-mode exhaustive --mesh-cache face-hash`: about 62 seconds; exact full audit, with `641` duplicate face-array cache hits.

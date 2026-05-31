@@ -381,13 +381,17 @@ def resolve_face_analysis_engine(requested_engine: str) -> str:
     """Resolve auto/numpy/numba into the engine used for face geometry checks."""
     if requested_engine not in FACE_ANALYSIS_ENGINES:
         raise ValueError(f"Unsupported geometry engine: {requested_engine}")
-    if requested_engine in {"auto", "numpy"}:
+    if requested_engine == "numpy":
         return "numpy"
     if np is None:
-        raise RuntimeError("Numba acceleration requires NumPy.")
+        if requested_engine == "numba":
+            raise RuntimeError("Numba acceleration requires NumPy.")
+        return "numpy"
     kernel = get_numba_face_kernel()
     if kernel is not None:
         return "numba"
+    if requested_engine == "auto":
+        return "numpy"
     raise RuntimeError("Numba acceleration is not installed. Install with: uv sync --extra numba")
 
 
@@ -931,7 +935,7 @@ def analyze(
     zero_area_epsilon: float,
     huge_coord_threshold: float,
     extent_tolerance: float,
-    geometry_engine: str = "numpy",
+    geometry_engine: str = "auto",
     audit_mode: str = "exhaustive",
     mesh_cache_mode: str = "off",
 ) -> dict[str, Any]:
@@ -1099,8 +1103,8 @@ def main() -> None:
     parser.add_argument(
         "--geometry-engine",
         choices=FACE_ANALYSIS_ENGINES,
-        default="numpy",
-        help="Engine for expensive per-face checks. NumPy is the measured default; Numba is available as opt-in.",
+        default="auto",
+        help="Engine for expensive per-face checks. Auto uses Numba when installed, otherwise NumPy.",
     )
     parser.add_argument(
         "--mesh-cache",

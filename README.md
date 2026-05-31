@@ -12,7 +12,7 @@ Use `uv`:
 uv sync
 ```
 
-Install optional Numba support for face-kernel experiments:
+Install optional Numba acceleration for expensive face checks:
 
 ```powershell
 uv sync --extra numba
@@ -69,7 +69,7 @@ Use Numba explicitly for expensive per-face checks:
 uv run usd-geometry-audit "F:\path\to\kb3d_stadiums.usd" --geometry-engine numba
 ```
 
-The measured default is `--geometry-engine numpy`. Numba remains opt-in because it can speed up isolated face kernels but was not faster on the full KB3D stadium audit.
+The default `--geometry-engine auto` uses Numba when the optional extra is installed and falls back to NumPy otherwise. On the optimized KB3D stadium audit, Numba kept the findings identical while reducing exact audit time from about 68 seconds to about 44 seconds.
 
 For repeated mesh-array experiments, enable the face cache:
 

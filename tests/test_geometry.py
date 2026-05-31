@@ -119,9 +119,9 @@ def test_face_geometry_engines_report_same_issues() -> None:
     assert numba_issues["zero_area_triangles"] == 2
 
 
-def test_auto_face_engine_uses_measured_default() -> None:
-    """Auto should not silently opt into Numba when NumPy is the measured default."""
-    assert resolve_face_analysis_engine("auto") == "numpy"
+def test_auto_face_engine_uses_numba_when_available() -> None:
+    """Auto should use the faster real-stage face engine when the extra is installed."""
+    assert resolve_face_analysis_engine("auto") == resolve_face_analysis_engine("numba")
 
 
 def test_mesh_record_skips_deep_face_checks_when_index_lengths_mismatch() -> None:
