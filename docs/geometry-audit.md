@@ -43,3 +43,57 @@ Override them with:
 ```powershell
 uv run usd-geometry-audit scene.usd --zero-area-epsilon 1e-10 --huge-coord-threshold 100000 --extent-tolerance 1e-3
 ```
+
+## Audit Modes
+
+`--audit-mode exhaustive` is the default and preserves the original exact behavior. It runs all supported checks on all mesh categories.
+
+`--audit-mode standard` keeps all cheap topology, index, point, bounds, normal, primvar, and transform checks. It still scans render/helper meshes for repeated vertices and zero-area fan triangles, but only runs repeated-vertex face checks on collision-like meshes. This is meant for production triage where collision zero-area triangles are usually lower signal than render-mesh issues.
+
+`--audit-mode fast` keeps the cheap topology/index/point/bounds/transform checks and skips exact deep face scans, normals, and primvars. Use this mode when you need a quick answer about serious mesh-array corruption before committing to the full exact audit.
+
+Every report records `audit_mode` so downstream comparisons can tell exact and reduced-scope audits apart.
+
+## Acceleration
+
+The expensive part of the audit is the exact per-face geometry pass: repeated vertex checks and fan-triangulated zero-area triangle checks. The measured default is `--geometry-engine numpy`; Numba is available as an opt-in engine for assets where compiled streaming loops beat NumPy batching.
+
+Install the optional extra with:
+
+```powershell
+uv sync --extra numba
+```
+
+Force a specific engine with:
+
+```powershell
+uv run usd-geometry-audit scene.usd --geometry-engine numba
+uv run usd-geometry-audit scene.usd --geometry-engine numpy
+```
+
+The JSON report includes both `geometry_engine`, the requested mode, and `face_analysis_engine`, the engine actually used. Numba only accelerates numeric mesh-array checks; USD composition, prototype traversal, attribute reads, JSON writing, normal validation, and primvar validation still run through the Python/OpenUSD path.
+
+On the full `kb3d_stadiums.usd` audit, Numba matched the NumPy findings but was slightly slower overall. It remains useful for isolated large face-array kernels, but it should be benchmarked per asset before being treated as a default.
+
+## Timing And Caching
+
+Reports include `phase_timings`, which breaks the audit into broad buckets such as stage open, traversal, attribute reads, point checks, face checks, primvars, normals, bounds/extent checks, and transforms.
+
+`--mesh-cache face-hash` caches face-check results for duplicate point/count/index arrays. This is exact, but not automatically faster: hashing large arrays costs time, and scenes with few duplicate mesh arrays may lose performance. The report includes `mesh_cache` stats with entries, hits, and misses so the cache can be evaluated per asset.
+
+Example:
+
+```powershell
+uv run usd-geometry-audit scene.usd --audit-mode standard --mesh-cache face-hash --json-out usd_geometry_audit_standard_cached.json
+```
+
+## KB3D Stadium Performance Notes
+
+The `kb3d_stadiums.usd` audit showed that the original bottleneck was not Numba-sized face math. It was authored normal validation walking huge normal arrays in Python. Vectorized normal and indexed-primvar checks reduced the full exact audit from roughly 11 minutes to about 68 seconds on the test machine.
+
+Measured full-stage timings after optimization:
+
+- `--audit-mode fast`: about 26 seconds; reduced-scope triage, no findings on this asset.
+- `--audit-mode standard`: about 62 seconds; same `32` zero-area render-triangle findings as exhaustive for this asset.
+- `--audit-mode exhaustive`: about 68 seconds; exact full audit.
+- `--audit-mode exhaustive --mesh-cache face-hash`: about 62 seconds; exact full audit, with `641` duplicate face-array cache hits.

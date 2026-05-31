@@ -7,6 +7,9 @@ __pycache__/
 dist/
 
 *_audit.json
+*_audit_*.json
 *_audit_stdout.log
+*_audit_*_stdout.log
 *_audit_stderr.log
+*_audit_*_stderr.log
 *.log

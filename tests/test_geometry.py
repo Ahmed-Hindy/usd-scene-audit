@@ -2,9 +2,20 @@
 
 from __future__ import annotations
 
+import pytest
+import numpy as np
 from pxr import Gf, Sdf, Usd, UsdGeom, Vt
 
-from usd_asset_audit.geometry import transform_determinant, validate_primvars
+from usd_asset_audit.geometry import (
+    FaceAnalysisCache,
+    PhaseTimer,
+    analyze_face_geometry,
+    mesh_record,
+    resolve_face_analysis_engine,
+    transform_determinant,
+    validate_normals,
+    validate_primvars,
+)
 
 
 def _triangle_mesh(stage: Usd.Stage, path: str) -> UsdGeom.Mesh:
@@ -60,3 +71,103 @@ def test_transform_determinant_includes_scale() -> None:
     determinant = transform_determinant(mesh.GetPrim(), cache)
 
     assert determinant == -1.0
+
+
+def test_validate_normals_handles_empty_authored_array() -> None:
+    """Vectorized normal validation should preserve the old empty-array behavior."""
+    stage = Usd.Stage.CreateInMemory()
+    mesh = _triangle_mesh(stage, "/World/Mesh")
+    mesh.CreateNormalsAttr(Vt.Vec3fArray([]))
+
+    issues = validate_normals(mesh, point_count=3, face_count=1, face_vertex_count=3)
+
+    assert issues == [
+        {
+            "issue": "normals_length_mismatch",
+            "interpolation": "vertex",
+            "expected": 3,
+            "actual": 0,
+        }
+    ]
+
+
+def test_face_geometry_engines_report_same_issues() -> None:
+    """NumPy and Numba face checks should agree on exact issue counts."""
+    try:
+        resolve_face_analysis_engine("numba")
+    except RuntimeError:
+        pytest.skip("Numba extra is not installed")
+
+    points = np.array(
+        [
+            [0.0, 0.0, 0.0],
+            [1.0, 0.0, 0.0],
+            [2.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0],
+        ],
+        dtype=np.float64,
+    )
+    counts = np.array([3, 4, 3], dtype=np.int64)
+    indices = np.array([0, 1, 2, 0, 1, 1, 3, 0, 3, 4], dtype=np.int64)
+
+    numpy_issues, _ = analyze_face_geometry(counts, indices, points, 5, 1e-12, "numpy")
+    numba_issues, _ = analyze_face_geometry(counts, indices, points, 5, 1e-12, "numba")
+
+    assert dict(numba_issues) == dict(numpy_issues)
+    assert numba_issues["faces_with_repeated_vertices"] == 1
+    assert numba_issues["zero_area_triangles"] == 2
+
+
+def test_auto_face_engine_uses_measured_default() -> None:
+    """Auto should not silently opt into Numba when NumPy is the measured default."""
+    assert resolve_face_analysis_engine("auto") == "numpy"
+
+
+def test_mesh_record_skips_deep_face_checks_when_index_lengths_mismatch() -> None:
+    """Mismatched face arrays should be reported without indexing past available data."""
+    stage = Usd.Stage.CreateInMemory()
+    mesh = UsdGeom.Mesh.Define(stage, "/World/BrokenMesh")
+    mesh.CreatePointsAttr(Vt.Vec3fArray([Gf.Vec3f(0, 0, 0), Gf.Vec3f(1, 0, 0), Gf.Vec3f(0, 1, 0)]))
+    mesh.CreateFaceVertexCountsAttr(Vt.IntArray([3]))
+    mesh.CreateFaceVertexIndicesAttr(Vt.IntArray([0, 1]))
+    cache = UsdGeom.XformCache(Usd.TimeCode.Default())
+
+    record = mesh_record(mesh.GetPrim(), 1e-12, 1e6, 1e-4, cache, "numpy", "exhaustive", PhaseTimer(), FaceAnalysisCache(False))
+
+    assert record["issues"]["face_vertex_count_index_length_mismatch"] == 1
+
+
+def test_fast_face_mode_skips_deep_face_checks() -> None:
+    """Fast mode should keep cheap topology checks but skip exact deep face scans."""
+    points = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [2.0, 0.0, 0.0]], dtype=np.float64)
+    counts = np.array([3, 2], dtype=np.int64)
+    indices = np.array([0, 1, 2, 0, 1], dtype=np.int64)
+
+    issues, _ = analyze_face_geometry(
+        counts,
+        indices,
+        points,
+        3,
+        1e-12,
+        "numpy",
+        check_repeated_vertices=False,
+        check_zero_area=False,
+    )
+
+    assert issues["one_or_two_vertex_faces"] == 1
+    assert "zero_area_triangles" not in issues
+
+
+def test_face_analysis_cache_reuses_duplicate_array_results() -> None:
+    """Face cache should reuse results for identical arrays and thresholds."""
+    points = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [2.0, 0.0, 0.0]], dtype=np.float64)
+    counts = np.array([3], dtype=np.int64)
+    indices = np.array([0, 1, 2], dtype=np.int64)
+    face_cache = FaceAnalysisCache(True)
+
+    first, _ = analyze_face_geometry(counts, indices, points, 3, 1e-12, "numpy", face_cache=face_cache)
+    second, _ = analyze_face_geometry(counts.copy(), indices.copy(), points.copy(), 3, 1e-12, "numpy", face_cache=face_cache)
+
+    assert dict(first) == dict(second)
+    assert face_cache.stats()["hits"] == 1

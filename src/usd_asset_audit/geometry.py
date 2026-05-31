@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import copy
+import hashlib
 import json
 import math
 import re
 import time
 from collections import Counter, defaultdict
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +24,66 @@ except ImportError:  # pragma: no cover - fallback exists for tiny ad hoc runs.
 
 MAX_EXAMPLES = 80
 FACE_CHUNK_SIZE = 100_000
+FACE_ANALYSIS_ENGINES = ("auto", "numpy", "numba")
+AUDIT_MODES = ("fast", "standard", "exhaustive")
+MESH_CACHE_MODES = ("off", "face-hash")
+_NUMBA_FACE_KERNEL = None
+_NUMBA_IMPORT_ERROR: Exception | None = None
+
+
+class PhaseTimer:
+    """Collect wall-clock timings for broad audit phases."""
+
+    def __init__(self) -> None:
+        self.timings: defaultdict[str, float] = defaultdict(float)
+
+    @contextmanager
+    def phase(self, name: str):
+        """Accumulate elapsed seconds under a named phase."""
+        started = time.perf_counter()
+        try:
+            yield
+        finally:
+            self.timings[name] += time.perf_counter() - started
+
+    def rounded(self) -> dict[str, float]:
+        """Return timings rounded for stable JSON output."""
+        return {key: round(value, 3) for key, value in sorted(self.timings.items())}
+
+
+class FaceAnalysisCache:
+    """Cache exact face-analysis results for duplicate mesh arrays."""
+
+    def __init__(self, enabled: bool) -> None:
+        self.enabled = enabled
+        self.entries: dict[tuple[Any, ...], tuple[Counter[str], dict[str, Any]]] = {}
+        self.hits = 0
+        self.misses = 0
+
+    def get(self, key: tuple[Any, ...] | None) -> tuple[Counter[str], dict[str, Any]] | None:
+        """Return a defensive copy of cached face results."""
+        if not self.enabled or key is None:
+            return None
+        value = self.entries.get(key)
+        if value is None:
+            self.misses += 1
+            return None
+        self.hits += 1
+        return Counter(value[0]), copy.deepcopy(value[1])
+
+    def set(self, key: tuple[Any, ...] | None, issues: Counter[str], details: dict[str, Any]) -> None:
+        """Store a defensive copy of face results."""
+        if self.enabled and key is not None:
+            self.entries[key] = (Counter(issues), copy.deepcopy(details))
+
+    def stats(self) -> dict[str, int | str]:
+        """Return cache statistics for reports."""
+        return {
+            "mode": "face-hash" if self.enabled else "off",
+            "entries": len(self.entries),
+            "hits": self.hits,
+            "misses": self.misses,
+        }
 
 
 def add_example(examples: dict[str, list[Any]], key: str, value: Any, limit: int = MAX_EXAMPLES) -> None:
@@ -168,6 +231,166 @@ def vector_array(value, dtype=None):
     return np.asarray(value, dtype=dtype)
 
 
+def array_digest(array) -> tuple[str, tuple[int, ...], str] | None:
+    """Return a stable digest for a NumPy array without changing audit results."""
+    if array is None or np is None:
+        return None
+    contiguous = np.ascontiguousarray(array)
+    digest = hashlib.blake2b(digest_size=16)
+    digest.update(str(contiguous.dtype).encode("ascii"))
+    digest.update(str(contiguous.shape).encode("ascii"))
+    digest.update(memoryview(contiguous.view(np.uint8)))
+    return digest.hexdigest(), tuple(int(v) for v in contiguous.shape), str(contiguous.dtype)
+
+
+def face_cache_key(
+    counts_np,
+    indices_np,
+    points_np,
+    point_count: int,
+    zero_area_epsilon: float,
+    face_analysis_engine: str,
+    check_repeated_vertices: bool,
+    check_zero_area: bool,
+) -> tuple[Any, ...] | None:
+    """Build a cache key for checks that depend only on face arrays and points."""
+    if counts_np is None or indices_np is None:
+        return None
+    points_key = array_digest(points_np) if check_zero_area else None
+    return (
+        array_digest(counts_np),
+        array_digest(indices_np),
+        points_key,
+        point_count,
+        zero_area_epsilon,
+        face_analysis_engine,
+        check_repeated_vertices,
+        check_zero_area,
+    )
+
+
+def face_checks_for_mode(audit_mode: str, category: str) -> tuple[bool, bool]:
+    """Return repeated-vertex and zero-area check switches for an audit mode."""
+    if audit_mode not in AUDIT_MODES:
+        raise ValueError(f"Unsupported audit mode: {audit_mode}")
+    if audit_mode == "fast":
+        return False, False
+    if audit_mode == "standard":
+        return True, category != "collision_like"
+    return True, True
+
+
+def _face_geometry_numba_kernel_impl(
+    counts,
+    indices,
+    points,
+    zero_area_epsilon,
+    check_repeated_vertices,
+    check_zero_area,
+):
+    """Count repeated-vertex faces and zero-area fan triangles in one streaming pass."""
+    repeated_total = 0
+    zero_area_total = 0
+    repeated_example_faces = np.full(10, -1, dtype=np.int64)
+    zero_example_indices = np.full((10, 3), -1, dtype=np.int64)
+    zero_example_areas = np.zeros(10, dtype=np.float64)
+    repeated_example_count = 0
+    zero_example_count = 0
+    threshold = 2.0 * zero_area_epsilon
+    cursor = 0
+
+    for face_index in range(counts.size):
+        width = counts[face_index]
+        repeated = False
+        if check_repeated_vertices:
+            for left in range(width):
+                left_index = indices[cursor + left]
+                for right in range(left + 1, width):
+                    if left_index == indices[cursor + right]:
+                        repeated = True
+                        break
+                if repeated:
+                    break
+
+        if repeated:
+            repeated_total += 1
+            if repeated_example_count < repeated_example_faces.size:
+                repeated_example_faces[repeated_example_count] = face_index
+                repeated_example_count += 1
+
+        if check_zero_area and width >= 3 and points.size:
+            anchor_index = indices[cursor]
+            ax = points[anchor_index, 0]
+            ay = points[anchor_index, 1]
+            az = points[anchor_index, 2]
+            for column in range(1, width - 1):
+                b_index = indices[cursor + column]
+                c_index = indices[cursor + column + 1]
+
+                abx = points[b_index, 0] - ax
+                aby = points[b_index, 1] - ay
+                abz = points[b_index, 2] - az
+                acx = points[c_index, 0] - ax
+                acy = points[c_index, 1] - ay
+                acz = points[c_index, 2] - az
+
+                cross_x = aby * acz - abz * acy
+                cross_y = abz * acx - abx * acz
+                cross_z = abx * acy - aby * acx
+                norm = math.sqrt(cross_x * cross_x + cross_y * cross_y + cross_z * cross_z)
+                if norm <= threshold:
+                    zero_area_total += 1
+                    if zero_example_count < zero_example_areas.size:
+                        zero_example_indices[zero_example_count, 0] = anchor_index
+                        zero_example_indices[zero_example_count, 1] = b_index
+                        zero_example_indices[zero_example_count, 2] = c_index
+                        zero_example_areas[zero_example_count] = norm * 0.5
+                        zero_example_count += 1
+
+        cursor += width
+
+    return (
+        repeated_total,
+        repeated_example_faces,
+        repeated_example_count,
+        zero_area_total,
+        zero_example_indices,
+        zero_example_areas,
+        zero_example_count,
+    )
+
+
+def get_numba_face_kernel():
+    """Return the optional Numba face-analysis kernel, or None when unavailable."""
+    global _NUMBA_FACE_KERNEL, _NUMBA_IMPORT_ERROR
+    if _NUMBA_FACE_KERNEL is not None:
+        return _NUMBA_FACE_KERNEL
+    if _NUMBA_IMPORT_ERROR is not None:
+        return None
+    try:
+        from numba import njit
+    except ImportError as exc:
+        _NUMBA_IMPORT_ERROR = exc
+        return None
+
+    _NUMBA_FACE_KERNEL = njit(cache=True)(_face_geometry_numba_kernel_impl)
+    return _NUMBA_FACE_KERNEL
+
+
+def resolve_face_analysis_engine(requested_engine: str) -> str:
+    """Resolve auto/numpy/numba into the engine used for face geometry checks."""
+    if requested_engine not in FACE_ANALYSIS_ENGINES:
+        raise ValueError(f"Unsupported geometry engine: {requested_engine}")
+    if requested_engine in {"auto", "numpy"}:
+        return "numpy"
+    if np is None:
+        raise RuntimeError("Numba acceleration requires NumPy.")
+    kernel = get_numba_face_kernel()
+    if kernel is not None:
+        return "numba"
+    raise RuntimeError("Numba acceleration is not installed. Install with: uv sync --extra numba")
+
+
 def count_repeated_rows(index_rows) -> tuple[int, list[list[int]]]:
     """Count rows that contain repeated vertex indices."""
     if np is None or index_rows.size == 0:
@@ -214,14 +437,125 @@ def count_zero_area_fan_triangles(points_np, index_rows, epsilon: float) -> tupl
     return total, examples
 
 
-def analyze_face_geometry_vectorized(
+def count_face_geometry_numba(
+    counts_np,
+    indices_np,
+    points_np,
+    offsets,
+    zero_area_epsilon: float,
+    check_repeated_vertices: bool,
+    check_zero_area: bool,
+) -> tuple[int, list[dict[str, Any]], int, list[dict[str, Any]]]:
+    """Count expensive face-geometry checks with the optional Numba kernel."""
+    kernel = get_numba_face_kernel()
+    if kernel is None:
+        return 0, [], 0, []
+    points_for_kernel = points_np if points_np is not None else np.empty((0, 3), dtype=np.float64)
+    (
+        repeated_total,
+        repeated_example_faces,
+        repeated_example_count,
+        zero_area_total,
+        zero_example_indices,
+        zero_example_areas,
+        zero_example_count,
+    ) = kernel(
+        counts_np,
+        indices_np,
+        points_for_kernel,
+        zero_area_epsilon,
+        check_repeated_vertices,
+        check_zero_area,
+    )
+
+    repeated_examples: list[dict[str, Any]] = []
+    for face_index in repeated_example_faces[:repeated_example_count]:
+        start = offsets[int(face_index)]
+        width = counts_np[int(face_index)]
+        repeated_examples.append({"indices": indices_np[start : start + width].astype(int).tolist()})
+
+    zero_area_examples = [
+        {
+            "triangle_indices": zero_example_indices[i].astype(int).tolist(),
+            "area": float(zero_example_areas[i]),
+        }
+        for i in range(int(zero_example_count))
+    ]
+    return int(repeated_total), repeated_examples, int(zero_area_total), zero_area_examples
+
+
+def count_face_geometry_numpy(
+    counts_np,
+    indices_np,
+    points_np,
+    offsets,
+    zero_area_epsilon: float,
+    check_repeated_vertices: bool,
+    check_zero_area: bool,
+) -> tuple[int, list[dict[str, Any]], int, list[dict[str, Any]]]:
+    """Count expensive face-geometry checks with NumPy batching."""
+    repeated_total = 0
+    zero_area_total = 0
+    repeated_examples: list[dict[str, Any]] = []
+    zero_area_examples: list[dict[str, Any]] = []
+
+    for width in sorted(int(v) for v in np.unique(counts_np) if int(v) > 0):
+        face_positions = np.flatnonzero(counts_np == width)
+        if face_positions.size == 0:
+            continue
+        for start in range(0, face_positions.size, FACE_CHUNK_SIZE):
+            chunk_faces = face_positions[start : start + FACE_CHUNK_SIZE]
+            starts = offsets[chunk_faces]
+            rows = indices_np[starts[:, None] + np.arange(width, dtype=np.int64)]
+
+            if check_repeated_vertices:
+                repeated_count, row_examples = count_repeated_rows(rows)
+                repeated_total += repeated_count
+                for row in row_examples:
+                    if len(repeated_examples) < 10:
+                        repeated_examples.append({"indices": row})
+
+            if check_zero_area and width >= 3 and points_np is not None:
+                zero_count, tri_examples = count_zero_area_fan_triangles(points_np, rows, zero_area_epsilon)
+                zero_area_total += zero_count
+                for example in tri_examples:
+                    if len(zero_area_examples) < 10:
+                        zero_area_examples.append(example)
+
+    return repeated_total, repeated_examples, zero_area_total, zero_area_examples
+
+
+def analyze_face_geometry(
     counts_np,
     indices_np,
     points_np,
     point_count: int,
     zero_area_epsilon: float,
+    face_analysis_engine: str,
+    check_repeated_vertices: bool = True,
+    check_zero_area: bool = True,
+    face_cache: FaceAnalysisCache | None = None,
 ) -> tuple[Counter[str], dict[str, Any]]:
-    """Validate face arrays with vectorized exact checks."""
+    """Validate face arrays with exact checks."""
+    cache_key = (
+        face_cache_key(
+            counts_np,
+            indices_np,
+            points_np,
+            point_count,
+            zero_area_epsilon,
+            face_analysis_engine,
+            check_repeated_vertices,
+            check_zero_area,
+        )
+        if face_cache is not None
+        else None
+    )
+    if face_cache is not None:
+        cached = face_cache.get(cache_key)
+        if cached is not None:
+            return cached
+
     issues: Counter[str] = Counter()
     details: dict[str, Any] = {}
     if np is None or counts_np is None or indices_np is None:
@@ -251,10 +585,19 @@ def analyze_face_geometry_vectorized(
             issues["out_of_range_face_vertex_indices"] += int(bad.size)
             details["out_of_range_index_examples"] = bad[:10].astype(int).tolist()
 
+    expected_index_count = int(counts_np.sum())
+    if expected_index_count != indices_np.size:
+        return issues, details
+
     if point_count == 0 or indices_np.size == 0 or np.any(counts_np < 0):
         return issues, details
 
     if np.any(indices_np < 0) or np.any(indices_np >= point_count):
+        return issues, details
+
+    if not check_repeated_vertices and not check_zero_area:
+        if face_cache is not None:
+            face_cache.set(cache_key, issues, details)
         return issues, details
 
     offsets = np.empty(counts_np.size, dtype=np.int64)
@@ -262,32 +605,26 @@ def analyze_face_geometry_vectorized(
     if counts_np.size > 1:
         offsets[1:] = np.cumsum(counts_np[:-1], dtype=np.int64)
 
-    repeated_total = 0
-    zero_area_total = 0
-    repeated_examples: list[dict[str, Any]] = []
-    zero_area_examples: list[dict[str, Any]] = []
-
-    for width in sorted(int(v) for v in np.unique(counts_np) if int(v) > 0):
-        face_positions = np.flatnonzero(counts_np == width)
-        if face_positions.size == 0:
-            continue
-        for start in range(0, face_positions.size, FACE_CHUNK_SIZE):
-            chunk_faces = face_positions[start : start + FACE_CHUNK_SIZE]
-            starts = offsets[chunk_faces]
-            rows = indices_np[starts[:, None] + np.arange(width, dtype=np.int64)]
-
-            repeated_count, row_examples = count_repeated_rows(rows)
-            repeated_total += repeated_count
-            for row in row_examples:
-                if len(repeated_examples) < 10:
-                    repeated_examples.append({"indices": row})
-
-            if width >= 3 and points_np is not None:
-                zero_count, tri_examples = count_zero_area_fan_triangles(points_np, rows, zero_area_epsilon)
-                zero_area_total += zero_count
-                for example in tri_examples:
-                    if len(zero_area_examples) < 10:
-                        zero_area_examples.append(example)
+    if face_analysis_engine == "numba":
+        repeated_total, repeated_examples, zero_area_total, zero_area_examples = count_face_geometry_numba(
+            counts_np,
+            indices_np,
+            points_np,
+            offsets,
+            zero_area_epsilon,
+            check_repeated_vertices,
+            check_zero_area,
+        )
+    else:
+        repeated_total, repeated_examples, zero_area_total, zero_area_examples = count_face_geometry_numpy(
+            counts_np,
+            indices_np,
+            points_np,
+            offsets,
+            zero_area_epsilon,
+            check_repeated_vertices,
+            check_zero_area,
+        )
 
     if repeated_total:
         issues["faces_with_repeated_vertices"] += repeated_total
@@ -296,6 +633,8 @@ def analyze_face_geometry_vectorized(
         issues["zero_area_triangles"] += zero_area_total
         details["zero_area_triangle_examples"] = zero_area_examples
 
+    if face_cache is not None:
+        face_cache.set(cache_key, issues, details)
     return issues, details
 
 
@@ -350,14 +689,19 @@ def validate_primvars(
                 )
 
         if is_indexed and value_len:
-            bad_indices = [int(i) for i in indices if int(i) < 0 or int(i) >= value_element_count]
+            if np is not None:
+                indices_np = np.asarray(indices, dtype=np.int64)
+                bad_positions = np.flatnonzero((indices_np < 0) | (indices_np >= value_element_count))
+                bad_indices = indices_np[bad_positions[:10]].astype(int).tolist()
+            else:
+                bad_indices = [int(i) for i in indices if int(i) < 0 or int(i) >= value_element_count][:10]
             if bad_indices:
                 issues.append(
                     {
                         "primvar": name,
                         "issue": "primvar_index_out_of_range",
                         "value_count": value_element_count,
-                        "bad_index_examples": bad_indices[:10],
+                        "bad_index_examples": bad_indices,
                     }
                 )
 
@@ -400,9 +744,19 @@ def validate_normals(
                 "actual": normal_count,
             }
         )
-    non_finite = [i for i, normal in enumerate(normals) if not is_finite_vec3(normal)]
+    if np is not None:
+        normals_np = np.asarray(normals)
+        if normals_np.size == 0:
+            non_finite = []
+        elif normals_np.ndim == 2:
+            finite_mask = np.isfinite(normals_np).all(axis=1)
+            non_finite = np.flatnonzero(~finite_mask)[:10].astype(int).tolist()
+        else:
+            non_finite = [i for i, normal in enumerate(normals) if not is_finite_vec3(normal)][:10]
+    else:
+        non_finite = [i for i, normal in enumerate(normals) if not is_finite_vec3(normal)][:10]
     if non_finite:
-        issues.append({"issue": "normals_non_finite", "index_examples": non_finite[:10]})
+        issues.append({"issue": "normals_non_finite", "index_examples": non_finite})
     return issues
 
 
@@ -421,6 +775,10 @@ def mesh_record(
     huge_coord_threshold: float,
     extent_tolerance: float,
     xform_cache: UsdGeom.XformCache,
+    face_analysis_engine: str,
+    audit_mode: str,
+    phase_timer: PhaseTimer,
+    face_cache: FaceAnalysisCache,
 ) -> dict[str, Any]:
     """Analyze a single mesh prim and return a report record."""
     path = str(prim.GetPath())
@@ -430,9 +788,10 @@ def mesh_record(
     issues: Counter[str] = Counter()
     details: dict[str, Any] = {}
 
-    points = mesh.GetPointsAttr().Get()
-    counts = mesh.GetFaceVertexCountsAttr().Get()
-    indices = mesh.GetFaceVertexIndicesAttr().Get()
+    with phase_timer.phase("mesh.read_attributes"):
+        points = mesh.GetPointsAttr().Get()
+        counts = mesh.GetFaceVertexCountsAttr().Get()
+        indices = mesh.GetFaceVertexIndicesAttr().Get()
 
     point_count = len(points) if points is not None else 0
     face_count = len(counts) if counts is not None else 0
@@ -458,59 +817,71 @@ def mesh_record(
         issues["face_vertex_count_index_length_mismatch"] += 1
         details["expected_index_count"] = expected_index_count
 
-    if points_np is not None and points_np.size:
-        finite_mask = np.isfinite(points_np).all(axis=1) if np is not None else None
-        if finite_mask is not None:
-            non_finite_indices = np.flatnonzero(~finite_mask)
-            if non_finite_indices.size:
-                issues["non_finite_points"] += int(non_finite_indices.size)
-                details["non_finite_point_examples"] = non_finite_indices[:10].astype(int).tolist()
-            finite_points = points_np[finite_mask]
-            if finite_points.size:
-                max_abs = np.max(np.abs(finite_points), axis=1)
-                huge_positions = np.flatnonzero(max_abs > huge_coord_threshold)
-                if huge_positions.size:
-                    original_indices = np.flatnonzero(finite_mask)[huge_positions]
-                    issues["huge_coordinate_points"] += int(huge_positions.size)
-                    details["huge_coordinate_examples"] = [
-                        {
-                            "index": int(original_indices[i]),
-                            "point": finite_points[huge_positions[i]].astype(float).tolist(),
-                            "max_abs": float(max_abs[huge_positions[i]]),
-                        }
-                        for i in range(min(10, huge_positions.size))
-                    ]
+    with phase_timer.phase("mesh.point_checks"):
+        if points_np is not None and points_np.size:
+            finite_mask = np.isfinite(points_np).all(axis=1) if np is not None else None
+            if finite_mask is not None:
+                non_finite_indices = np.flatnonzero(~finite_mask)
+                if non_finite_indices.size:
+                    issues["non_finite_points"] += int(non_finite_indices.size)
+                    details["non_finite_point_examples"] = non_finite_indices[:10].astype(int).tolist()
+                finite_points = points_np[finite_mask]
+                if finite_points.size:
+                    max_abs = np.max(np.abs(finite_points), axis=1)
+                    huge_positions = np.flatnonzero(max_abs > huge_coord_threshold)
+                    if huge_positions.size:
+                        original_indices = np.flatnonzero(finite_mask)[huge_positions]
+                        issues["huge_coordinate_points"] += int(huge_positions.size)
+                        details["huge_coordinate_examples"] = [
+                            {
+                                "index": int(original_indices[i]),
+                                "point": finite_points[huge_positions[i]].astype(float).tolist(),
+                                "max_abs": float(max_abs[huge_positions[i]]),
+                            }
+                            for i in range(min(10, huge_positions.size))
+                        ]
 
-    face_issues, face_details = analyze_face_geometry_vectorized(
-        counts_np,
-        indices_np,
-        points_np,
-        point_count,
-        zero_area_epsilon,
-    )
+    check_repeated_vertices, check_zero_area = face_checks_for_mode(audit_mode, category)
+    with phase_timer.phase("mesh.face_checks"):
+        face_issues, face_details = analyze_face_geometry(
+            counts_np,
+            indices_np,
+            points_np,
+            point_count,
+            zero_area_epsilon,
+            face_analysis_engine,
+            check_repeated_vertices,
+            check_zero_area,
+            face_cache,
+        )
     issues.update(face_issues)
     details.update(face_details)
 
-    bounds = bbox_from_points(points if points is not None else [])
-    extent_delta = bounds_mismatch(authored_extent_bounds(mesh), bounds, extent_tolerance)
-    if extent_delta is not None:
-        issues["authored_extent_mismatch"] += 1
-        details["authored_extent_max_delta"] = extent_delta
+    with phase_timer.phase("mesh.bounds_extent"):
+        bounds = bbox_from_points(points if points is not None else [])
+        extent_delta = bounds_mismatch(authored_extent_bounds(mesh), bounds, extent_tolerance)
+        if extent_delta is not None:
+            issues["authored_extent_mismatch"] += 1
+            details["authored_extent_max_delta"] = extent_delta
 
-    for normal_issue in validate_normals(mesh, point_count, face_count, expected_index_count):
-        issues[normal_issue["issue"]] += 1
-        add_example(details, normal_issue["issue"], normal_issue, 10)
+    if audit_mode != "fast":
+        with phase_timer.phase("mesh.normals"):
+            for normal_issue in validate_normals(mesh, point_count, face_count, expected_index_count):
+                issues[normal_issue["issue"]] += 1
+                add_example(details, normal_issue["issue"], normal_issue, 10)
 
-    for primvar_issue in validate_primvars(prim, point_count, face_count, expected_index_count):
-        issues[primvar_issue["issue"]] += 1
-        add_example(details, primvar_issue["issue"], primvar_issue, 10)
+        with phase_timer.phase("mesh.primvars"):
+            for primvar_issue in validate_primvars(prim, point_count, face_count, expected_index_count):
+                issues[primvar_issue["issue"]] += 1
+                add_example(details, primvar_issue["issue"], primvar_issue, 10)
 
-    determinant = transform_determinant(prim, xform_cache)
-    if determinant is not None:
-        if abs(determinant) <= 1e-12:
-            issues["near_zero_transform_determinant"] += 1
-        elif determinant < 0:
-            issues["negative_transform_determinant"] += 1
+    with phase_timer.phase("mesh.transforms"):
+        determinant = transform_determinant(prim, xform_cache)
+        if determinant is not None:
+            if abs(determinant) <= 1e-12:
+                issues["near_zero_transform_determinant"] += 1
+            elif determinant < 0:
+                issues["negative_transform_determinant"] += 1
 
     return {
         "path": path,
@@ -555,15 +926,32 @@ def seriousness_score(record: dict[str, Any]) -> int:
     return sum(weights.get(issue, 1) * count for issue, count in record["issues"].items())
 
 
-def analyze(stage_path: Path, zero_area_epsilon: float, huge_coord_threshold: float, extent_tolerance: float) -> dict[str, Any]:
+def analyze(
+    stage_path: Path,
+    zero_area_epsilon: float,
+    huge_coord_threshold: float,
+    extent_tolerance: float,
+    geometry_engine: str = "numpy",
+    audit_mode: str = "exhaustive",
+    mesh_cache_mode: str = "off",
+) -> dict[str, Any]:
     """Analyze all meshes in a USD stage and its prototypes."""
     started = time.perf_counter()
-    stage = Usd.Stage.Open(str(stage_path))
+    phase_timer = PhaseTimer()
+    face_analysis_engine = resolve_face_analysis_engine(geometry_engine)
+    if audit_mode not in AUDIT_MODES:
+        raise ValueError(f"Unsupported audit mode: {audit_mode}")
+    if mesh_cache_mode not in MESH_CACHE_MODES:
+        raise ValueError(f"Unsupported mesh cache mode: {mesh_cache_mode}")
+    face_cache = FaceAnalysisCache(enabled=mesh_cache_mode == "face-hash")
+    with phase_timer.phase("stage.open"):
+        stage = Usd.Stage.Open(str(stage_path))
     if stage is None:
         raise RuntimeError(f"Could not open stage: {stage_path}")
 
-    prims, prototype_count = prims_with_prototypes(stage)
-    mesh_prims = [prim for prim in prims if prim.IsA(UsdGeom.Mesh)]
+    with phase_timer.phase("stage.traverse"):
+        prims, prototype_count = prims_with_prototypes(stage)
+        mesh_prims = [prim for prim in prims if prim.IsA(UsdGeom.Mesh)]
 
     summary_counts: Counter[str] = Counter()
     category_counts: Counter[str] = Counter()
@@ -573,7 +961,17 @@ def analyze(stage_path: Path, zero_area_epsilon: float, huge_coord_threshold: fl
     xform_cache = UsdGeom.XformCache(Usd.TimeCode.Default())
 
     for prim in mesh_prims:
-        record = mesh_record(prim, zero_area_epsilon, huge_coord_threshold, extent_tolerance, xform_cache)
+        record = mesh_record(
+            prim,
+            zero_area_epsilon,
+            huge_coord_threshold,
+            extent_tolerance,
+            xform_cache,
+            face_analysis_engine,
+            audit_mode,
+            phase_timer,
+            face_cache,
+        )
         records.append(record)
         category = record["category"]
         category_counts[category] += 1
@@ -644,6 +1042,10 @@ def analyze(stage_path: Path, zero_area_epsilon: float, huge_coord_threshold: fl
             "huge_coord_threshold": huge_coord_threshold,
             "extent_tolerance": extent_tolerance,
         },
+        "audit_mode": audit_mode,
+        "geometry_engine": geometry_engine,
+        "face_analysis_engine": face_analysis_engine,
+        "mesh_cache": face_cache.stats(),
         "summary_counts": dict(summary_counts.most_common()),
         "category_counts": dict(category_counts.most_common()),
         "category_issue_counts": {category: dict(counter.most_common()) for category, counter in category_issue_counts.items()},
@@ -654,6 +1056,7 @@ def analyze(stage_path: Path, zero_area_epsilon: float, huge_coord_threshold: fl
         "largest_meshes_by_points": [compact(record) for record in largest_by_points],
         "largest_meshes_by_faces": [compact(record) for record in largest_by_faces],
         "largest_meshes_by_extent": [compact(record) for record in largest_by_extent],
+        "phase_timings": phase_timer.rounded(),
         "elapsed_seconds": round(time.perf_counter() - started, 3),
     }
     return report
@@ -663,6 +1066,9 @@ def print_summary(report: dict[str, Any]) -> None:
     """Print a compact console summary."""
     print(f"Stage: {report['stage']}")
     print(f"Meshes scanned: {report['mesh_count']} (prototypes: {report['prototype_count']})")
+    print(f"Audit mode: {report['audit_mode']}")
+    print(f"Face analysis engine: {report['face_analysis_engine']}")
+    print(f"Mesh cache: {report['mesh_cache']}")
     print(f"Categories: {report['category_counts']}")
     print(f"Serious geometry failures: {report['serious_geometry_failures']}")
     print(f"Likely benign collision/helper warnings: {report['likely_benign_collision_helper_warnings']}")
@@ -681,9 +1087,38 @@ def main() -> None:
     parser.add_argument("--zero-area-epsilon", type=float, default=1e-12)
     parser.add_argument("--huge-coord-threshold", type=float, default=1e6)
     parser.add_argument("--extent-tolerance", type=float, default=1e-4)
+    parser.add_argument(
+        "--audit-mode",
+        choices=AUDIT_MODES,
+        default="exhaustive",
+        help=(
+            "fast checks topology/bounds only, standard skips exact collision zero-area checks, "
+            "exhaustive keeps all exact checks."
+        ),
+    )
+    parser.add_argument(
+        "--geometry-engine",
+        choices=FACE_ANALYSIS_ENGINES,
+        default="numpy",
+        help="Engine for expensive per-face checks. NumPy is the measured default; Numba is available as opt-in.",
+    )
+    parser.add_argument(
+        "--mesh-cache",
+        choices=MESH_CACHE_MODES,
+        default="off",
+        help="Optional cache for duplicate face arrays. face-hash can help repeated geometry but costs hashing time.",
+    )
     args = parser.parse_args()
 
-    report = analyze(args.stage, args.zero_area_epsilon, args.huge_coord_threshold, args.extent_tolerance)
+    report = analyze(
+        args.stage,
+        args.zero_area_epsilon,
+        args.huge_coord_threshold,
+        args.extent_tolerance,
+        args.geometry_engine,
+        args.audit_mode,
+        args.mesh_cache,
+    )
     if args.json_out:
         args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print_summary(report)
