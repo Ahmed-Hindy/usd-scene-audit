@@ -38,6 +38,8 @@ The [OpenChessSet](https://github.com/usd-wg/assets/tree/main/full_assets/OpenCh
 uv run usd-scene-audit "F:\path\to\OpenChessSet\chess_set.usda" --json-out usd_scene_audit.json
 ```
 
+By default, naming audits report universal USD name hygiene and hierarchy issues. Vendor or studio prefix-style naming checks are opt-in so generic sample assets such as OpenChessSet are not treated as naming-policy failures.
+
 ## Commands
 
 ### `usd-geometry-audit`
@@ -99,14 +101,26 @@ Example:
 uv run usd-names-hierarchy-audit "F:\path\to\OpenChessSet\chess_set.usda" --json-out usd_names_hierarchy_audit.json
 ```
 
+Enable prefix-style naming policy checks with a custom regex:
+
+```powershell
+uv run usd-names-hierarchy-audit "F:\path\to\OpenChessSet\chess_set.usda" --prefix-style-pattern "USD_[A-Z]+_[A-Za-z0-9]+" --json-out usd_names_hierarchy_audit.json
+```
+
 ### `usd-scene-audit`
 
-Audits high-level scene composition, material bindings, material references, and broad naming counts.
+Audits high-level scene composition, material bindings, material references, and broad naming counts. Prefix-style naming checks are disabled by default and the active naming policy is recorded in the JSON report.
 
 Example:
 
 ```powershell
 uv run usd-scene-audit "F:\path\to\OpenChessSet\chess_set.usda" --json-out usd_scene_audit.json
+```
+
+Enable prefix-style naming policy checks with a custom regex:
+
+```powershell
+uv run usd-scene-audit "F:\path\to\OpenChessSet\chess_set.usda" --prefix-style-pattern "USD_[A-Z]+_[A-Za-z0-9]+" --json-out usd_scene_audit.json
 ```
 
 ## Notes
