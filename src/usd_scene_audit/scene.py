@@ -1,4 +1,4 @@
-"""Audit a composed USD stage for naming and material assignment issues."""
+"""Audit a composed OpenUSD stage for naming and material assignment issues."""
 
 from __future__ import annotations
 
@@ -111,13 +111,16 @@ def resolve_authored_asset(layer: Sdf.Layer, asset_path: str) -> str | None:
     return os.path.normpath(os.path.join(os.path.dirname(layer_path), asset_path))
 
 
-def is_expected_kb3d_name(name: str) -> bool:
-    """Check the loose KB3D-style naming convention used by this pack."""
-    if name == "kb3d_stadiums" or name in COMMON_CONTAINER_NAMES:
+PREFIX_STYLE_RE = re.compile(r"[A-Z][A-Z0-9]*_[A-Z0-9]+_[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*")
+
+
+def is_expected_prefix_name(name: str) -> bool:
+    """Check a loose vendor/package prefix naming convention."""
+    if name in COMMON_CONTAINER_NAMES:
         return True
     if name == "__class__" or name.startswith("__Prototype_"):
         return True
-    return bool(re.fullmatch(r"KB3D_[A-Z0-9]+_[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*", name))
+    return bool(PREFIX_STYLE_RE.fullmatch(name))
 
 
 def analyze(stage_path: Path) -> dict:
@@ -140,7 +143,7 @@ def analyze(stage_path: Path) -> dict:
         "prototype_count": 0,
         "naming": {
             "suspicious_count": 0,
-            "non_kb3d_style_count": 0,
+            "non_prefix_style_count": 0,
             "duplicate_sibling_names": [],
             "case_collision_names": [],
             "examples": defaultdict(list),
@@ -207,9 +210,9 @@ def analyze(stage_path: Path) -> dict:
             if "__" in name:
                 report["naming"]["suspicious_count"] += 1
                 add_example(report["naming"]["examples"]["double_underscore"], path)
-            if not is_expected_kb3d_name(name):
-                report["naming"]["non_kb3d_style_count"] += 1
-                add_example(report["naming"]["examples"]["non_kb3d_style"], path)
+            if not is_expected_prefix_name(name):
+                report["naming"]["non_prefix_style_count"] += 1
+                add_example(report["naming"]["examples"]["non_prefix_style"], path)
 
         if prim.IsA(UsdShade.Material):
             material_paths.add(path)

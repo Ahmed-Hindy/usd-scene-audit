@@ -1,7 +1,7 @@
 [project]
-name = "usd-asset-audit"
+name = "usd-scene-audit"
 version = "0.1.0"
-description = "Command-line USD scene, naming, hierarchy, and geometry audit tools."
+description = "Command-line OpenUSD scene audit tools for geometry, naming, hierarchy, materials, and authored asset references."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -10,9 +10,9 @@ dependencies = [
 ]
 
 [project.scripts]
-usd-geometry-audit = "usd_asset_audit.geometry:main"
-usd-names-hierarchy-audit = "usd_asset_audit.names_hierarchy:main"
-usd-scene-audit = "usd_asset_audit.scene:main"
+usd-geometry-audit = "usd_scene_audit.geometry:main"
+usd-names-hierarchy-audit = "usd_scene_audit.names_hierarchy:main"
+usd-scene-audit = "usd_scene_audit.scene:main"
 
 [project.optional-dependencies]
 numba = [

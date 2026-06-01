@@ -1,4 +1,4 @@
-"""Focused USD naming and hierarchy audit for a composed stage."""
+"""Focused OpenUSD naming and hierarchy audit for a composed stage."""
 
 from __future__ import annotations
 
@@ -14,7 +14,8 @@ from pxr import Usd, UsdGeom, UsdShade
 
 MAX_EXAMPLES = 80
 CONTAINER_NAMES = {"geo", "mtl", "materials", "render", "proxy", "lod", "payload"}
-KNOWN_ALLOWED = {"kb3d_stadiums", "__class__"} | CONTAINER_NAMES
+KNOWN_ALLOWED = {"__class__"} | CONTAINER_NAMES
+PREFIX_STYLE_RE = re.compile(r"[A-Z][A-Z0-9]*_[A-Z0-9]+_[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*")
 
 
 def add_example(report: dict, key: str, value: str, limit: int = MAX_EXAMPLES) -> None:
@@ -40,11 +41,11 @@ def is_internal_generated(name: str) -> bool:
     return name.startswith("__Prototype_") or name == "__class__"
 
 
-def is_kb3d_style_name(name: str) -> bool:
-    """Return true for the loose naming convention seen in the kit."""
+def is_prefix_style_name(name: str) -> bool:
+    """Return true for a loose vendor/package prefix naming convention."""
     if name in KNOWN_ALLOWED or is_internal_generated(name):
         return True
-    return bool(re.fullmatch(r"KB3D_[A-Z0-9]+_[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*", name))
+    return bool(PREFIX_STYLE_RE.fullmatch(name))
 
 
 def prims_with_prototypes(stage: Usd.Stage) -> list[Usd.Prim]:
@@ -121,8 +122,8 @@ def analyze(stage_path: Path) -> dict:
         elif depth == report["hierarchy"]["max_depth"]:
             add_example(report["hierarchy"], "max_depth_examples", norm_path, 10)
 
-        if not is_kb3d_style_name(name):
-            note_oddity(report, oddity_counts, "non_kb3d_style", norm_path)
+        if not is_prefix_style_name(name):
+            note_oddity(report, oddity_counts, "non_prefix_style", norm_path)
         if name.endswith("_"):
             note_oddity(report, oddity_counts, "trailing_underscore", norm_path)
         if re.search(r"_COL_$", name):

@@ -1,8 +1,8 @@
-# USD Asset Audit
+# USD Scene Audit
 
-Small command-line tools for auditing large composed USD scenes with `usd-core`.
+Command-line OpenUSD scene audit tools for geometry, naming, hierarchy, materials, and authored asset references.
 
-The tools were built for heavy KitBash3D-style scenes where the root stage is mostly layout and the real mesh data lives inside instance prototypes. Each command traverses the normal stage plus `stage.GetPrototypes()` so instanceable component geometry is included.
+The tools are built for large composed USD stages where the root stage may be mostly layout and the real mesh data may live inside instance prototypes. Each command traverses the normal stage plus `stage.GetPrototypes()` so instanceable component geometry is included.
 
 ## Install
 
@@ -48,15 +48,15 @@ Checks include:
 Example:
 
 ```powershell
-uv run usd-geometry-audit "F:\path\to\kb3d_stadiums.usd" --json-out usd_geometry_audit.json
+uv run usd-geometry-audit "F:\path\to\scene.usd" --json-out usd_geometry_audit.json
 ```
 
 Choose a performance/coverage mode:
 
 ```powershell
-uv run usd-geometry-audit "F:\path\to\kb3d_stadiums.usd" --audit-mode fast
-uv run usd-geometry-audit "F:\path\to\kb3d_stadiums.usd" --audit-mode standard
-uv run usd-geometry-audit "F:\path\to\kb3d_stadiums.usd" --audit-mode exhaustive
+uv run usd-geometry-audit "F:\path\to\scene.usd" --audit-mode fast
+uv run usd-geometry-audit "F:\path\to\scene.usd" --audit-mode standard
+uv run usd-geometry-audit "F:\path\to\scene.usd" --audit-mode exhaustive
 ```
 
 - `fast`: topology, index, point, bounds, and transform checks only.
@@ -66,15 +66,15 @@ uv run usd-geometry-audit "F:\path\to\kb3d_stadiums.usd" --audit-mode exhaustive
 Use Numba explicitly for expensive per-face checks:
 
 ```powershell
-uv run usd-geometry-audit "F:\path\to\kb3d_stadiums.usd" --geometry-engine numba
+uv run usd-geometry-audit "F:\path\to\scene.usd" --geometry-engine numba
 ```
 
-The default `--geometry-engine auto` uses Numba when the optional extra is installed and falls back to NumPy otherwise. On the optimized KB3D stadium audit, Numba kept the findings identical while reducing exact audit time from about 68 seconds to about 44 seconds.
+The default `--geometry-engine auto` uses Numba when the optional extra is installed and falls back to NumPy otherwise. On one optimized large-scene audit, Numba kept the findings identical while reducing exact audit time from about 68 seconds to about 44 seconds.
 
 For repeated mesh-array experiments, enable the face cache:
 
 ```powershell
-uv run usd-geometry-audit "F:\path\to\kb3d_stadiums.usd" --mesh-cache face-hash
+uv run usd-geometry-audit "F:\path\to\scene.usd" --mesh-cache face-hash
 ```
 
 The cache hashes mesh arrays before reusing face-check results, so benchmark it on the target asset before keeping it enabled.
@@ -88,7 +88,7 @@ Audits naming and hierarchy oddities while normalizing OpenUSD-generated prototy
 Example:
 
 ```powershell
-uv run usd-names-hierarchy-audit "F:\path\to\kb3d_stadiums.usd" --json-out usd_names_hierarchy_audit.json
+uv run usd-names-hierarchy-audit "F:\path\to\scene.usd" --json-out usd_names_hierarchy_audit.json
 ```
 
 ### `usd-scene-audit`
@@ -98,7 +98,7 @@ Audits high-level scene composition, material bindings, material references, and
 Example:
 
 ```powershell
-uv run usd-scene-audit "F:\path\to\kb3d_stadiums.usd" --json-out usd_scene_audit.json
+uv run usd-scene-audit "F:\path\to\scene.usd" --json-out usd_scene_audit.json
 ```
 
 ## Notes

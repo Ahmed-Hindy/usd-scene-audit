@@ -6,7 +6,7 @@ import pytest
 import numpy as np
 from pxr import Gf, Sdf, Usd, UsdGeom, Vt
 
-from usd_asset_audit.geometry import (
+from usd_scene_audit.geometry import (
     FaceAnalysisCache,
     PhaseTimer,
     analyze_face_geometry,
