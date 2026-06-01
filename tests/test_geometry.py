@@ -121,6 +121,11 @@ def test_face_geometry_engines_report_same_issues() -> None:
 
 def test_auto_face_engine_uses_numba_when_available() -> None:
     """Auto should use the faster real-stage face engine when the extra is installed."""
+    try:
+        resolve_face_analysis_engine("numba")
+    except RuntimeError:
+        pytest.skip("Numba extra is not installed")
+
     assert resolve_face_analysis_engine("auto") == resolve_face_analysis_engine("numba")
 
 

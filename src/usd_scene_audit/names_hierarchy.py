@@ -15,7 +15,6 @@ from pxr import Usd, UsdGeom, UsdShade
 MAX_EXAMPLES = 80
 CONTAINER_NAMES = {"geo", "mtl", "materials", "render", "proxy", "lod", "payload"}
 KNOWN_ALLOWED = {"__class__"} | CONTAINER_NAMES
-PREFIX_STYLE_RE = re.compile(r"[A-Z][A-Z0-9]*_[A-Z0-9]+_[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*")
 
 
 def add_example(report: dict, key: str, value: str, limit: int = MAX_EXAMPLES) -> None:
@@ -41,11 +40,11 @@ def is_internal_generated(name: str) -> bool:
     return name.startswith("__Prototype_") or name == "__class__"
 
 
-def is_prefix_style_name(name: str) -> bool:
+def is_prefix_style_name(name: str, prefix_style_re: re.Pattern[str]) -> bool:
     """Return true for a loose vendor/package prefix naming convention."""
     if name in KNOWN_ALLOWED or is_internal_generated(name):
         return True
-    return bool(PREFIX_STYLE_RE.fullmatch(name))
+    return bool(prefix_style_re.fullmatch(name))
 
 
 def prims_with_prototypes(stage: Usd.Stage) -> list[Usd.Prim]:
@@ -56,9 +55,10 @@ def prims_with_prototypes(stage: Usd.Stage) -> list[Usd.Prim]:
     return prims
 
 
-def analyze(stage_path: Path) -> dict:
+def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     """Audit names and hierarchy while ignoring material reference resolution."""
     started = time.perf_counter()
+    prefix_style_re = re.compile(prefix_style_pattern) if prefix_style_pattern else None
     stage = Usd.Stage.Open(str(stage_path))
     if stage is None:
         raise RuntimeError(f"Could not open stage: {stage_path}")
@@ -71,6 +71,12 @@ def analyze(stage_path: Path) -> dict:
         "total_prims_including_prototypes": len(prims),
         "type_counts": {},
         "name_oddities": defaultdict(list),
+        "naming_policy": {
+            "prefix_style": {
+                "enabled": prefix_style_re is not None,
+                "pattern": prefix_style_pattern,
+            },
+        },
         "name_counts": {},
         "hierarchy": {
             "max_depth": 0,
@@ -122,7 +128,7 @@ def analyze(stage_path: Path) -> dict:
         elif depth == report["hierarchy"]["max_depth"]:
             add_example(report["hierarchy"], "max_depth_examples", norm_path, 10)
 
-        if not is_prefix_style_name(name):
+        if prefix_style_re and not is_prefix_style_name(name, prefix_style_re):
             note_oddity(report, oddity_counts, "non_prefix_style", norm_path)
         if name.endswith("_"):
             note_oddity(report, oddity_counts, "trailing_underscore", norm_path)
@@ -214,9 +220,19 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("stage", type=Path)
     parser.add_argument("--json-out", type=Path)
+    parser.add_argument(
+        "--prefix-style-pattern",
+        help="Optional regex for vendor/package prefix-style names. Disabled by default.",
+    )
     args = parser.parse_args()
 
-    report = analyze(args.stage)
+    if args.prefix_style_pattern:
+        try:
+            re.compile(args.prefix_style_pattern)
+        except re.error as exc:
+            parser.error(f"invalid --prefix-style-pattern: {exc}")
+
+    report = analyze(args.stage, prefix_style_pattern=args.prefix_style_pattern)
     payload = json.dumps(report, indent=2, sort_keys=True)
     if args.json_out:
         args.json_out.write_text(payload + "\n", encoding="utf-8")

@@ -111,26 +111,30 @@ def resolve_authored_asset(layer: Sdf.Layer, asset_path: str) -> str | None:
     return os.path.normpath(os.path.join(os.path.dirname(layer_path), asset_path))
 
 
-PREFIX_STYLE_RE = re.compile(r"[A-Z][A-Z0-9]*_[A-Z0-9]+_[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*")
-
-
-def is_expected_prefix_name(name: str) -> bool:
+def is_expected_prefix_name(name: str, prefix_style_re: re.Pattern[str]) -> bool:
     """Check a loose vendor/package prefix naming convention."""
     if name in COMMON_CONTAINER_NAMES:
         return True
     if name == "__class__" or name.startswith("__Prototype_"):
         return True
-    return bool(PREFIX_STYLE_RE.fullmatch(name))
+    return bool(prefix_style_re.fullmatch(name))
 
 
-def analyze(stage_path: Path) -> dict:
+def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     start = time.perf_counter()
+    prefix_style_re = re.compile(prefix_style_pattern) if prefix_style_pattern else None
     stage = Usd.Stage.Open(str(stage_path))
     if stage is None:
         raise RuntimeError(f"Could not open stage: {stage_path}")
 
     root_layer = stage.GetRootLayer()
     used_layers = stage.GetUsedLayers()
+    naming_policy = {
+        "prefix_style": {
+            "enabled": prefix_style_re is not None,
+            "pattern": prefix_style_pattern,
+        },
+    }
 
     report = {
         "stage": str(stage_path),
@@ -141,6 +145,7 @@ def analyze(stage_path: Path) -> dict:
         "layer_count": len(used_layers),
         "prims": {},
         "prototype_count": 0,
+        "naming_policy": naming_policy,
         "naming": {
             "suspicious_count": 0,
             "non_prefix_style_count": 0,
@@ -210,7 +215,7 @@ def analyze(stage_path: Path) -> dict:
             if "__" in name:
                 report["naming"]["suspicious_count"] += 1
                 add_example(report["naming"]["examples"]["double_underscore"], path)
-            if not is_expected_prefix_name(name):
+            if prefix_style_re and not is_expected_prefix_name(name, prefix_style_re):
                 report["naming"]["non_prefix_style_count"] += 1
                 add_example(report["naming"]["examples"]["non_prefix_style"], path)
 
@@ -335,9 +340,19 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("stage", type=Path)
     parser.add_argument("--json-out", type=Path)
+    parser.add_argument(
+        "--prefix-style-pattern",
+        help="Optional regex for vendor/package prefix-style names. Disabled by default.",
+    )
     args = parser.parse_args()
 
-    report = analyze(args.stage)
+    if args.prefix_style_pattern:
+        try:
+            re.compile(args.prefix_style_pattern)
+        except re.error as exc:
+            parser.error(f"invalid --prefix-style-pattern: {exc}")
+
+    report = analyze(args.stage, prefix_style_pattern=args.prefix_style_pattern)
     payload = json.dumps(report, indent=2, sort_keys=True)
     if args.json_out:
         args.json_out.write_text(payload + "\n", encoding="utf-8")
