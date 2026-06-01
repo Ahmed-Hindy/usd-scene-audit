@@ -21,13 +21,21 @@ uv sync --extra numba
 Run commands with:
 
 ```powershell
-uv run usd-geometry-audit "F:\path\to\scene.usd" --json-out usd_geometry_audit.json
+uv run usd-geometry-audit "F:\path\to\OpenChessSet\chess_set.usda" --json-out usd_geometry_audit.json
 ```
 
 For one-off usage from this checkout without syncing first:
 
 ```powershell
-uv --native-tls run --with-editable . usd-geometry-audit "F:\path\to\scene.usd"
+uv --native-tls run --with-editable . usd-geometry-audit "F:\path\to\OpenChessSet\chess_set.usda"
+```
+
+## Example Assets
+
+The [OpenChessSet](https://github.com/usd-wg/assets/tree/main/full_assets/OpenChessSet) asset in the USD Working Group sample asset repository is a useful real-world test scene for `usd-scene-audit`. It includes composed USD layers, referenced geometry, and MaterialX look files.
+
+```powershell
+uv run usd-scene-audit "F:\path\to\OpenChessSet\chess_set.usda" --json-out usd_scene_audit.json
 ```
 
 ## Commands
@@ -48,15 +56,15 @@ Checks include:
 Example:
 
 ```powershell
-uv run usd-geometry-audit "F:\path\to\scene.usd" --json-out usd_geometry_audit.json
+uv run usd-geometry-audit "F:\path\to\OpenChessSet\chess_set.usda" --json-out usd_geometry_audit.json
 ```
 
 Choose a performance/coverage mode:
 
 ```powershell
-uv run usd-geometry-audit "F:\path\to\scene.usd" --audit-mode fast
-uv run usd-geometry-audit "F:\path\to\scene.usd" --audit-mode standard
-uv run usd-geometry-audit "F:\path\to\scene.usd" --audit-mode exhaustive
+uv run usd-geometry-audit "F:\path\to\OpenChessSet\chess_set.usda" --audit-mode fast
+uv run usd-geometry-audit "F:\path\to\OpenChessSet\chess_set.usda" --audit-mode standard
+uv run usd-geometry-audit "F:\path\to\OpenChessSet\chess_set.usda" --audit-mode exhaustive
 ```
 
 - `fast`: topology, index, point, bounds, and transform checks only.
@@ -66,7 +74,7 @@ uv run usd-geometry-audit "F:\path\to\scene.usd" --audit-mode exhaustive
 Use Numba explicitly for expensive per-face checks:
 
 ```powershell
-uv run usd-geometry-audit "F:\path\to\scene.usd" --geometry-engine numba
+uv run usd-geometry-audit "F:\path\to\OpenChessSet\chess_set.usda" --geometry-engine numba
 ```
 
 The default `--geometry-engine auto` uses Numba when the optional extra is installed and falls back to NumPy otherwise. On one optimized large-scene audit, Numba kept the findings identical while reducing exact audit time from about 68 seconds to about 44 seconds.
@@ -74,7 +82,7 @@ The default `--geometry-engine auto` uses Numba when the optional extra is insta
 For repeated mesh-array experiments, enable the face cache:
 
 ```powershell
-uv run usd-geometry-audit "F:\path\to\scene.usd" --mesh-cache face-hash
+uv run usd-geometry-audit "F:\path\to\OpenChessSet\chess_set.usda" --mesh-cache face-hash
 ```
 
 The cache hashes mesh arrays before reusing face-check results, so benchmark it on the target asset before keeping it enabled.
@@ -88,7 +96,7 @@ Audits naming and hierarchy oddities while normalizing OpenUSD-generated prototy
 Example:
 
 ```powershell
-uv run usd-names-hierarchy-audit "F:\path\to\scene.usd" --json-out usd_names_hierarchy_audit.json
+uv run usd-names-hierarchy-audit "F:\path\to\OpenChessSet\chess_set.usda" --json-out usd_names_hierarchy_audit.json
 ```
 
 ### `usd-scene-audit`
@@ -98,7 +106,7 @@ Audits high-level scene composition, material bindings, material references, and
 Example:
 
 ```powershell
-uv run usd-scene-audit "F:\path\to\scene.usd" --json-out usd_scene_audit.json
+uv run usd-scene-audit "F:\path\to\OpenChessSet\chess_set.usda" --json-out usd_scene_audit.json
 ```
 
 ## Notes
