@@ -1,4 +1,4 @@
-"""USD asset audit command-line tools."""
+"""OpenUSD scene audit command-line tools."""
 
 __all__ = ["__version__"]
 

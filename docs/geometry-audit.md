@@ -1,6 +1,6 @@
-# Geometry Audit Details
+# USD Geometry Audit Details
 
-`usd-geometry-audit` is intended for large USD stages where correctness matters more than a fast shallow scan.
+`usd-geometry-audit` is intended for large OpenUSD stages where correctness matters more than a fast shallow scan.
 
 ## Mesh Inclusion
 
@@ -73,7 +73,7 @@ uv run usd-geometry-audit scene.usd --geometry-engine numpy
 
 The JSON report includes both `geometry_engine`, the requested mode, and `face_analysis_engine`, the engine actually used. Numba only accelerates numeric mesh-array checks; USD composition, prototype traversal, attribute reads, JSON writing, normal validation, and primvar validation still run through the Python/OpenUSD path.
 
-On the optimized full `kb3d_stadiums.usd` audit, Numba matched the NumPy findings and reduced exact audit time from about 68 seconds to about 44 seconds. Keep benchmarking per asset, because the speedup only applies to the face-check portion of the run.
+On one optimized full-scene USD audit, Numba matched the NumPy findings and reduced exact audit time from about 68 seconds to about 44 seconds. Keep benchmarking per scene, because the speedup only applies to the face-check portion of the run.
 
 ## Timing And Caching
 
@@ -87,9 +87,9 @@ Example:
 uv run usd-geometry-audit scene.usd --audit-mode standard --mesh-cache face-hash --json-out usd_geometry_audit_standard_cached.json
 ```
 
-## KB3D Stadium Performance Notes
+## Large Scene Performance Notes
 
-The `kb3d_stadiums.usd` audit showed that the original bottleneck was not Numba-sized face math. It was authored normal validation walking huge normal arrays in Python. Vectorized normal and indexed-primvar checks reduced the full exact audit from roughly 11 minutes to about 68 seconds on the test machine.
+One large USD scene audit showed that the original bottleneck was not Numba-sized face math. It was authored normal validation walking huge normal arrays in Python. Vectorized normal and indexed-primvar checks reduced the full exact audit from roughly 11 minutes to about 68 seconds on the test machine.
 
 Measured full-stage timings after optimization:
 
