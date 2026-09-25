@@ -15,13 +15,24 @@ from pxr import Ar, Sdf, Usd, UsdGeom, UsdShade
 MAX_EXAMPLES = 40
 
 # A URI scheme must be detected before anchoring, because anchoring a path
-# collapses the "//" in "scheme://host" into "scheme:/host".
-ASSET_URI_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9+.\-]*://")
+# collapses the "//" in "scheme://host" into "scheme:/host". The scheme requires
+# two or more characters so a Windows drive letter ("C://tex/a.exr") is not
+# mistaken for a URI.
+ASSET_URI_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9+.\-]+://")
 
 # Asset paths that stand in for a family of files rather than one file. Their
 # existence cannot be decided by resolving the authored string.
 UDIM_TOKEN_PATTERN = re.compile(r"<UDIM>", re.IGNORECASE)
-SEQUENCE_TOKEN_PATTERN = re.compile(r"<f\d*>|<n\d*>|<frame>|\$F\d*|#{2,}", re.IGNORECASE)
+
+# Frame-sequence tokens. Both alternatives are bounded deliberately:
+#   - "$F" needs a non-alphanumeric follower, so the Houdini-style "$F4" matches
+#     while variable names such as "$FX", "$FONTS", and "$FOOTAGE" do not.
+#   - a "####" run must sit between "." or "_" delimiters, so "beauty.####.exr"
+#     matches while directory names such as "v###" or "notes##draft" do not.
+SEQUENCE_TOKEN_PATTERN = re.compile(
+    r"<f\d*>|<n\d*>|<frame>|\$F\d*(?![A-Za-z0-9])|[._]#{2,}(?=[._])",
+    re.IGNORECASE,
+)
 
 # Tiles tried when probing whether a UDIM texture set exists at all. Probing can
 # only ever upgrade an asset to "resolved"; a failed probe never reports missing,
@@ -120,22 +131,31 @@ def has_variable_tokens(asset_path: str) -> bool:
 def asset_identifier(layer: Sdf.Layer, asset_path: str) -> str:
     """Anchor an authored asset path against the layer that authored it.
 
-    Uses ``ArResolver.CreateIdentifier``, which anchors without requiring the
-    asset to exist -- unlike ``Sdf.Layer.ComputeAbsolutePath``, which returns the
-    input unchanged when the asset cannot be resolved and so is unusable for
-    reporting missing assets.
+    Uses ``Sdf.ComputeAssetPathRelativeToLayer``, which is the only accessor that
+    preserves a layer's *package* context. Anchoring against ``layer.realPath``
+    silently discards it: for a layer loaded out of a ``.usdz``, ``realPath`` is
+    the path of the package file, so a layer-relative asset anchors to a sibling
+    of the archive instead of into it.
 
-    Note that a bare relative path such as ``tex/color.exr`` is a *search path*
-    in USD and is deliberately left unanchored, because it has no single expected
-    location. Only explicitly relative paths such as ``./tex/color.exr`` anchor
-    to the layer directory.
+        packaged layer realPath        : /show/packed.usdz
+        realPath anchoring             : /show/tex/color.png                 (wrong)
+        ComputeAssetPathRelativeToLayer: /show/packed.usdz[tex/color.png]    (right)
+
+    An explicitly relative path such as ``./tex/color.exr`` anchors to the layer
+    directory whether or not the file exists, which is what lets a missing asset
+    be reported with its expected location.
+
+    A *bare* relative path such as ``tex/color.exr`` is a USD search path. USD
+    resolves it against the resolver's search path rather than the layer, so it
+    is returned unanchored when it does not resolve -- it has no single expected
+    location, and which directory it resolves from can depend on the process
+    working directory. That is USD's semantics, not a choice made here.
     """
     if ASSET_URI_PATTERN.match(asset_path):
         return asset_path
-    anchor = layer.realPath or ""
-    if not anchor or layer.identifier.startswith("anon:"):
+    if layer.anonymous:
         return asset_path
-    return Ar.GetResolver().CreateIdentifier(asset_path, Ar.ResolvedPath(anchor))
+    return Sdf.ComputeAssetPathRelativeToLayer(layer, asset_path)
 
 
 def classify_authored_asset(layer: Sdf.Layer, asset_path: str) -> tuple[str, str]:
@@ -149,14 +169,24 @@ def classify_authored_asset(layer: Sdf.Layer, asset_path: str) -> tuple[str, str
     identifier = asset_identifier(layer, asset_path)
 
     if has_variable_tokens(asset_path):
+        # Substitute into the authored path and re-anchor, so a probe works for
+        # search paths as well as for explicitly relative paths.
         for tile in UDIM_PROBE_TILES:
-            probe = UDIM_TOKEN_PATTERN.sub(tile, identifier)
-            if probe != identifier and resolver.Resolve(probe):
+            probe = UDIM_TOKEN_PATTERN.sub(tile, asset_path)
+            if probe != asset_path and resolver.Resolve(asset_identifier(layer, probe)):
                 return "resolved", identifier
         return "unverifiable", identifier
 
     if resolver.Resolve(identifier):
         return "resolved", identifier
+
+    if ASSET_URI_PATTERN.match(asset_path):
+        # No registered resolver claimed this scheme, so existence cannot be
+        # decided locally. Calling it missing would be a guess, and a stage that
+        # legitimately references cloud assets would report false findings on any
+        # machine without the matching resolver plugin installed.
+        return "unverifiable", identifier
+
     return "missing", identifier
 
 

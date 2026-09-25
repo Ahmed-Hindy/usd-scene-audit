@@ -83,28 +83,49 @@ def test_missing_asset_is_reported_as_an_absolute_path(stage_path) -> None:
 # ---------------------------------------------------------------- packages
 
 
-def test_reference_into_usdz_package_is_not_missing(tmp_path) -> None:
-    """os.path.exists cannot see inside a .usdz; Ar can."""
-    inner = tmp_path / "inner.usda"
-    inner_stage = Usd.Stage.CreateNew(str(inner))
-    mesh = UsdGeom.Mesh.Define(inner_stage, "/Inner")
-    inner_stage.SetDefaultPrim(mesh.GetPrim())
-    inner_stage.GetRootLayer().Save()
+def _build_package_with_internal_texture(tmp_path):
+    """Build a .usdz whose layer references a texture stored inside the package."""
+    source = tmp_path / "source"
+    (source / "tex").mkdir(parents=True)
+    (source / "tex" / "color.png").write_bytes(b"x")
 
-    package = tmp_path / "pack.usdz"
+    inner = source / "asset.usda"
+    stage = Usd.Stage.CreateNew(str(inner))
+    mesh = UsdGeom.Mesh.Define(stage, "/Asset")
+    stage.SetDefaultPrim(mesh.GetPrim())
+    mesh.GetPrim().CreateAttribute("userProperties:tex", Sdf.ValueTypeNames.Asset).Set(Sdf.AssetPath("./tex/color.png"))
+    stage.GetRootLayer().Save()
+
+    package = tmp_path / "packed.usdz"
     assert UsdUtils.CreateNewUsdzPackage(Sdf.AssetPath(str(inner)), str(package))
+    return package
 
-    root = tmp_path / "root.usda"
-    root_stage = Usd.Stage.CreateNew(str(root))
-    world = UsdGeom.Xform.Define(root_stage, "/World")
-    root_stage.SetDefaultPrim(world.GetPrim())
-    ref = UsdGeom.Xform.Define(root_stage, "/World/Packaged")
-    ref.GetPrim().GetReferences().AddReference("./pack.usdz")
-    root_stage.GetRootLayer().Save()
 
-    report = scene.analyze(root)
+def test_asset_authored_inside_a_usdz_is_not_missing(tmp_path) -> None:
+    """An asset stored inside a package must resolve to a package-relative path.
+
+    This is the case os.path.exists cannot see at all, and it is also the case
+    that anchoring on layer.realPath gets wrong: realPath for a packaged layer is
+    the path of the .usdz itself, so a layer-relative asset anchors to a sibling
+    of the archive rather than into it.
+    """
+    package = _build_package_with_internal_texture(tmp_path)
+
+    report = scene.analyze(package)
 
     assert report["assets"]["missing_authored_asset_count"] == 0, missing_paths(report)
+    assert report["assets"]["resolved_asset_count"] >= 1
+
+
+def test_package_internal_asset_identifier_is_package_relative(tmp_path) -> None:
+    """The identifier must keep the package context, not point beside the archive."""
+    package = _build_package_with_internal_texture(tmp_path)
+    stage = Usd.Stage.Open(str(package))
+    layer = next(layer for layer in stage.GetUsedLayers() if not layer.anonymous)
+
+    identifier = asset_identifier(layer, "./tex/color.png")
+
+    assert identifier.endswith("packed.usdz[tex/color.png]"), identifier
 
 
 # ------------------------------------------------------------------- units
@@ -136,6 +157,38 @@ def test_concrete_paths_are_not_treated_as_patterns(asset_path: str) -> None:
 
 
 @pytest.mark.parametrize(
+    "asset_path",
+    [
+        "$FX/cache/points.bgeo",
+        "$FOOTAGE/plate.exr",
+        "./$FONTS/glyph.png",
+        "$HIP/tex/color.exr",
+        "./v###/color.exr",
+        "./notes##draft/color.exr",
+    ],
+)
+def test_variable_names_are_not_frame_sequences(asset_path: str) -> None:
+    """Environment-variable and directory names must not read as frame tokens.
+
+    These are ordinary in Houdini and Nuke pipelines. Misreading them as patterns
+    silently moves the reference into 'unverifiable', where no counter treats it
+    as a problem, so it stops being audited at all.
+    """
+    assert not has_variable_tokens(asset_path)
+
+
+def test_udim_probe_works_for_search_paths(tmp_path) -> None:
+    """A UDIM set must be found whether or not the authored path starts with ./."""
+    (tmp_path / "tex").mkdir()
+    (tmp_path / "tex" / "color.1001.exr").write_bytes(b"x")
+    layer = Sdf.Layer.CreateNew(str(tmp_path / "layer.usda"))
+    layer.Save()
+
+    assert classify_authored_asset(layer, "./tex/color.<UDIM>.exr")[0] == "resolved"
+    assert classify_authored_asset(layer, "tex/color.<UDIM>.exr")[0] == "resolved"
+
+
+@pytest.mark.parametrize(
     "uri",
     ["https://example.com/tex.exr", "http://example.com/tex.exr", "omniverse://host/a.usd", "s3://bucket/a.usd"],
 )
@@ -144,6 +197,45 @@ def test_uri_asset_paths_are_left_intact(tmp_path, uri: str) -> None:
     layer = Sdf.Layer.CreateNew(str(tmp_path / "layer.usda"))
 
     assert asset_identifier(layer, uri) == uri
+
+
+@pytest.mark.parametrize(
+    "uri",
+    ["https://cdn.example.com/tex.exr", "omniverse://nucleus/proj/a.usd"],
+)
+def test_unclaimed_uri_is_unverifiable_not_missing(tmp_path, uri: str) -> None:
+    """A URI no resolver claims cannot be judged, so it must not be called missing.
+
+    Reporting it missing would mean any stage referencing cloud assets produces
+    false findings on every machine without the matching resolver plugin.
+    """
+    layer = Sdf.Layer.CreateNew(str(tmp_path / "layer.usda"))
+    layer.Save()
+
+    assert classify_authored_asset(layer, uri)[0] == "unverifiable"
+
+
+def test_uri_references_are_not_reported_as_missing(tmp_path) -> None:
+    """End to end: a stage referencing cloud assets reports no missing assets."""
+    layer = Sdf.Layer.CreateNew(str(tmp_path / "root.usda"))
+    stage = Usd.Stage.Open(layer)
+    world = UsdGeom.Xform.Define(stage, "/World")
+    stage.SetDefaultPrim(world.GetPrim())
+    for index, uri in enumerate(["https://cdn.example.com/t.exr", "omniverse://nucleus/proj/a.usd"]):
+        world.GetPrim().CreateAttribute(f"userProperties:u{index}", Sdf.ValueTypeNames.Asset).Set(Sdf.AssetPath(uri))
+    layer.Save()
+
+    report = scene.analyze(tmp_path / "root.usda")
+
+    assert report["assets"]["missing_authored_asset_count"] == 0, missing_paths(report)
+    assert report["assets"]["unverifiable_asset_count"] == 2
+
+
+def test_windows_drive_letter_is_not_a_uri(tmp_path) -> None:
+    """A URI scheme needs 2+ characters, so C:// is a path, not a scheme."""
+    layer = Sdf.Layer.CreateNew(str(tmp_path / "layer.usda"))
+
+    assert asset_identifier(layer, "C://tex/color.exr") != "C://tex/color.exr"
 
 
 def test_explicitly_relative_path_anchors_to_the_layer(tmp_path) -> None:
