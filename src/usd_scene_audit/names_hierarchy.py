@@ -11,6 +11,10 @@ from pathlib import Path
 
 from pxr import Usd, UsdGeom, UsdShade
 
+# TODO(#22): CheckErrorLog belongs in a shared module once one exists; it is not
+# geometry-specific.
+from usd_scene_audit.geometry import CheckErrorLog
+
 
 MAX_EXAMPLES = 80
 CONTAINER_NAMES = {"geo", "mtl", "materials", "render", "proxy", "lod", "payload"}
@@ -58,6 +62,9 @@ def prims_with_prototypes(stage: Usd.Stage) -> list[Usd.Prim]:
 def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     """Audit names and hierarchy while ignoring material reference resolution."""
     started = time.perf_counter()
+    # No check in this module catches broadly today. The block is still reported
+    # so all three audits expose the same contract and a gate can read one key.
+    error_log = CheckErrorLog()
     prefix_style_re = re.compile(prefix_style_pattern) if prefix_style_pattern else None
     stage = Usd.Stage.Open(str(stage_path))
     if stage is None:
@@ -97,6 +104,7 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
             "deep_collision_like_mesh_count": 0,
             "deep_collision_like_mesh_examples": [],
         },
+        "check_errors": error_log.as_report(),
         "elapsed_seconds": None,
     }
 
@@ -135,8 +143,10 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
         if re.search(r"_COL_$", name):
             note_oddity(report, oddity_counts, "trailing_col_underscore", norm_path)
         parent_name = parent.GetName() if parent and parent.IsValid() else ""
-        if parent_name and name.startswith(parent_name + "_") and (
-            re.search(r"_C(?:_\d+)?$", name) or re.search(r"_CO$", name)
+        if (
+            parent_name
+            and name.startswith(parent_name + "_")
+            and (re.search(r"_C(?:_\d+)?$", name) or re.search(r"_CO$", name))
         ):
             note_oddity(report, oddity_counts, "truncated_collision_suffix", norm_path)
         if re.search(r"tunel", name, re.IGNORECASE):

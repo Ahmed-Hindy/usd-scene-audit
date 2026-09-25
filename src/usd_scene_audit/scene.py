@@ -11,6 +11,10 @@ from pathlib import Path
 
 from pxr import Ar, Sdf, Usd, UsdGeom, UsdShade
 
+# TODO(#22): CheckErrorLog belongs in a shared module once one exists; it is not
+# geometry-specific.
+from usd_scene_audit.geometry import CheckErrorLog
+
 
 MAX_EXAMPLES = 40
 
@@ -69,7 +73,7 @@ def direct_material_targets(prim: Usd.Prim) -> list[str]:
     return targets
 
 
-def authored_asset_paths(layer: Sdf.Layer) -> set[str]:
+def authored_asset_paths(layer: Sdf.Layer, error_log: CheckErrorLog | None = None) -> set[str]:
     """Collect authored asset paths from a layer by walking Sdf fields."""
     assets: set[str] = set()
 
@@ -111,7 +115,12 @@ def authored_asset_paths(layer: Sdf.Layer) -> set[str]:
         for field in spec.ListInfoKeys():
             try:
                 visit(spec.GetInfo(field))
-            except Exception:
+            except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
+                # An unreadable field could hide an asset reference, which is the
+                # very thing this walk exists to find. Skipping is acceptable;
+                # skipping silently is not.
+                if error_log is not None:
+                    error_log.record("authored_asset_paths", f"{layer.identifier}:{spec.path}.{field}", error)
                 continue
         for child_spec in getattr(spec, "nameChildren", ()):
             visit_spec(child_spec)
@@ -137,9 +146,9 @@ def asset_identifier(layer: Sdf.Layer, asset_path: str) -> str:
     the path of the package file, so a layer-relative asset anchors to a sibling
     of the archive instead of into it.
 
-        packaged layer realPath        : /show/packed.usdz
-        realPath anchoring             : /show/tex/color.png                 (wrong)
-        ComputeAssetPathRelativeToLayer: /show/packed.usdz[tex/color.png]    (right)
+        packaged layer realPath    : /show/packed.usdz
+        realPath anchoring         : /show/tex/color.png              (wrong)
+        ComputeAssetPathRelativeToLayer: /show/packed.usdz[tex/color.png]  (right)
 
     An explicitly relative path such as ``./tex/color.exr`` anchors to the layer
     directory whether or not the file exists, which is what lets a missing asset
@@ -201,6 +210,7 @@ def is_expected_prefix_name(name: str, prefix_style_re: re.Pattern[str]) -> bool
 
 def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     start = time.perf_counter()
+    error_log = CheckErrorLog()
     prefix_style_re = re.compile(prefix_style_pattern) if prefix_style_pattern else None
     stage = Usd.Stage.Open(str(stage_path))
     if stage is None:
@@ -261,6 +271,7 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
             "unverifiable_asset_count": 0,
             "unverifiable_assets": [],
         },
+        "check_errors": {"count": 0, "examples": []},
         "elapsed_seconds": None,
     }
 
@@ -387,7 +398,7 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     missing_assets: dict[str, set[str]] = defaultdict(set)
     unverifiable_assets: dict[str, set[str]] = defaultdict(set)
     for layer in used_layers:
-        for asset in authored_asset_paths(layer):
+        for asset in authored_asset_paths(layer, error_log):
             status, identifier = classify_authored_asset(layer, asset)
             report["assets"]["authored_asset_count"] += 1
             if status == "resolved":
@@ -422,6 +433,7 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     report["materials"]["unbound_material_prim_count"] = len(material_paths - set(computed_materials))
     report["assets"]["missing_authored_asset_count"] = len(missing_assets)
     report["assets"]["unverifiable_asset_count"] = len(unverifiable_assets)
+    report["check_errors"] = error_log.as_report()
     report["elapsed_seconds"] = round(time.perf_counter() - start, 3)
 
     # Convert defaultdicts for JSON stability.
