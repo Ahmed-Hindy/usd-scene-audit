@@ -13,6 +13,7 @@ from pxr import Sdf, Usd, UsdGeom, UsdUtils
 
 from usd_scene_audit import scene
 from usd_scene_audit.scene import (
+    ASSET_URI_PATTERN,
     asset_identifier,
     classify_authored_asset,
     has_variable_tokens,
@@ -231,11 +232,17 @@ def test_uri_references_are_not_reported_as_missing(tmp_path) -> None:
     assert report["assets"]["unverifiable_asset_count"] == 2
 
 
-def test_windows_drive_letter_is_not_a_uri(tmp_path) -> None:
-    """A URI scheme needs 2+ characters, so C:// is a path, not a scheme."""
-    layer = Sdf.Layer.CreateNew(str(tmp_path / "layer.usda"))
+def test_windows_drive_letter_is_not_a_uri_scheme() -> None:
+    """A URI scheme needs 2+ characters, so C:// is a drive letter, not a scheme.
 
-    assert asset_identifier(layer, "C://tex/color.exr") != "C://tex/color.exr"
+    Asserted against the pattern rather than against asset_identifier's output,
+    because that output is legitimately platform-dependent: on Windows
+    "C://tex/color.exr" is already absolute and anchoring correctly leaves it
+    alone, while on POSIX it is relative and gets anchored to the layer.
+    """
+    assert not ASSET_URI_PATTERN.match("C://tex/color.exr")
+    assert ASSET_URI_PATTERN.match("https://example.com/tex.exr")
+    assert ASSET_URI_PATTERN.match("omniverse://host/a.usd")
 
 
 def test_explicitly_relative_path_anchors_to_the_layer(tmp_path) -> None:
