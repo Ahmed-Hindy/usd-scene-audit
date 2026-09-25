@@ -21,12 +21,24 @@ These are the false-positive guards. A finding against any of them is a bug in t
 | `animated_normals_primvars.usda` | Valid deforming mesh; points, normals, extent, and UVs all time-sampled only |
 | `animated_preroll_extent.usda` | Points carry a pre-roll sample while `extent` covers only the shot range; guards against comparing two attributes at two different times |
 
+| `assets_udim_texture.usda` | Texture authored as a `<UDIM>` pattern, with tiles present in `tex/` |
+
 ## Stages with genuine defects
 
 | Fixture | Expected finding |
 |---|---|
 | `static_mesh_out_of_range_indices.usda` | `out_of_range_face_vertex_indices` |
 | `static_mesh_missing_points.usda` | `missing_points` |
+| `assets_missing_texture.usda` | One missing authored asset (`./tex/absent.exr`) |
+
+## Supporting files
+
+`tex/` holds placeholder texture files for the asset-resolution fixtures. They are
+not real EXRs — asset auditing only asks the resolver whether a path resolves, so
+the contents are irrelevant and small text files keep the repository light.
+
+Fixtures needing binary artifacts, such as a `.usdz` package, are built at test
+runtime into `tmp_path` rather than committed.
 
 ## Stages pinning down known gaps
 

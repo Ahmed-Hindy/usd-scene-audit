@@ -4,16 +4,29 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import time
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from pxr import Sdf, Usd, UsdGeom, UsdShade
+from pxr import Ar, Sdf, Usd, UsdGeom, UsdShade
 
 
 MAX_EXAMPLES = 40
+
+# A URI scheme must be detected before anchoring, because anchoring a path
+# collapses the "//" in "scheme://host" into "scheme:/host".
+ASSET_URI_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9+.\-]*://")
+
+# Asset paths that stand in for a family of files rather than one file. Their
+# existence cannot be decided by resolving the authored string.
+UDIM_TOKEN_PATTERN = re.compile(r"<UDIM>", re.IGNORECASE)
+SEQUENCE_TOKEN_PATTERN = re.compile(r"<f\d*>|<n\d*>|<frame>|\$F\d*|#{2,}", re.IGNORECASE)
+
+# Tiles tried when probing whether a UDIM texture set exists at all. Probing can
+# only ever upgrade an asset to "resolved"; a failed probe never reports missing,
+# because tile numbering is asset-specific.
+UDIM_PROBE_TILES = ("1001", "1002")
 
 COMMON_CONTAINER_NAMES = {
     "geo",
@@ -59,10 +72,10 @@ def authored_asset_paths(layer: Sdf.Layer) -> set[str]:
                 visit(prim_path)
             return
         if isinstance(value, Sdf.AssetPath):
+            # Only the authored path. resolvedPath is derived from it, so adding
+            # both counted a single reference twice.
             if value.path:
                 assets.add(value.path)
-            if value.resolvedPath:
-                assets.add(value.resolvedPath)
             return
         for list_attr in (
             "explicitItems",
@@ -99,16 +112,52 @@ def authored_asset_paths(layer: Sdf.Layer) -> set[str]:
     return assets
 
 
-def resolve_authored_asset(layer: Sdf.Layer, asset_path: str) -> str | None:
-    """Resolve a path authored in a USD layer into an absolute filesystem path."""
-    if not asset_path or asset_path.startswith(("http://", "https://", "omniverse://")):
-        return None
-    if os.path.isabs(asset_path):
-        return os.path.normpath(asset_path)
-    layer_path = layer.realPath or layer.identifier
-    if not layer_path or layer_path.startswith("anon:"):
-        return None
-    return os.path.normpath(os.path.join(os.path.dirname(layer_path), asset_path))
+def has_variable_tokens(asset_path: str) -> bool:
+    """Return true when an asset path names a family of files, not one file."""
+    return bool(UDIM_TOKEN_PATTERN.search(asset_path) or SEQUENCE_TOKEN_PATTERN.search(asset_path))
+
+
+def asset_identifier(layer: Sdf.Layer, asset_path: str) -> str:
+    """Anchor an authored asset path against the layer that authored it.
+
+    Uses ``ArResolver.CreateIdentifier``, which anchors without requiring the
+    asset to exist -- unlike ``Sdf.Layer.ComputeAbsolutePath``, which returns the
+    input unchanged when the asset cannot be resolved and so is unusable for
+    reporting missing assets.
+
+    Note that a bare relative path such as ``tex/color.exr`` is a *search path*
+    in USD and is deliberately left unanchored, because it has no single expected
+    location. Only explicitly relative paths such as ``./tex/color.exr`` anchor
+    to the layer directory.
+    """
+    if ASSET_URI_PATTERN.match(asset_path):
+        return asset_path
+    anchor = layer.realPath or ""
+    if not anchor or layer.identifier.startswith("anon:"):
+        return asset_path
+    return Ar.GetResolver().CreateIdentifier(asset_path, Ar.ResolvedPath(anchor))
+
+
+def classify_authored_asset(layer: Sdf.Layer, asset_path: str) -> tuple[str, str]:
+    """Classify an authored asset path as resolved, missing, or unverifiable.
+
+    Resolution goes through ``Ar`` rather than ``os.path``, so package-relative
+    paths into ``.usdz`` archives and paths served by a custom resolver are
+    judged correctly. ``os.path.exists`` reports both as missing.
+    """
+    resolver = Ar.GetResolver()
+    identifier = asset_identifier(layer, asset_path)
+
+    if has_variable_tokens(asset_path):
+        for tile in UDIM_PROBE_TILES:
+            probe = UDIM_TOKEN_PATTERN.sub(tile, identifier)
+            if probe != identifier and resolver.Resolve(probe):
+                return "resolved", identifier
+        return "unverifiable", identifier
+
+    if resolver.Resolve(identifier):
+        return "resolved", identifier
+    return "missing", identifier
 
 
 def is_expected_prefix_name(name: str, prefix_style_re: re.Pattern[str]) -> bool:
@@ -176,8 +225,11 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
         },
         "assets": {
             "authored_asset_count": 0,
+            "resolved_asset_count": 0,
             "missing_authored_asset_count": 0,
             "missing_authored_assets": [],
+            "unverifiable_asset_count": 0,
+            "unverifiable_assets": [],
         },
         "elapsed_seconds": None,
     }
@@ -303,18 +355,28 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
             add_example(report["materials"]["materials_without_surface_output"], material_path)
 
     missing_assets: dict[str, set[str]] = defaultdict(set)
+    unverifiable_assets: dict[str, set[str]] = defaultdict(set)
     for layer in used_layers:
         for asset in authored_asset_paths(layer):
-            resolved = resolve_authored_asset(layer, asset)
-            if not resolved:
-                continue
+            status, identifier = classify_authored_asset(layer, asset)
             report["assets"]["authored_asset_count"] += 1
-            if not os.path.exists(resolved):
-                missing_assets[resolved].add(layer.identifier)
+            if status == "resolved":
+                report["assets"]["resolved_asset_count"] += 1
+            elif status == "missing":
+                missing_assets[identifier].add(layer.identifier)
+            else:
+                unverifiable_assets[identifier].add(layer.identifier)
 
     for asset, layers in sorted(missing_assets.items()):
         add_example(
             report["assets"]["missing_authored_assets"],
+            f"{asset} (authored from {len(layers)} layer(s))",
+            max_items=120,
+        )
+
+    for asset, layers in sorted(unverifiable_assets.items()):
+        add_example(
+            report["assets"]["unverifiable_assets"],
             f"{asset} (authored from {len(layers)} layer(s))",
             max_items=120,
         )
@@ -329,6 +391,7 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     report["materials"]["bound_materials_used_by_mesh_count"] = len(computed_materials)
     report["materials"]["unbound_material_prim_count"] = len(material_paths - set(computed_materials))
     report["assets"]["missing_authored_asset_count"] = len(missing_assets)
+    report["assets"]["unverifiable_asset_count"] = len(unverifiable_assets)
     report["elapsed_seconds"] = round(time.perf_counter() - start, 3)
 
     # Convert defaultdicts for JSON stability.

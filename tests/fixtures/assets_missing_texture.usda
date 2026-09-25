@@ -1,0 +1,38 @@
+#usda 1.0
+(
+    """A material referencing a texture that genuinely is not on disk.
+
+    `./tex/absent.exr` is explicitly layer-relative and has no variable tokens,
+    so it anchors to a single expected location and must be reported as missing.
+    This is the counterpart to the UDIM and package fixtures: routing resolution
+    through Ar must not stop real missing assets from being found.
+    """
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def Scope "mtl"
+    {
+        def Material "Surface"
+        {
+            token outputs:surface.connect = </World/mtl/Surface/preview.outputs:surface>
+
+            def Shader "preview"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor.connect = </World/mtl/Surface/albedo.outputs:rgb>
+                token outputs:surface
+            }
+
+            def Shader "albedo"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @./tex/absent.exr@
+                float3 outputs:rgb
+            }
+        }
+    }
+}

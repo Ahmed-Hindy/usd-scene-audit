@@ -119,6 +119,12 @@ uv run usd-names-hierarchy-audit "F:\path\to\OpenChessSet\chess_set.usda" --pref
 
 Audits high-level scene composition, material bindings, material references, and broad naming counts. Prefix-style naming checks are disabled by default and the active naming policy is recorded in the JSON report.
 
+Authored asset references are resolved through USD's asset resolution layer (`Ar`), so package-relative paths into `.usdz` archives and paths served by a custom resolver are judged correctly. Each authored reference is classified as:
+
+- `resolved_asset_count`: the resolver found the asset.
+- `missing_authored_asset_count`: the asset does not resolve, listed in `missing_authored_assets`.
+- `unverifiable_asset_count`: the path names a family of files rather than one file, such as a `<UDIM>` texture set or a `<f4>` frame sequence, and no tile probe resolved. Listed in `unverifiable_assets` and never counted as missing, because tile and frame numbering are asset-specific.
+
 Example:
 
 ```powershell
