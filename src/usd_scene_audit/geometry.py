@@ -98,7 +98,7 @@ def normalized_path(path: str) -> str:
     return re.sub(r"^/__Prototype_\d+", "/<prototype>", path)
 
 
-def resolve_time_code(frame: float | None) -> Usd.TimeCode:
+def resolve_time_code(frame: float | None, stage: Usd.Stage | None = None) -> Usd.TimeCode:
     """Return the time code used to read geometry attributes.
 
     Reading at ``Usd.TimeCode.Default()`` resolves only an attribute's default
@@ -106,13 +106,31 @@ def resolve_time_code(frame: float | None) -> Usd.TimeCode:
     with no default, so a default-time read returns ``None`` and the mesh looks
     like it is missing its points entirely.
 
-    ``EarliestTime()`` resolves to the first authored time sample when one
-    exists and falls back to the default value otherwise, so it is safe for
-    static and animated geometry alike.
+    Preference order:
+
+    1. An explicitly requested ``frame``.
+    2. The stage's authored ``startTimeCode``, when it has one.
+    3. ``EarliestTime()``.
+
+    Options 1 and 2 are a single concrete moment, which matters because several
+    checks compare two attributes against each other. ``EarliestTime()`` resolves
+    *each attribute* at its own first authored sample, so a mesh whose extent is
+    authored only over the shot range while its points also carry pre-roll
+    samples would be compared across two different moments and report a
+    mismatch that does not exist at any real frame. Preferring the authored
+    ``startTimeCode`` keeps every attribute on the same frame and makes the
+    default audit describe the shot rather than whatever pre-roll sample happens
+    to sort earliest.
+
+    ``EarliestTime()`` remains the fallback for stages with no authored time
+    range: it resolves to the first authored sample when one exists and falls
+    back to the default value otherwise, so it is safe for static geometry too.
     """
-    if frame is None:
-        return Usd.TimeCode.EarliestTime()
-    return Usd.TimeCode(float(frame))
+    if frame is not None:
+        return Usd.TimeCode(float(frame))
+    if stage is not None and stage.HasAuthoredTimeCodeRange():
+        return Usd.TimeCode(stage.GetStartTimeCode())
+    return Usd.TimeCode.EarliestTime()
 
 
 def describe_time_code(time_code: Usd.TimeCode) -> str | float:
@@ -980,7 +998,6 @@ def analyze(
     """Analyze all meshes in a USD stage and its prototypes."""
     started = time.perf_counter()
     phase_timer = PhaseTimer()
-    time_code = resolve_time_code(frame)
     face_analysis_engine = resolve_face_analysis_engine(geometry_engine)
     if audit_mode not in AUDIT_MODES:
         raise ValueError(f"Unsupported audit mode: {audit_mode}")
@@ -991,6 +1008,8 @@ def analyze(
         stage = Usd.Stage.Open(str(stage_path))
     if stage is None:
         raise RuntimeError(f"Could not open stage: {stage_path}")
+
+    time_code = resolve_time_code(frame, stage)
 
     with phase_timer.phase("stage.traverse"):
         prims, prototype_count = prims_with_prototypes(stage)

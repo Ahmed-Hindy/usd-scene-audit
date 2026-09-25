@@ -1,0 +1,35 @@
+#usda 1.0
+(
+    """A valid deforming mesh whose attributes are sampled over different frame
+    ranges: `points` carries a pre-roll sample at frame 1, while `extent` is
+    authored only over the shot range that `startTimeCode` declares.
+
+    Reading each attribute at its own earliest sample compares the frame-1
+    points against the frame-2 extent and reports a bounds mismatch that exists
+    at no real frame. Resolving every attribute at one concrete time code -- the
+    stage's authored startTimeCode -- is what keeps this stage clean.
+
+    The audit must report zero findings for this stage.
+    """
+    defaultPrim = "World"
+    endTimeCode = 2
+    metersPerUnit = 1
+    startTimeCode = 2
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def Mesh "Preroll"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points.timeSamples = {
+            1: [(0, 0, 0), (1, 0, 0), (0, 1, 0)],
+            2: [(0, 0, 9), (1, 0, 9), (0, 1, 9)],
+        }
+        float3[] extent.timeSamples = {
+            2: [(0, 0, 9), (1, 1, 9)],
+        }
+    }
+}

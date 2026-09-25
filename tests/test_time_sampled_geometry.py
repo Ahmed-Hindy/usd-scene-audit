@@ -88,10 +88,61 @@ def test_topology_change_across_time_reports_no_false_findings(stage_path) -> No
 # --------------------------------------------------------------- time code plumbing
 
 
-def test_resolve_time_code_defaults_to_earliest() -> None:
-    """With no frame requested, attributes resolve at the earliest time sample."""
+def test_resolve_time_code_falls_back_to_earliest() -> None:
+    """With no frame and no stage time range, resolve at the earliest sample."""
     assert resolve_time_code(None).IsEarliestTime()
     assert not resolve_time_code(None).IsDefault()
+
+
+def test_resolve_time_code_prefers_authored_start_time(stage_path) -> None:
+    """A stage that declares its time range is audited at the start of that range.
+
+    One concrete time code keeps every attribute on the same frame. EarliestTime
+    resolves each attribute at its own first sample, which makes checks that
+    compare two attributes report mismatches that exist at no real frame.
+    """
+    stage = Usd.Stage.Open(str(stage_path("animated_preroll_extent.usda")))
+
+    time_code = resolve_time_code(None, stage)
+
+    assert not time_code.IsEarliestTime()
+    assert time_code.GetValue() == 2.0
+
+
+def test_resolve_time_code_ignores_stage_when_frame_is_explicit(stage_path) -> None:
+    """An explicit frame always wins over the stage's authored range."""
+    stage = Usd.Stage.Open(str(stage_path("animated_preroll_extent.usda")))
+
+    assert resolve_time_code(9.0, stage).GetValue() == 9.0
+
+
+def test_stage_without_authored_range_uses_earliest(stage_path) -> None:
+    """A static stage with no time metadata still falls back to earliest."""
+    stage = Usd.Stage.Open(str(stage_path("static_mesh_clean.usda")))
+
+    assert resolve_time_code(None, stage).IsEarliestTime()
+
+
+def test_preroll_sampling_does_not_create_false_findings(stage_path) -> None:
+    """Attributes sampled over different frame ranges must not be cross-compared."""
+    report = audit(stage_path("animated_preroll_extent.usda"))
+
+    assert report["time_code"] == 2.0
+    assert report["summary_counts"] == {}
+
+
+def test_time_sampled_authoring_defects_are_caught(stage_path) -> None:
+    """Defects in time-sampled normals and extent must be reported.
+
+    The clean animated fixtures assert an absence of findings, which a regressed
+    normals or extent read satisfies for the wrong reason: at default time both
+    resolve to None and their checks exit quietly. This fixture fails if either
+    read stops resolving real data.
+    """
+    report = audit(stage_path("animated_mesh_authoring_defects.usda"))
+
+    assert report["summary_counts"]["normals_length_mismatch"] == 1
+    assert report["summary_counts"]["authored_extent_mismatch"] == 1
 
 
 def test_resolve_time_code_honours_explicit_frame() -> None:
@@ -111,13 +162,16 @@ def test_describe_time_code_is_json_friendly() -> None:
 
 def test_report_records_evaluated_time_code(stage_path) -> None:
     """The evaluated time code belongs in the report for reproducibility."""
+    # This fixture declares startTimeCode = 1, so the default run reports it.
     default_run = audit(stage_path("animated_points_valid.usda"))
     framed_run = audit(stage_path("animated_points_valid.usda"), frame=3.0)
+    static_run = audit(stage_path("static_mesh_clean.usda"))
 
     assert default_run["requested_frame"] is None
-    assert default_run["time_code"] == "earliest"
+    assert default_run["time_code"] == 1.0
     assert framed_run["requested_frame"] == 3.0
     assert framed_run["time_code"] == 3.0
+    assert static_run["time_code"] == "earliest"
 
 
 def test_frame_selection_changes_the_data_read(stage_path) -> None:

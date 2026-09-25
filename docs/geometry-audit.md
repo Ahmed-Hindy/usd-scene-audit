@@ -13,21 +13,35 @@ This is important for instanceable USD assets because ordinary traversal sees on
 
 ## Time Samples
 
-Mesh attributes are read at a single time code, which defaults to the earliest authored time sample.
+Mesh attributes are read at one time code per audit, chosen in this order:
+
+1. An explicitly requested `--frame`.
+2. The stage's authored `startTimeCode`, when it has one.
+3. `Usd.TimeCode.EarliestTime()`.
 
 This matters because USD attribute resolution distinguishes an attribute's *default value* from its *time samples*. Deforming geometry — simulation caches, cloth, crowd agents, imported Alembic — normally authors `points` purely as time samples with no default value at all. Reading such an attribute at `Usd.TimeCode.Default()` resolves to nothing, which previously made every animated mesh look like it was missing its points, and in turn made every face-vertex index look out of range.
 
-`Usd.TimeCode.EarliestTime()` resolves to the first authored time sample when one exists and falls back to the default value otherwise, so it is correct for static and animated geometry alike.
+### Why one concrete time code, not `EarliestTime()` everywhere
 
-Select an explicit frame with `--frame`:
+`EarliestTime()` is not a single moment. It resolves *each attribute* at that attribute's own first authored sample. Several checks compare two attributes against each other — authored `extent` against computed point bounds, authored `normals` length against the point count — so a mesh whose attributes are sampled over different frame ranges would be compared across two different moments.
+
+A cache with pre-roll on `points` but `extent` authored only over the shot range reports an extent mismatch that exists at no real frame. Preferring the stage's authored `startTimeCode` keeps every attribute on the same frame, and makes the default audit describe the shot rather than whatever pre-roll sample happens to sort earliest. `tests/fixtures/animated_preroll_extent.usda` pins this behaviour.
+
+`EarliestTime()` remains the fallback for stages with no authored time range: it resolves to the first authored sample when one exists and falls back to the default value otherwise, so static geometry is handled correctly too.
+
+### Selecting a frame
 
 ```powershell
 uv run usd-geometry-audit scene.usd --frame 1001
 ```
 
-Reports record `requested_frame` (the value passed, or `null`) and `time_code` (`"earliest"`, `"default"`, or the numeric frame evaluated), so a report states which moment in time it describes.
+Reports record `requested_frame` (the value passed, or `null`) and `time_code` (the numeric frame evaluated, or `"earliest"`/`"default"`), so a report states which moment in time it describes.
 
-Defects that only exist *across* time — a point count that changes mid-sequence, or points that go non-finite at one frame — are not detected by a single-sample audit. `tests/fixtures/animated_topology_change.usda` captures that case and is the regression target for adding time-sampled checks.
+### What a single-frame audit can and cannot find
+
+Each audit evaluates one time code, so a defect is found only if it is present at that time code. A defect at a *specific* frame is reachable by auditing that frame: `--frame 5` finds a point that goes non-finite at frame 5.
+
+What a single-frame audit cannot establish is that a value *changed* between frames — for example that a point count is 3 at one frame and 1 at another while `faceVertexIndices` stays static. That requires comparing samples, which needs a sampling pass. `tests/fixtures/animated_topology_change.usda` captures that case and is the regression target for adding time-sampled checks.
 
 ## Mesh Categories
 
