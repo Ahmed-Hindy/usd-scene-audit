@@ -61,6 +61,14 @@ Example:
 uv run usd-geometry-audit "F:\path\to\OpenChessSet\chess_set.usda" --json-out usd_geometry_audit.json
 ```
 
+Mesh attributes are read at the earliest authored time sample, so deforming geometry such as simulation caches, cloth, and crowd agents is audited against real point data rather than looking like it has no points at all. Audit a specific frame with `--frame`:
+
+```powershell
+uv run usd-geometry-audit "F:\path\to\OpenChessSet\chess_set.usda" --frame 1001
+```
+
+Every report records both `requested_frame` and the `time_code` that was actually evaluated.
+
 Choose a performance/coverage mode:
 
 ```powershell

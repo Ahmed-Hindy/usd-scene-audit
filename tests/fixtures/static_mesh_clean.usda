@@ -1,0 +1,29 @@
+#usda 1.0
+(
+    """A wholly valid static mesh: authored extent matching its points, vertex
+    normals, and a UV primvar.
+
+    This is the false-positive guard for the whole corpus. Any finding reported
+    against this stage is a bug in the audit, not in the asset.
+    """
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def Mesh "Plane"
+    {
+        float3[] extent = [(0, 0, 0), (1, 1, 0)]
+        int[] faceVertexCounts = [4]
+        int[] faceVertexIndices = [0, 1, 3, 2]
+        normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1)] (
+            interpolation = "vertex"
+        )
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)]
+        texCoord2f[] primvars:st = [(0, 0), (1, 0), (0, 1), (1, 1)] (
+            interpolation = "vertex"
+        )
+    }
+}

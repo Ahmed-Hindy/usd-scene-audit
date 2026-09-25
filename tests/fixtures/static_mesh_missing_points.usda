@@ -1,0 +1,22 @@
+#usda 1.0
+(
+    """A mesh with face topology but no authored points at any time.
+
+    Distinct from the animated fixtures: here `points` genuinely has no value,
+    neither a default nor a time sample. The audit must still report
+    missing_points, so that widening the time-code read does not turn a real
+    defect into silence.
+    """
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def Mesh "NoPoints"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+    }
+}

@@ -98,6 +98,32 @@ def normalized_path(path: str) -> str:
     return re.sub(r"^/__Prototype_\d+", "/<prototype>", path)
 
 
+def resolve_time_code(frame: float | None) -> Usd.TimeCode:
+    """Return the time code used to read geometry attributes.
+
+    Reading at ``Usd.TimeCode.Default()`` resolves only an attribute's default
+    value. Deforming geometry normally authors ``points`` purely as time samples
+    with no default, so a default-time read returns ``None`` and the mesh looks
+    like it is missing its points entirely.
+
+    ``EarliestTime()`` resolves to the first authored time sample when one
+    exists and falls back to the default value otherwise, so it is safe for
+    static and animated geometry alike.
+    """
+    if frame is None:
+        return Usd.TimeCode.EarliestTime()
+    return Usd.TimeCode(float(frame))
+
+
+def describe_time_code(time_code: Usd.TimeCode) -> str | float:
+    """Return a JSON-friendly description of an evaluated time code."""
+    if time_code.IsEarliestTime():
+        return "earliest"
+    if time_code.IsDefault():
+        return "default"
+    return float(time_code.GetValue())
+
+
 def prims_with_prototypes(stage: Usd.Stage) -> tuple[list[Usd.Prim], int]:
     """Return ordinary stage traversal plus prototype contents."""
     prims = list(stage.Traverse())
@@ -171,9 +197,11 @@ def triangle_area(a, b, c) -> float:
     return 0.5 * Gf.Cross(ab, ac).GetLength()
 
 
-def authored_extent_bounds(mesh: UsdGeom.Mesh):
+def authored_extent_bounds(mesh: UsdGeom.Mesh, time_code: Usd.TimeCode | None = None):
     """Return authored extent as a bounds tuple, or None."""
-    extent = mesh.GetExtentAttr().Get()
+    if time_code is None:
+        time_code = Usd.TimeCode.EarliestTime()
+    extent = mesh.GetExtentAttr().Get(time_code)
     if not extent or len(extent) != 2:
         return None
     return (vec3_tuple(extent[0]), vec3_tuple(extent[1]))
@@ -647,8 +675,11 @@ def validate_primvars(
     point_count: int,
     face_count: int,
     face_vertex_count: int,
+    time_code: Usd.TimeCode | None = None,
 ) -> list[dict[str, Any]]:
     """Validate authored primvar lengths, with special attention to UV-like primvars."""
+    if time_code is None:
+        time_code = Usd.TimeCode.EarliestTime()
     issues: list[dict[str, Any]] = []
     primvars = UsdGeom.PrimvarsAPI(prim).GetPrimvars()
     for primvar in primvars:
@@ -659,9 +690,9 @@ def validate_primvars(
         name = primvar.GetPrimvarName()
         interpolation = primvar.GetInterpolation() or ""
         expected = expected_primvar_length(interpolation, point_count, face_count, face_vertex_count)
-        value = primvar.Get()
+        value = primvar.Get(time_code)
         value_len = attr_length(value)
-        indices = primvar.GetIndices()
+        indices = primvar.GetIndices(time_code)
         indices_len = attr_length(indices)
         is_indexed = indices is not None and indices_len > 0
         element_size = max(1, int(primvar.GetElementSize() or 1))
@@ -730,10 +761,13 @@ def validate_normals(
     point_count: int,
     face_count: int,
     face_vertex_count: int,
+    time_code: Usd.TimeCode | None = None,
 ) -> list[dict[str, Any]]:
     """Validate authored normals length and finite values."""
+    if time_code is None:
+        time_code = Usd.TimeCode.EarliestTime()
     issues: list[dict[str, Any]] = []
-    normals = mesh.GetNormalsAttr().Get()
+    normals = mesh.GetNormalsAttr().Get(time_code)
     if normals is None:
         return issues
     interpolation = mesh.GetNormalsInterpolation() or ""
@@ -783,8 +817,11 @@ def mesh_record(
     audit_mode: str,
     phase_timer: PhaseTimer,
     face_cache: FaceAnalysisCache,
+    time_code: Usd.TimeCode | None = None,
 ) -> dict[str, Any]:
     """Analyze a single mesh prim and return a report record."""
+    if time_code is None:
+        time_code = Usd.TimeCode.EarliestTime()
     path = str(prim.GetPath())
     name = prim.GetName()
     mesh = UsdGeom.Mesh(prim)
@@ -793,9 +830,9 @@ def mesh_record(
     details: dict[str, Any] = {}
 
     with phase_timer.phase("mesh.read_attributes"):
-        points = mesh.GetPointsAttr().Get()
-        counts = mesh.GetFaceVertexCountsAttr().Get()
-        indices = mesh.GetFaceVertexIndicesAttr().Get()
+        points = mesh.GetPointsAttr().Get(time_code)
+        counts = mesh.GetFaceVertexCountsAttr().Get(time_code)
+        indices = mesh.GetFaceVertexIndicesAttr().Get(time_code)
 
     point_count = len(points) if points is not None else 0
     face_count = len(counts) if counts is not None else 0
@@ -863,19 +900,19 @@ def mesh_record(
 
     with phase_timer.phase("mesh.bounds_extent"):
         bounds = bbox_from_points(points if points is not None else [])
-        extent_delta = bounds_mismatch(authored_extent_bounds(mesh), bounds, extent_tolerance)
+        extent_delta = bounds_mismatch(authored_extent_bounds(mesh, time_code), bounds, extent_tolerance)
         if extent_delta is not None:
             issues["authored_extent_mismatch"] += 1
             details["authored_extent_max_delta"] = extent_delta
 
     if audit_mode != "fast":
         with phase_timer.phase("mesh.normals"):
-            for normal_issue in validate_normals(mesh, point_count, face_count, expected_index_count):
+            for normal_issue in validate_normals(mesh, point_count, face_count, expected_index_count, time_code):
                 issues[normal_issue["issue"]] += 1
                 add_example(details, normal_issue["issue"], normal_issue, 10)
 
         with phase_timer.phase("mesh.primvars"):
-            for primvar_issue in validate_primvars(prim, point_count, face_count, expected_index_count):
+            for primvar_issue in validate_primvars(prim, point_count, face_count, expected_index_count, time_code):
                 issues[primvar_issue["issue"]] += 1
                 add_example(details, primvar_issue["issue"], primvar_issue, 10)
 
@@ -938,10 +975,12 @@ def analyze(
     geometry_engine: str = "auto",
     audit_mode: str = "exhaustive",
     mesh_cache_mode: str = "off",
+    frame: float | None = None,
 ) -> dict[str, Any]:
     """Analyze all meshes in a USD stage and its prototypes."""
     started = time.perf_counter()
     phase_timer = PhaseTimer()
+    time_code = resolve_time_code(frame)
     face_analysis_engine = resolve_face_analysis_engine(geometry_engine)
     if audit_mode not in AUDIT_MODES:
         raise ValueError(f"Unsupported audit mode: {audit_mode}")
@@ -962,7 +1001,7 @@ def analyze(
     category_issue_counts: dict[str, Counter[str]] = defaultdict(Counter)
     examples: dict[str, list[Any]] = {}
     records: list[dict[str, Any]] = []
-    xform_cache = UsdGeom.XformCache(Usd.TimeCode.Default())
+    xform_cache = UsdGeom.XformCache(time_code)
 
     for prim in mesh_prims:
         record = mesh_record(
@@ -975,6 +1014,7 @@ def analyze(
             audit_mode,
             phase_timer,
             face_cache,
+            time_code,
         )
         records.append(record)
         category = record["category"]
@@ -1049,6 +1089,8 @@ def analyze(
         "audit_mode": audit_mode,
         "geometry_engine": geometry_engine,
         "face_analysis_engine": face_analysis_engine,
+        "requested_frame": frame,
+        "time_code": describe_time_code(time_code),
         "mesh_cache": face_cache.stats(),
         "summary_counts": dict(summary_counts.most_common()),
         "category_counts": dict(category_counts.most_common()),
@@ -1071,6 +1113,7 @@ def print_summary(report: dict[str, Any]) -> None:
     print(f"Stage: {report['stage']}")
     print(f"Meshes scanned: {report['mesh_count']} (prototypes: {report['prototype_count']})")
     print(f"Audit mode: {report['audit_mode']}")
+    print(f"Evaluated at time code: {report['time_code']}")
     print(f"Face analysis engine: {report['face_analysis_engine']}")
     print(f"Mesh cache: {report['mesh_cache']}")
     print(f"Categories: {report['category_counts']}")
@@ -1112,6 +1155,15 @@ def main() -> None:
         default="off",
         help="Optional cache for duplicate face arrays. face-hash can help repeated geometry but costs hashing time.",
     )
+    parser.add_argument(
+        "--frame",
+        type=float,
+        default=None,
+        help=(
+            "Time code at which to read mesh attributes. Defaults to the earliest authored "
+            "time sample, falling back to the default value for static geometry."
+        ),
+    )
     args = parser.parse_args()
 
     report = analyze(
@@ -1122,6 +1174,7 @@ def main() -> None:
         args.geometry_engine,
         args.audit_mode,
         args.mesh_cache,
+        args.frame,
     )
     if args.json_out:
         args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")

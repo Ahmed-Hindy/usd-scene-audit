@@ -11,6 +11,24 @@ The command scans:
 
 This is important for instanceable USD assets because ordinary traversal sees only the instance prims, not the prototype mesh contents.
 
+## Time Samples
+
+Mesh attributes are read at a single time code, which defaults to the earliest authored time sample.
+
+This matters because USD attribute resolution distinguishes an attribute's *default value* from its *time samples*. Deforming geometry — simulation caches, cloth, crowd agents, imported Alembic — normally authors `points` purely as time samples with no default value at all. Reading such an attribute at `Usd.TimeCode.Default()` resolves to nothing, which previously made every animated mesh look like it was missing its points, and in turn made every face-vertex index look out of range.
+
+`Usd.TimeCode.EarliestTime()` resolves to the first authored time sample when one exists and falls back to the default value otherwise, so it is correct for static and animated geometry alike.
+
+Select an explicit frame with `--frame`:
+
+```powershell
+uv run usd-geometry-audit scene.usd --frame 1001
+```
+
+Reports record `requested_frame` (the value passed, or `null`) and `time_code` (`"earliest"`, `"default"`, or the numeric frame evaluated), so a report states which moment in time it describes.
+
+Defects that only exist *across* time — a point count that changes mid-sequence, or points that go non-finite at one frame — are not detected by a single-sample audit. `tests/fixtures/animated_topology_change.usda` captures that case and is the regression target for adding time-sampled checks.
+
 ## Mesh Categories
 
 Every mesh is included. Categories only make the report easier to read:
@@ -23,6 +41,7 @@ Every mesh is included. Categories only make the report easier to read:
 
 The JSON report contains:
 
+- `requested_frame` and `time_code`: the moment in time the audit describes
 - `summary_counts`: total issue counts
 - `category_counts`: mesh counts by category
 - `category_issue_counts`: issue counts by category

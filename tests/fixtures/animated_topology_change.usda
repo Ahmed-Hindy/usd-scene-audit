@@ -1,0 +1,33 @@
+#usda 1.0
+(
+    """A mesh whose point count changes mid-sequence while faceVertexIndices
+    stays static, and whose points go non-finite at frame 5.
+
+    Both defects are real and both are invisible to a single-sample audit: at
+    the earliest time sample this mesh is perfectly valid. Detecting them
+    requires sampling across time, which is tracked separately.
+
+    This fixture exists to pin down current behaviour -- the audit must report
+    no *false* findings here -- and to be the regression target once
+    time-varying checks land.
+    """
+    defaultPrim = "World"
+    endTimeCode = 8
+    metersPerUnit = 1
+    startTimeCode = 1
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def Mesh "BadCache"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points.timeSamples = {
+            1: [(0, 0, 0), (1, 0, 0), (0, 1, 0)],
+            5: [(nan, 0, 0), (1, 0, 0), (0, 1, 0)],
+            8: [(0, 0, 0)],
+        }
+    }
+}
