@@ -51,6 +51,41 @@ class PhaseTimer:
         return {key: round(value, 3) for key, value in sorted(self.timings.items())}
 
 
+class CheckErrorLog:
+    """Record checks that failed to run.
+
+    A check that raised and a check that passed used to produce identical
+    output: nothing. For an audit tool that is the worst failure mode, because
+    "0 issues" cannot be distinguished from "the analysis partially failed".
+
+    Failures are recorded rather than narrowed away on purpose. One unusual prim
+    must not abort a multi-minute audit of a large stage, so the broad catch
+    stays -- what changes is that it is no longer silent. The recorded exception
+    types are what will tell us which excepts can safely be narrowed later.
+    """
+
+    def __init__(self, limit: int = 40) -> None:
+        self.entries: list[dict[str, str]] = []
+        self.count = 0
+        self.limit = limit
+
+    def record(self, check: str, subject: str, error: BaseException) -> None:
+        """Record one failed check, keeping the example list bounded."""
+        self.count += 1
+        if len(self.entries) < self.limit:
+            self.entries.append(
+                {
+                    "check": check,
+                    "subject": subject,
+                    "error": f"{type(error).__name__}: {error}",
+                }
+            )
+
+    def as_report(self) -> dict[str, Any]:
+        """Return a JSON-friendly summary of failed checks."""
+        return {"count": self.count, "examples": self.entries}
+
+
 class FaceAnalysisCache:
     """Cache exact face-analysis results for duplicate mesh arrays."""
 
@@ -240,7 +275,9 @@ def bounds_mismatch(
     return max_delta if max_delta > tolerance else None
 
 
-def expected_primvar_length(interpolation: str, point_count: int, face_count: int, face_vertex_count: int) -> int | None:
+def expected_primvar_length(
+    interpolation: str, point_count: int, face_count: int, face_vertex_count: int
+) -> int | None:
     """Return expected primvar element count for a USD interpolation."""
     if interpolation == "constant":
         return 1
@@ -816,12 +853,22 @@ def validate_normals(
     return issues
 
 
-def transform_determinant(prim: Usd.Prim, xform_cache: UsdGeom.XformCache) -> float | None:
-    """Return local-to-world transform determinant, if computable."""
+def transform_determinant(
+    prim: Usd.Prim,
+    xform_cache: UsdGeom.XformCache,
+    error_log: CheckErrorLog | None = None,
+) -> float | None:
+    """Return local-to-world transform determinant, if computable.
+
+    A failure is recorded in ``error_log`` rather than silently returning None,
+    which the caller would otherwise read as "this transform is fine".
+    """
     try:
         transform = xform_cache.GetLocalToWorldTransform(prim)
         return float(transform.GetDeterminant())
-    except Exception:
+    except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
+        if error_log is not None:
+            error_log.record("transform_determinant", str(prim.GetPath()), error)
         return None
 
 
@@ -836,6 +883,7 @@ def mesh_record(
     phase_timer: PhaseTimer,
     face_cache: FaceAnalysisCache,
     time_code: Usd.TimeCode | None = None,
+    error_log: CheckErrorLog | None = None,
 ) -> dict[str, Any]:
     """Analyze a single mesh prim and return a report record."""
     if time_code is None:
@@ -935,7 +983,7 @@ def mesh_record(
                 add_example(details, primvar_issue["issue"], primvar_issue, 10)
 
     with phase_timer.phase("mesh.transforms"):
-        determinant = transform_determinant(prim, xform_cache)
+        determinant = transform_determinant(prim, xform_cache, error_log)
         if determinant is not None:
             if abs(determinant) <= 1e-12:
                 issues["near_zero_transform_determinant"] += 1
@@ -1004,6 +1052,7 @@ def analyze(
     if mesh_cache_mode not in MESH_CACHE_MODES:
         raise ValueError(f"Unsupported mesh cache mode: {mesh_cache_mode}")
     face_cache = FaceAnalysisCache(enabled=mesh_cache_mode == "face-hash")
+    error_log = CheckErrorLog()
     with phase_timer.phase("stage.open"):
         stage = Usd.Stage.Open(str(stage_path))
     if stage is None:
@@ -1034,6 +1083,7 @@ def analyze(
             phase_timer,
             face_cache,
             time_code,
+            error_log,
         )
         records.append(record)
         category = record["category"]
@@ -1113,9 +1163,12 @@ def analyze(
         "mesh_cache": face_cache.stats(),
         "summary_counts": dict(summary_counts.most_common()),
         "category_counts": dict(category_counts.most_common()),
-        "category_issue_counts": {category: dict(counter.most_common()) for category, counter in category_issue_counts.items()},
+        "category_issue_counts": {
+            category: dict(counter.most_common()) for category, counter in category_issue_counts.items()
+        },
         "serious_geometry_failures": serious_geometry_failures,
         "likely_benign_collision_helper_warnings": likely_benign_collision_helper_warnings,
+        "check_errors": error_log.as_report(),
         "examples": examples,
         "worst_meshes": [compact(record) for record in worst_meshes],
         "largest_meshes_by_points": [compact(record) for record in largest_by_points],
@@ -1138,6 +1191,9 @@ def print_summary(report: dict[str, Any]) -> None:
     print(f"Categories: {report['category_counts']}")
     print(f"Serious geometry failures: {report['serious_geometry_failures']}")
     print(f"Likely benign collision/helper warnings: {report['likely_benign_collision_helper_warnings']}")
+    check_errors = report["check_errors"]["count"]
+    if check_errors:
+        print(f"Checks that failed to run: {check_errors} (see check_errors in the JSON report)")
     print("Summary counts:")
     for issue, count in report["summary_counts"].items():
         print(f"  {issue}: {count}")
