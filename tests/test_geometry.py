@@ -9,7 +9,6 @@ from pxr import Gf, Sdf, Usd, UsdGeom, Vt
 from usd_scene_audit import geometry
 from usd_scene_audit.geometry import (
     FaceAnalysisCache,
-    PhaseTimer,
     analyze_face_geometry,
     mesh_record,
     resolve_face_analysis_engine,
@@ -112,8 +111,8 @@ def test_face_geometry_engines_report_same_issues() -> None:
     counts = np.array([3, 4, 3], dtype=np.int64)
     indices = np.array([0, 1, 2, 0, 1, 1, 3, 0, 3, 4], dtype=np.int64)
 
-    numpy_issues, _ = analyze_face_geometry(counts, indices, points, 5, 1e-12, "numpy")
-    numba_issues, _ = analyze_face_geometry(counts, indices, points, 5, 1e-12, "numba")
+    numpy_issues, _ = analyze_face_geometry(counts, indices, points, 5, face_analysis_engine="numpy")
+    numba_issues, _ = analyze_face_geometry(counts, indices, points, 5, face_analysis_engine="numba")
 
     assert dict(numba_issues) == dict(numpy_issues)
     assert numba_issues["faces_with_repeated_vertices"] == 1
@@ -139,7 +138,7 @@ def test_mesh_record_skips_deep_face_checks_when_index_lengths_mismatch() -> Non
     mesh.CreateFaceVertexIndicesAttr(Vt.IntArray([0, 1]))
     cache = UsdGeom.XformCache(Usd.TimeCode.Default())
 
-    record = mesh_record(mesh.GetPrim(), 1e-12, 1e6, 1e-4, cache, "numpy", "exhaustive", PhaseTimer(), FaceAnalysisCache(False))
+    record = mesh_record(mesh.GetPrim(), xform_cache=cache)
 
     assert record["issues"]["face_vertex_count_index_length_mismatch"] == 1
 
@@ -155,8 +154,6 @@ def test_fast_face_mode_skips_deep_face_checks() -> None:
         indices,
         points,
         3,
-        1e-12,
-        "numpy",
         check_repeated_vertices=False,
         check_zero_area=False,
     )
@@ -172,8 +169,8 @@ def test_face_analysis_cache_reuses_duplicate_array_results() -> None:
     indices = np.array([0, 1, 2], dtype=np.int64)
     face_cache = FaceAnalysisCache(True)
 
-    first, _ = analyze_face_geometry(counts, indices, points, 3, 1e-12, "numpy", face_cache=face_cache)
-    second, _ = analyze_face_geometry(counts.copy(), indices.copy(), points.copy(), 3, 1e-12, "numpy", face_cache=face_cache)
+    first, _ = analyze_face_geometry(counts, indices, points, 3, face_cache=face_cache)
+    second, _ = analyze_face_geometry(counts.copy(), indices.copy(), points.copy(), 3, face_cache=face_cache)
 
     assert dict(first) == dict(second)
     assert face_cache.stats()["hits"] == 1
@@ -197,7 +194,7 @@ def test_face_cache_hashes_arrays_only_when_enabled(monkeypatch, cache_state, ex
     counts = np.array([3], dtype=np.int64)
     indices = np.array([0, 1, 2], dtype=np.int64)
 
-    issues, _ = analyze_face_geometry(counts, indices, points, 3, 1e-12, "numpy", face_cache=face_cache)
+    issues, _ = analyze_face_geometry(counts, indices, points, 3, face_cache=face_cache)
 
     assert dict(issues) == {}
     assert bool(calls) is expect_hashing
@@ -209,9 +206,9 @@ def test_analyze_with_mesh_cache_off_does_not_hash_arrays(monkeypatch, stage_pat
     real_digest = geometry.array_digest
     monkeypatch.setattr(geometry, "array_digest", lambda array: calls.append(1) or real_digest(array))
 
-    off = geometry.analyze(stage_path("static_mesh_clean.usda"), 1e-12, 1e6, 1e-4, mesh_cache_mode="off")
+    off = geometry.analyze(stage_path("static_mesh_clean.usda"), mesh_cache_mode="off")
     assert calls == []
     assert off["mesh_cache"] == {"mode": "off", "entries": 0, "hits": 0, "misses": 0}
 
-    geometry.analyze(stage_path("static_mesh_clean.usda"), 1e-12, 1e6, 1e-4, mesh_cache_mode="face-hash")
+    geometry.analyze(stage_path("static_mesh_clean.usda"), mesh_cache_mode="face-hash")
     assert calls, "face-hash mode should still hash arrays to build cache keys"

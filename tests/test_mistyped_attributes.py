@@ -29,7 +29,7 @@ def _write_mesh(path: Path, name: str = "M", **overrides: str) -> None:
 
 
 def _audit(path: Path) -> dict:
-    return geometry.analyze(path, 1e-12, 1e6, 1e-4)
+    return geometry.analyze(path)
 
 
 @pytest.mark.parametrize(
