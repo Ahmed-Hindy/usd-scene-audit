@@ -4,16 +4,44 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import time
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from pxr import Sdf, Usd, UsdGeom, UsdShade
+from pxr import Ar, Sdf, Usd, UsdGeom, UsdShade
+
+# TODO(#22): CheckErrorLog belongs in a shared module once one exists; it is not
+# geometry-specific.
+from usd_scene_audit.geometry import CheckErrorLog
 
 
 MAX_EXAMPLES = 40
+
+# A URI scheme must be detected before anchoring, because anchoring a path
+# collapses the "//" in "scheme://host" into "scheme:/host". The scheme requires
+# two or more characters so a Windows drive letter ("C://tex/a.exr") is not
+# mistaken for a URI.
+ASSET_URI_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9+.\-]+://")
+
+# Asset paths that stand in for a family of files rather than one file. Their
+# existence cannot be decided by resolving the authored string.
+UDIM_TOKEN_PATTERN = re.compile(r"<UDIM>", re.IGNORECASE)
+
+# Frame-sequence tokens. Both alternatives are bounded deliberately:
+#   - "$F" needs a non-alphanumeric follower, so the Houdini-style "$F4" matches
+#     while variable names such as "$FX", "$FONTS", and "$FOOTAGE" do not.
+#   - a "####" run must sit between "." or "_" delimiters, so "beauty.####.exr"
+#     matches while directory names such as "v###" or "notes##draft" do not.
+SEQUENCE_TOKEN_PATTERN = re.compile(
+    r"<f\d*>|<n\d*>|<frame>|\$F\d*(?![A-Za-z0-9])|[._]#{2,}(?=[._])",
+    re.IGNORECASE,
+)
+
+# Tiles tried when probing whether a UDIM texture set exists at all. Probing can
+# only ever upgrade an asset to "resolved"; a failed probe never reports missing,
+# because tile numbering is asset-specific.
+UDIM_PROBE_TILES = ("1001", "1002")
 
 COMMON_CONTAINER_NAMES = {
     "geo",
@@ -45,7 +73,7 @@ def direct_material_targets(prim: Usd.Prim) -> list[str]:
     return targets
 
 
-def authored_asset_paths(layer: Sdf.Layer) -> set[str]:
+def authored_asset_paths(layer: Sdf.Layer, error_log: CheckErrorLog | None = None) -> set[str]:
     """Collect authored asset paths from a layer by walking Sdf fields."""
     assets: set[str] = set()
 
@@ -59,10 +87,10 @@ def authored_asset_paths(layer: Sdf.Layer) -> set[str]:
                 visit(prim_path)
             return
         if isinstance(value, Sdf.AssetPath):
+            # Only the authored path. resolvedPath is derived from it, so adding
+            # both counted a single reference twice.
             if value.path:
                 assets.add(value.path)
-            if value.resolvedPath:
-                assets.add(value.resolvedPath)
             return
         for list_attr in (
             "explicitItems",
@@ -87,7 +115,12 @@ def authored_asset_paths(layer: Sdf.Layer) -> set[str]:
         for field in spec.ListInfoKeys():
             try:
                 visit(spec.GetInfo(field))
-            except Exception:
+            except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
+                # An unreadable field could hide an asset reference, which is the
+                # very thing this walk exists to find. Skipping is acceptable;
+                # skipping silently is not.
+                if error_log is not None:
+                    error_log.record("authored_asset_paths", f"{layer.identifier}:{spec.path}.{field}", error)
                 continue
         for child_spec in getattr(spec, "nameChildren", ()):
             visit_spec(child_spec)
@@ -99,16 +132,71 @@ def authored_asset_paths(layer: Sdf.Layer) -> set[str]:
     return assets
 
 
-def resolve_authored_asset(layer: Sdf.Layer, asset_path: str) -> str | None:
-    """Resolve a path authored in a USD layer into an absolute filesystem path."""
-    if not asset_path or asset_path.startswith(("http://", "https://", "omniverse://")):
-        return None
-    if os.path.isabs(asset_path):
-        return os.path.normpath(asset_path)
-    layer_path = layer.realPath or layer.identifier
-    if not layer_path or layer_path.startswith("anon:"):
-        return None
-    return os.path.normpath(os.path.join(os.path.dirname(layer_path), asset_path))
+def has_variable_tokens(asset_path: str) -> bool:
+    """Return true when an asset path names a family of files, not one file."""
+    return bool(UDIM_TOKEN_PATTERN.search(asset_path) or SEQUENCE_TOKEN_PATTERN.search(asset_path))
+
+
+def asset_identifier(layer: Sdf.Layer, asset_path: str) -> str:
+    """Anchor an authored asset path against the layer that authored it.
+
+    Uses ``Sdf.ComputeAssetPathRelativeToLayer``, which is the only accessor that
+    preserves a layer's *package* context. Anchoring against ``layer.realPath``
+    silently discards it: for a layer loaded out of a ``.usdz``, ``realPath`` is
+    the path of the package file, so a layer-relative asset anchors to a sibling
+    of the archive instead of into it.
+
+        packaged layer realPath    : /show/packed.usdz
+        realPath anchoring         : /show/tex/color.png              (wrong)
+        ComputeAssetPathRelativeToLayer: /show/packed.usdz[tex/color.png]  (right)
+
+    An explicitly relative path such as ``./tex/color.exr`` anchors to the layer
+    directory whether or not the file exists, which is what lets a missing asset
+    be reported with its expected location.
+
+    A *bare* relative path such as ``tex/color.exr`` is a USD search path. USD
+    resolves it against the resolver's search path rather than the layer, so it
+    is returned unanchored when it does not resolve -- it has no single expected
+    location, and which directory it resolves from can depend on the process
+    working directory. That is USD's semantics, not a choice made here.
+    """
+    if ASSET_URI_PATTERN.match(asset_path):
+        return asset_path
+    if layer.anonymous:
+        return asset_path
+    return Sdf.ComputeAssetPathRelativeToLayer(layer, asset_path)
+
+
+def classify_authored_asset(layer: Sdf.Layer, asset_path: str) -> tuple[str, str]:
+    """Classify an authored asset path as resolved, missing, or unverifiable.
+
+    Resolution goes through ``Ar`` rather than ``os.path``, so package-relative
+    paths into ``.usdz`` archives and paths served by a custom resolver are
+    judged correctly. ``os.path.exists`` reports both as missing.
+    """
+    resolver = Ar.GetResolver()
+    identifier = asset_identifier(layer, asset_path)
+
+    if has_variable_tokens(asset_path):
+        # Substitute into the authored path and re-anchor, so a probe works for
+        # search paths as well as for explicitly relative paths.
+        for tile in UDIM_PROBE_TILES:
+            probe = UDIM_TOKEN_PATTERN.sub(tile, asset_path)
+            if probe != asset_path and resolver.Resolve(asset_identifier(layer, probe)):
+                return "resolved", identifier
+        return "unverifiable", identifier
+
+    if resolver.Resolve(identifier):
+        return "resolved", identifier
+
+    if ASSET_URI_PATTERN.match(asset_path):
+        # No registered resolver claimed this scheme, so existence cannot be
+        # decided locally. Calling it missing would be a guess, and a stage that
+        # legitimately references cloud assets would report false findings on any
+        # machine without the matching resolver plugin installed.
+        return "unverifiable", identifier
+
+    return "missing", identifier
 
 
 def is_expected_prefix_name(name: str, prefix_style_re: re.Pattern[str]) -> bool:
@@ -122,6 +210,7 @@ def is_expected_prefix_name(name: str, prefix_style_re: re.Pattern[str]) -> bool
 
 def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     start = time.perf_counter()
+    error_log = CheckErrorLog()
     prefix_style_re = re.compile(prefix_style_pattern) if prefix_style_pattern else None
     stage = Usd.Stage.Open(str(stage_path))
     if stage is None:
@@ -176,9 +265,13 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
         },
         "assets": {
             "authored_asset_count": 0,
+            "resolved_asset_count": 0,
             "missing_authored_asset_count": 0,
             "missing_authored_assets": [],
+            "unverifiable_asset_count": 0,
+            "unverifiable_assets": [],
         },
+        "check_errors": {"count": 0, "examples": []},
         "elapsed_seconds": None,
     }
 
@@ -303,18 +396,28 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
             add_example(report["materials"]["materials_without_surface_output"], material_path)
 
     missing_assets: dict[str, set[str]] = defaultdict(set)
+    unverifiable_assets: dict[str, set[str]] = defaultdict(set)
     for layer in used_layers:
-        for asset in authored_asset_paths(layer):
-            resolved = resolve_authored_asset(layer, asset)
-            if not resolved:
-                continue
+        for asset in authored_asset_paths(layer, error_log):
+            status, identifier = classify_authored_asset(layer, asset)
             report["assets"]["authored_asset_count"] += 1
-            if not os.path.exists(resolved):
-                missing_assets[resolved].add(layer.identifier)
+            if status == "resolved":
+                report["assets"]["resolved_asset_count"] += 1
+            elif status == "missing":
+                missing_assets[identifier].add(layer.identifier)
+            else:
+                unverifiable_assets[identifier].add(layer.identifier)
 
     for asset, layers in sorted(missing_assets.items()):
         add_example(
             report["assets"]["missing_authored_assets"],
+            f"{asset} (authored from {len(layers)} layer(s))",
+            max_items=120,
+        )
+
+    for asset, layers in sorted(unverifiable_assets.items()):
+        add_example(
+            report["assets"]["unverifiable_assets"],
             f"{asset} (authored from {len(layers)} layer(s))",
             max_items=120,
         )
@@ -329,6 +432,8 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     report["materials"]["bound_materials_used_by_mesh_count"] = len(computed_materials)
     report["materials"]["unbound_material_prim_count"] = len(material_paths - set(computed_materials))
     report["assets"]["missing_authored_asset_count"] = len(missing_assets)
+    report["assets"]["unverifiable_asset_count"] = len(unverifiable_assets)
+    report["check_errors"] = error_log.as_report()
     report["elapsed_seconds"] = round(time.perf_counter() - start, 3)
 
     # Convert defaultdicts for JSON stability.

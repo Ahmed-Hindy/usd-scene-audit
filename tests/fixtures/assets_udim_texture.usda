@@ -1,0 +1,48 @@
+#usda 1.0
+(
+    """A material whose texture is authored as a UDIM pattern.
+
+    `./tex/color.<UDIM>.exr` is not the name of a file; it stands for the whole
+    tile set. Resolving the authored string literally always fails, so checking
+    existence with os.path.exists reports a missing asset even when every tile is
+    present on disk.
+
+    The companion tile files live in tex/ next to this layer.
+    """
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def Mesh "Card"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        rel material:binding = </World/mtl/Surface>
+    }
+
+    def Scope "mtl"
+    {
+        def Material "Surface"
+        {
+            token outputs:surface.connect = </World/mtl/Surface/preview.outputs:surface>
+
+            def Shader "preview"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor.connect = </World/mtl/Surface/albedo.outputs:rgb>
+                token outputs:surface
+            }
+
+            def Shader "albedo"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @./tex/color.<UDIM>.exr@
+                float3 outputs:rgb
+            }
+        }
+    }
+}

@@ -119,6 +119,19 @@ uv run usd-names-hierarchy-audit "F:\path\to\OpenChessSet\chess_set.usda" --pref
 
 Audits high-level scene composition, material bindings, material references, and broad naming counts. Prefix-style naming checks are disabled by default and the active naming policy is recorded in the JSON report.
 
+Authored asset references are resolved through USD's asset resolution layer (`Ar`), so package-relative paths into `.usdz` archives and paths served by a custom resolver are judged correctly. Each authored reference is classified as:
+
+- `resolved_asset_count`: the resolver found the asset.
+- `missing_authored_asset_count`: the asset does not resolve and its absence is a real finding. Listed in `missing_authored_assets`.
+- `unverifiable_asset_count`: existence cannot be decided locally, so calling it missing would be a guess. Listed in `unverifiable_assets` and never counted as missing. This covers two cases:
+  - The path names a family of files rather than one file, such as a `<UDIM>` tile set or a `<f4>` frame sequence, and no probe resolved.
+  - The path carries a URI scheme that no registered resolver claims. Without this, a stage referencing cloud assets would report every such reference as missing on any machine lacking the matching resolver plugin.
+
+Two notes on the counters:
+
+- A *bare* relative path such as `tex/color.exr` is a USD search path. USD resolves it against the resolver's search path rather than against the authoring layer, so where it resolves from can depend on the process working directory. Explicitly relative paths such as `./tex/color.exr` always anchor to the layer.
+- `authored_asset_count` counts authored references per layer, while `missing_authored_asset_count` and `unverifiable_asset_count` count unique resolved identifiers. The three buckets therefore do not sum to `authored_asset_count` when one asset is referenced from several layers.
+
 Example:
 
 ```powershell
