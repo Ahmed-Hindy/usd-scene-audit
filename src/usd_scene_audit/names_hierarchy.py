@@ -7,6 +7,7 @@ import json
 import re
 import time
 from collections import Counter, defaultdict
+from collections.abc import Callable
 from pathlib import Path
 
 from pxr import Usd, UsdGeom, UsdShade
@@ -17,6 +18,8 @@ from usd_scene_audit.geometry import CheckErrorLog, PrototypePaths
 
 
 MAX_EXAMPLES = 80
+# Records one name oddity: (oddity key, normalized prim path).
+NoteOddity = Callable[[str, str], None]
 CONTAINER_NAMES = {"geo", "mtl", "materials", "render", "proxy", "lod", "payload"}
 KNOWN_ALLOWED = {"__class__"} | CONTAINER_NAMES
 
@@ -63,9 +66,7 @@ def prims_with_prototypes(stage: Usd.Stage) -> list[Usd.Prim]:
     return prims
 
 
-def new_report(
-    stage_path: Path, stage: Usd.Stage, prims: list[Usd.Prim], prefix_style_pattern: str | None, prefix_enabled: bool
-) -> dict:
+def new_report(stage_path: Path, stage: Usd.Stage, prims: list[Usd.Prim], prefix_style_pattern: str | None) -> dict:
     """Return the report skeleton, with every count at zero and every list empty."""
     return {
         "stage": str(stage_path),
@@ -76,7 +77,7 @@ def new_report(
         "name_oddities": defaultdict(list),
         "naming_policy": {
             "prefix_style": {
-                "enabled": prefix_enabled,
+                "enabled": bool(prefix_style_pattern),
                 "pattern": prefix_style_pattern,
             },
         },
@@ -121,7 +122,7 @@ def check_name(
     name: str,
     parent_name: str,
     norm_path: str,
-    note,
+    note: NoteOddity,
     prefix_style_re: re.Pattern[str] | None,
 ) -> None:
     """Note naming-convention oddities for one prim name."""
@@ -183,7 +184,7 @@ def check_mesh_placement(
         note_hierarchy(hierarchy, "deep_collision_like_mesh", norm_path)
 
 
-def check_prim(prim: Usd.Prim, report: dict, note, prefix_style_re: re.Pattern[str] | None) -> None:
+def check_prim(prim: Usd.Prim, report: dict, note: NoteOddity, prefix_style_re: re.Pattern[str] | None) -> None:
     """Run every per-prim naming and hierarchy check."""
     path = str(prim.GetPath())
     norm_path = normalized_path(path)
@@ -228,7 +229,7 @@ def sibling_oddities(parent_child_names: dict[str, list[str]], oddity_counts: Co
     return duplicate_sibling_examples, case_collision_examples
 
 
-def analyze(stage_path: Path, *, prefix_style_pattern: str | None = None) -> dict:
+def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     """Audit names and hierarchy while ignoring material reference resolution."""
     started = time.perf_counter()
     # No check in this module catches broadly today. The block is still reported
@@ -240,7 +241,7 @@ def analyze(stage_path: Path, *, prefix_style_pattern: str | None = None) -> dic
         raise RuntimeError(f"Could not open stage: {stage_path}")
 
     prims = prims_with_prototypes(stage)
-    report = new_report(stage_path, stage, prims, prefix_style_pattern, prefix_style_re is not None)
+    report = new_report(stage_path, stage, prims, prefix_style_pattern)
     type_counts: Counter[str] = Counter()
     name_counts: Counter[str] = Counter()
     oddity_counts: Counter[str] = Counter()
