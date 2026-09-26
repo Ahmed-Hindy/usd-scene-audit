@@ -326,13 +326,6 @@ def issue_details(details: dict[str, Any], key: str, value: Any, limit: int = 10
         details[key].append(value)
 
 
-def vector_array(value, dtype=None):
-    """Convert a USD Vt array to a NumPy array, or None for an absent value."""
-    if value is None:
-        return None
-    return np.asarray(value, dtype=dtype)
-
-
 def value_type_name(value) -> str:
     """Return the Sdf type name of a resolved value, e.g. ``float[]`` for a Vt.FloatArray."""
     type_name = str(Sdf.GetValueTypeNameForValue(value))
