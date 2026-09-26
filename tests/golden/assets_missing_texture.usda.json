@@ -1,0 +1,370 @@
+{
+ "geometry": {
+  "stage": "<fixtures>/assets_missing_texture.usda",
+  "default_prim": "/World",
+  "prototype_count": 0,
+  "mesh_count": 0,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "exhaustive",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": null,
+  "time_code": "earliest",
+  "mesh_cache": {
+   "mode": "off",
+   "entries": 0,
+   "hits": 0,
+   "misses": 0
+  },
+  "summary_counts": {},
+  "category_counts": {},
+  "category_issue_counts": {
+   "collision_like": {}
+  },
+  "serious_geometry_failures": 0,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {},
+  "worst_meshes": [],
+  "largest_meshes_by_points": [],
+  "largest_meshes_by_faces": [],
+  "largest_meshes_by_extent": []
+ },
+ "geometry_fast_cached": {
+  "stage": "<fixtures>/assets_missing_texture.usda",
+  "default_prim": "/World",
+  "prototype_count": 0,
+  "mesh_count": 0,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "fast",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": null,
+  "time_code": "earliest",
+  "mesh_cache": {
+   "mode": "face-hash",
+   "entries": 0,
+   "hits": 0,
+   "misses": 0
+  },
+  "summary_counts": {},
+  "category_counts": {},
+  "category_issue_counts": {
+   "collision_like": {}
+  },
+  "serious_geometry_failures": 0,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {},
+  "worst_meshes": [],
+  "largest_meshes_by_points": [],
+  "largest_meshes_by_faces": [],
+  "largest_meshes_by_extent": []
+ },
+ "geometry_standard_frame1": {
+  "stage": "<fixtures>/assets_missing_texture.usda",
+  "default_prim": "/World",
+  "prototype_count": 0,
+  "mesh_count": 0,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "standard",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": 1.0,
+  "time_code": 1.0,
+  "mesh_cache": {
+   "mode": "off",
+   "entries": 0,
+   "hits": 0,
+   "misses": 0
+  },
+  "summary_counts": {},
+  "category_counts": {},
+  "category_issue_counts": {
+   "collision_like": {}
+  },
+  "serious_geometry_failures": 0,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {},
+  "worst_meshes": [],
+  "largest_meshes_by_points": [],
+  "largest_meshes_by_faces": [],
+  "largest_meshes_by_extent": []
+ },
+ "names": {
+  "stage": "<fixtures>/assets_missing_texture.usda",
+  "default_prim": "/World",
+  "prototype_count": 0,
+  "total_prims_including_prototypes": 5,
+  "type_counts": {
+   "Shader": 2,
+   "Xform": 1,
+   "Scope": 1,
+   "Material": 1
+  },
+  "name_oddities": {
+   "duplicate_sibling_names": [],
+   "case_collision_names": []
+  },
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": false,
+    "pattern": null
+   }
+  },
+  "name_counts": {},
+  "hierarchy": {
+   "max_depth": 4,
+   "max_depth_examples": [
+    "/World/mtl/Surface/preview",
+    "/World/mtl/Surface/albedo"
+   ],
+   "single_child_chain_count": 0,
+   "single_child_chain_examples": [],
+   "leaf_scope_count": 0,
+   "leaf_scope_examples": [],
+   "empty_scope_count": 0,
+   "empty_scope_examples": [],
+   "same_name_parent_child_count": 0,
+   "same_name_parent_child_examples": [],
+   "xform_mesh_same_name_count": 0,
+   "xform_mesh_same_name_examples": [],
+   "mesh_with_mesh_child_count": 0,
+   "mesh_with_mesh_child_examples": [],
+   "mesh_parent_type_counts": {},
+   "deep_collision_like_mesh_count": 0,
+   "deep_collision_like_mesh_examples": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "name_oddity_counts": {}
+ },
+ "names_prefix": {
+  "stage": "<fixtures>/assets_missing_texture.usda",
+  "default_prim": "/World",
+  "prototype_count": 0,
+  "total_prims_including_prototypes": 5,
+  "type_counts": {
+   "Shader": 2,
+   "Xform": 1,
+   "Scope": 1,
+   "Material": 1
+  },
+  "name_oddities": {
+   "non_prefix_style": [
+    "/World/mtl/Surface/preview",
+    "/World/mtl/Surface/albedo"
+   ],
+   "duplicate_sibling_names": [],
+   "case_collision_names": []
+  },
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": true,
+    "pattern": "[A-Z][A-Za-z0-9]*"
+   }
+  },
+  "name_counts": {},
+  "hierarchy": {
+   "max_depth": 4,
+   "max_depth_examples": [
+    "/World/mtl/Surface/preview",
+    "/World/mtl/Surface/albedo"
+   ],
+   "single_child_chain_count": 0,
+   "single_child_chain_examples": [],
+   "leaf_scope_count": 0,
+   "leaf_scope_examples": [],
+   "empty_scope_count": 0,
+   "empty_scope_examples": [],
+   "same_name_parent_child_count": 0,
+   "same_name_parent_child_examples": [],
+   "xform_mesh_same_name_count": 0,
+   "xform_mesh_same_name_examples": [],
+   "mesh_with_mesh_child_count": 0,
+   "mesh_with_mesh_child_examples": [],
+   "mesh_parent_type_counts": {},
+   "deep_collision_like_mesh_count": 0,
+   "deep_collision_like_mesh_examples": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "name_oddity_counts": {
+   "non_prefix_style": 2
+  }
+ },
+ "scene": {
+  "stage": "<fixtures>/assets_missing_texture.usda",
+  "root_layer": "<fixtures>/assets_missing_texture.usda",
+  "default_prim": "/World",
+  "meters_per_unit": 1.0,
+  "up_axis": "Y",
+  "layer_count": 2,
+  "prims": {
+   "total": 5,
+   "by_type": {
+    "Shader": 2,
+    "Xform": 1,
+    "Scope": 1,
+    "Material": 1
+   }
+  },
+  "prototype_count": 0,
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": false,
+    "pattern": null
+   }
+  },
+  "naming": {
+   "suspicious_count": 0,
+   "non_prefix_style_count": 0,
+   "duplicate_sibling_count": 0,
+   "duplicate_sibling_names": [],
+   "case_collision_count": 0,
+   "case_collision_names": [],
+   "examples": {}
+  },
+  "materials": {
+   "material_prim_count": 1,
+   "shader_prim_count": 2,
+   "mesh_count": 0,
+   "geom_subset_count": 0,
+   "mesh_with_computed_material": 0,
+   "mesh_without_computed_material": 0,
+   "geom_subset_with_computed_material": 0,
+   "geom_subset_without_computed_material": 0,
+   "mesh_without_mesh_or_subset_material": 0,
+   "bound_materials_used_by_mesh_count": 0,
+   "unbound_material_prim_count": 1,
+   "direct_binding_relation_count": 0,
+   "direct_binding_targets_missing_count": 0,
+   "direct_binding_targets_missing": [],
+   "direct_binding_targets_not_material_count": 0,
+   "direct_binding_targets_not_material": [],
+   "mesh_without_material_examples": [],
+   "mesh_without_mesh_or_subset_material_examples": [],
+   "geom_subset_without_material_examples": [],
+   "materials_without_surface_output": [],
+   "materials_without_surface_output_count": 0
+  },
+  "assets": {
+   "authored_asset_count": 1,
+   "resolved_asset_count": 0,
+   "missing_authored_asset_count": 1,
+   "missing_authored_assets": [
+    "<fixtures>/tex/absent.exr (authored from 1 layer(s))"
+   ],
+   "unverifiable_asset_count": 0,
+   "unverifiable_assets": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  }
+ },
+ "scene_prefix": {
+  "stage": "<fixtures>/assets_missing_texture.usda",
+  "root_layer": "<fixtures>/assets_missing_texture.usda",
+  "default_prim": "/World",
+  "meters_per_unit": 1.0,
+  "up_axis": "Y",
+  "layer_count": 2,
+  "prims": {
+   "total": 5,
+   "by_type": {
+    "Shader": 2,
+    "Xform": 1,
+    "Scope": 1,
+    "Material": 1
+   }
+  },
+  "prototype_count": 0,
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": true,
+    "pattern": "[A-Z][A-Za-z0-9]*"
+   }
+  },
+  "naming": {
+   "suspicious_count": 0,
+   "non_prefix_style_count": 2,
+   "duplicate_sibling_count": 0,
+   "duplicate_sibling_names": [],
+   "case_collision_count": 0,
+   "case_collision_names": [],
+   "examples": {
+    "non_prefix_style": [
+     "/World/mtl/Surface/preview",
+     "/World/mtl/Surface/albedo"
+    ]
+   }
+  },
+  "materials": {
+   "material_prim_count": 1,
+   "shader_prim_count": 2,
+   "mesh_count": 0,
+   "geom_subset_count": 0,
+   "mesh_with_computed_material": 0,
+   "mesh_without_computed_material": 0,
+   "geom_subset_with_computed_material": 0,
+   "geom_subset_without_computed_material": 0,
+   "mesh_without_mesh_or_subset_material": 0,
+   "bound_materials_used_by_mesh_count": 0,
+   "unbound_material_prim_count": 1,
+   "direct_binding_relation_count": 0,
+   "direct_binding_targets_missing_count": 0,
+   "direct_binding_targets_missing": [],
+   "direct_binding_targets_not_material_count": 0,
+   "direct_binding_targets_not_material": [],
+   "mesh_without_material_examples": [],
+   "mesh_without_mesh_or_subset_material_examples": [],
+   "geom_subset_without_material_examples": [],
+   "materials_without_surface_output": [],
+   "materials_without_surface_output_count": 0
+  },
+  "assets": {
+   "authored_asset_count": 1,
+   "resolved_asset_count": 0,
+   "missing_authored_asset_count": 1,
+   "missing_authored_assets": [
+    "<fixtures>/tex/absent.exr (authored from 1 layer(s))"
+   ],
+   "unverifiable_asset_count": 0,
+   "unverifiable_assets": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  }
+ }
+}

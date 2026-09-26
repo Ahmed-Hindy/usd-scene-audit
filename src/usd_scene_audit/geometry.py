@@ -47,7 +47,8 @@ def accepts_legacy_positional(*legacy_names: str, fold=None):
     ``legacy_names`` -- the old positional signature. ``fold``, when given,
     rewrites the resulting keyword arguments into the new signature (for
     example, grouping loose thresholds into a settings object) and is also
-    applied when a caller passes those legacy names by keyword.
+    applied when a caller passes those legacy names by keyword. It is called as
+    ``fold(kwargs, warned)`` so that one legacy call emits one warning.
     """
 
     def decorate(function):
@@ -60,6 +61,7 @@ def accepts_legacy_positional(*legacy_names: str, fold=None):
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
             legacy_values = args[len(positional) :]
+            warned = bool(legacy_values)
             if legacy_values:
                 if len(legacy_values) > len(legacy_names):
                     raise TypeError(
@@ -79,7 +81,7 @@ def accepts_legacy_positional(*legacy_names: str, fold=None):
                     kwargs[name] = value
                 args = args[: len(positional)]
             if fold is not None:
-                kwargs = fold(kwargs)
+                kwargs = fold(kwargs, warned)
             return function(*args, **kwargs)
 
         return wrapper
@@ -1251,18 +1253,20 @@ def determinant_issues(determinant: float | None) -> Counter[str]:
     return issues
 
 
-def _fold_legacy_mesh_settings(kwargs: dict[str, Any]) -> dict[str, Any]:
+def _fold_legacy_mesh_settings(kwargs: dict[str, Any], warned: bool) -> dict[str, Any]:
     """Map mesh_record()'s old loose threshold arguments onto ``settings``."""
     loose = {name: kwargs.pop(name) for name in MeshCheckSettings.__dataclass_fields__ if name in kwargs}
     if loose:
         if kwargs.get("settings") is not None:
             raise TypeError("mesh_record() got both settings and loose threshold arguments")
+    if loose and not warned:
         warnings.warn(
             f"passing {', '.join(loose)} to mesh_record() is deprecated and will stop working in the next "
             "major release; pass settings=MeshCheckSettings(...)",
             DeprecationWarning,
             stacklevel=3,
         )
+    if loose:
         kwargs["settings"] = MeshCheckSettings(**loose)
     return kwargs
 

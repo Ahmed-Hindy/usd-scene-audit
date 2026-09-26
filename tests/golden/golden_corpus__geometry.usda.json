@@ -1,0 +1,6728 @@
+{
+ "geometry": {
+  "stage": "<fixtures>/golden_corpus/geometry.usda",
+  "default_prim": null,
+  "prototype_count": 0,
+  "mesh_count": 19,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "exhaustive",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": null,
+  "time_code": 1.0,
+  "mesh_cache": {
+   "mode": "off",
+   "entries": 0,
+   "hits": 0,
+   "misses": 0
+  },
+  "summary_counts": {
+   "zero_area_triangles": 5,
+   "one_or_two_vertex_faces": 2,
+   "non_finite_points": 2,
+   "primvar_length_mismatch": 2,
+   "faces_with_repeated_vertices": 1,
+   "empty_or_negative_faces": 1,
+   "negative_face_vertex_indices": 1,
+   "out_of_range_face_vertex_indices": 1,
+   "huge_coordinate_points": 1,
+   "face_vertex_count_index_length_mismatch": 1,
+   "missing_points": 1,
+   "missing_face_vertex_counts": 1,
+   "missing_face_vertex_indices": 1,
+   "authored_extent_mismatch": 1,
+   "primvar_index_out_of_range": 1,
+   "primvar_element_size_mismatch": 1,
+   "uv_unusual_interpolation": 1,
+   "uv_empty": 1,
+   "normals_length_mismatch": 1,
+   "normals_non_finite": 1,
+   "negative_transform_determinant": 1,
+   "near_zero_transform_determinant": 1
+  },
+  "category_counts": {
+   "render_like": 17,
+   "collision_like": 1,
+   "unknown_helper_like": 1
+  },
+  "category_issue_counts": {
+   "render_like": {
+    "zero_area_triangles": 3,
+    "one_or_two_vertex_faces": 2,
+    "non_finite_points": 2,
+    "primvar_length_mismatch": 2,
+    "faces_with_repeated_vertices": 1,
+    "empty_or_negative_faces": 1,
+    "negative_face_vertex_indices": 1,
+    "out_of_range_face_vertex_indices": 1,
+    "huge_coordinate_points": 1,
+    "face_vertex_count_index_length_mismatch": 1,
+    "missing_points": 1,
+    "missing_face_vertex_counts": 1,
+    "missing_face_vertex_indices": 1,
+    "authored_extent_mismatch": 1,
+    "primvar_index_out_of_range": 1,
+    "primvar_element_size_mismatch": 1,
+    "uv_unusual_interpolation": 1,
+    "uv_empty": 1,
+    "normals_length_mismatch": 1,
+    "normals_non_finite": 1,
+    "negative_transform_determinant": 1,
+    "near_zero_transform_determinant": 1
+   },
+   "collision_like": {
+    "zero_area_triangles": 1
+   },
+   "unknown_helper_like": {
+    "zero_area_triangles": 1
+   }
+  },
+  "serious_geometry_failures": 13,
+  "likely_benign_collision_helper_warnings": 1,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {
+   "faces_with_repeated_vertices": [
+    {
+     "path": "/World/Repeated",
+     "normalized_path": "/World/Repeated",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "repeated_vertex_face_examples": [
+       {
+        "indices": [
+         0,
+         1,
+         1,
+         2
+        ]
+       }
+      ],
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         1
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    }
+   ],
+   "zero_area_triangles": [
+    {
+     "path": "/World/Repeated",
+     "normalized_path": "/World/Repeated",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "repeated_vertex_face_examples": [
+       {
+        "indices": [
+         0,
+         1,
+         1,
+         2
+        ]
+       }
+      ],
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         1
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    },
+    {
+     "path": "/World/Rock_COL",
+     "normalized_path": "/World/Rock_COL",
+     "category": "collision_like",
+     "count": 1,
+     "details": {
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         2
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    },
+    {
+     "path": "/World/proxy/HelperMesh",
+     "normalized_path": "/World/proxy/HelperMesh",
+     "category": "unknown_helper_like",
+     "count": 1,
+     "details": {
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         2
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    },
+    {
+     "path": "/World/Dup_A",
+     "normalized_path": "/World/Dup_A",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         2
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    },
+    {
+     "path": "/World/Dup_B",
+     "normalized_path": "/World/Dup_B",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         2
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    }
+   ],
+   "empty_or_negative_faces": [
+    {
+     "path": "/World/Degenerate",
+     "normalized_path": "/World/Degenerate",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "empty_or_negative_face_examples": [
+       3
+      ],
+      "one_or_two_vertex_face_examples": [
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "one_or_two_vertex_faces": [
+    {
+     "path": "/World/Degenerate",
+     "normalized_path": "/World/Degenerate",
+     "category": "render_like",
+     "count": 2,
+     "details": {
+      "empty_or_negative_face_examples": [
+       3
+      ],
+      "one_or_two_vertex_face_examples": [
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "negative_face_vertex_indices": [
+    {
+     "path": "/World/NegIndex",
+     "normalized_path": "/World/NegIndex",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "negative_index_examples": [
+       -1
+      ]
+     }
+    }
+   ],
+   "out_of_range_face_vertex_indices": [
+    {
+     "path": "/World/OutOfRange",
+     "normalized_path": "/World/OutOfRange",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "out_of_range_index_examples": [
+       9
+      ]
+     }
+    }
+   ],
+   "huge_coordinate_points": [
+    {
+     "path": "/World/Huge",
+     "normalized_path": "/World/Huge",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "huge_coordinate_examples": [
+       {
+        "index": 1,
+        "point": [
+         1000000000.0,
+         0.0,
+         0.0
+        ],
+        "max_abs": 1000000000.0
+       }
+      ]
+     }
+    }
+   ],
+   "non_finite_points": [
+    {
+     "path": "/World/NaN",
+     "normalized_path": "/World/NaN",
+     "category": "render_like",
+     "count": 2,
+     "details": {
+      "non_finite_point_examples": [
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "face_vertex_count_index_length_mismatch": [
+    {
+     "path": "/World/Mismatch",
+     "normalized_path": "/World/Mismatch",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "expected_index_count": 6
+     }
+    }
+   ],
+   "missing_points": [
+    {
+     "path": "/World/NoTopology",
+     "normalized_path": "/World/NoTopology",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ],
+   "missing_face_vertex_counts": [
+    {
+     "path": "/World/NoTopology",
+     "normalized_path": "/World/NoTopology",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ],
+   "missing_face_vertex_indices": [
+    {
+     "path": "/World/NoTopology",
+     "normalized_path": "/World/NoTopology",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ],
+   "authored_extent_mismatch": [
+    {
+     "path": "/World/BadExtent",
+     "normalized_path": "/World/BadExtent",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "authored_extent_max_delta": 5.0
+     }
+    }
+   ],
+   "primvar_index_out_of_range": [
+    {
+     "path": "/World/Primvars",
+     "normalized_path": "/World/Primvars",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "primvar_index_out_of_range": [
+       {
+        "primvar": "color",
+        "issue": "primvar_index_out_of_range",
+        "value_count": 2,
+        "bad_index_examples": [
+         5
+        ]
+       }
+      ],
+      "primvar_element_size_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_element_size_mismatch",
+        "value_count": 5,
+        "element_size": 2
+       }
+      ],
+      "primvar_length_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "vertex",
+        "expected": 3,
+        "actual": 2,
+        "value_count": 5,
+        "index_count": 0,
+        "element_size": 2
+       },
+       {
+        "primvar": "uv1",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 0,
+        "value_count": 0,
+        "index_count": 0,
+        "element_size": 1
+       }
+      ],
+      "uv_unusual_interpolation": [
+       {
+        "primvar": "st",
+        "issue": "uv_unusual_interpolation",
+        "interpolation": "uniform"
+       }
+      ],
+      "uv_empty": [
+       {
+        "primvar": "uv1",
+        "issue": "uv_empty"
+       }
+      ]
+     }
+    }
+   ],
+   "primvar_element_size_mismatch": [
+    {
+     "path": "/World/Primvars",
+     "normalized_path": "/World/Primvars",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "primvar_index_out_of_range": [
+       {
+        "primvar": "color",
+        "issue": "primvar_index_out_of_range",
+        "value_count": 2,
+        "bad_index_examples": [
+         5
+        ]
+       }
+      ],
+      "primvar_element_size_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_element_size_mismatch",
+        "value_count": 5,
+        "element_size": 2
+       }
+      ],
+      "primvar_length_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "vertex",
+        "expected": 3,
+        "actual": 2,
+        "value_count": 5,
+        "index_count": 0,
+        "element_size": 2
+       },
+       {
+        "primvar": "uv1",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 0,
+        "value_count": 0,
+        "index_count": 0,
+        "element_size": 1
+       }
+      ],
+      "uv_unusual_interpolation": [
+       {
+        "primvar": "st",
+        "issue": "uv_unusual_interpolation",
+        "interpolation": "uniform"
+       }
+      ],
+      "uv_empty": [
+       {
+        "primvar": "uv1",
+        "issue": "uv_empty"
+       }
+      ]
+     }
+    }
+   ],
+   "primvar_length_mismatch": [
+    {
+     "path": "/World/Primvars",
+     "normalized_path": "/World/Primvars",
+     "category": "render_like",
+     "count": 2,
+     "details": {
+      "primvar_index_out_of_range": [
+       {
+        "primvar": "color",
+        "issue": "primvar_index_out_of_range",
+        "value_count": 2,
+        "bad_index_examples": [
+         5
+        ]
+       }
+      ],
+      "primvar_element_size_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_element_size_mismatch",
+        "value_count": 5,
+        "element_size": 2
+       }
+      ],
+      "primvar_length_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "vertex",
+        "expected": 3,
+        "actual": 2,
+        "value_count": 5,
+        "index_count": 0,
+        "element_size": 2
+       },
+       {
+        "primvar": "uv1",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 0,
+        "value_count": 0,
+        "index_count": 0,
+        "element_size": 1
+       }
+      ],
+      "uv_unusual_interpolation": [
+       {
+        "primvar": "st",
+        "issue": "uv_unusual_interpolation",
+        "interpolation": "uniform"
+       }
+      ],
+      "uv_empty": [
+       {
+        "primvar": "uv1",
+        "issue": "uv_empty"
+       }
+      ]
+     }
+    }
+   ],
+   "uv_unusual_interpolation": [
+    {
+     "path": "/World/Primvars",
+     "normalized_path": "/World/Primvars",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "primvar_index_out_of_range": [
+       {
+        "primvar": "color",
+        "issue": "primvar_index_out_of_range",
+        "value_count": 2,
+        "bad_index_examples": [
+         5
+        ]
+       }
+      ],
+      "primvar_element_size_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_element_size_mismatch",
+        "value_count": 5,
+        "element_size": 2
+       }
+      ],
+      "primvar_length_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "vertex",
+        "expected": 3,
+        "actual": 2,
+        "value_count": 5,
+        "index_count": 0,
+        "element_size": 2
+       },
+       {
+        "primvar": "uv1",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 0,
+        "value_count": 0,
+        "index_count": 0,
+        "element_size": 1
+       }
+      ],
+      "uv_unusual_interpolation": [
+       {
+        "primvar": "st",
+        "issue": "uv_unusual_interpolation",
+        "interpolation": "uniform"
+       }
+      ],
+      "uv_empty": [
+       {
+        "primvar": "uv1",
+        "issue": "uv_empty"
+       }
+      ]
+     }
+    }
+   ],
+   "uv_empty": [
+    {
+     "path": "/World/Primvars",
+     "normalized_path": "/World/Primvars",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "primvar_index_out_of_range": [
+       {
+        "primvar": "color",
+        "issue": "primvar_index_out_of_range",
+        "value_count": 2,
+        "bad_index_examples": [
+         5
+        ]
+       }
+      ],
+      "primvar_element_size_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_element_size_mismatch",
+        "value_count": 5,
+        "element_size": 2
+       }
+      ],
+      "primvar_length_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "vertex",
+        "expected": 3,
+        "actual": 2,
+        "value_count": 5,
+        "index_count": 0,
+        "element_size": 2
+       },
+       {
+        "primvar": "uv1",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 0,
+        "value_count": 0,
+        "index_count": 0,
+        "element_size": 1
+       }
+      ],
+      "uv_unusual_interpolation": [
+       {
+        "primvar": "st",
+        "issue": "uv_unusual_interpolation",
+        "interpolation": "uniform"
+       }
+      ],
+      "uv_empty": [
+       {
+        "primvar": "uv1",
+        "issue": "uv_empty"
+       }
+      ]
+     }
+    }
+   ],
+   "normals_length_mismatch": [
+    {
+     "path": "/World/Normals",
+     "normalized_path": "/World/Normals",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "normals_length_mismatch": [
+       {
+        "issue": "normals_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 2
+       }
+      ],
+      "normals_non_finite": [
+       {
+        "issue": "normals_non_finite",
+        "index_examples": [
+         1
+        ]
+       }
+      ]
+     }
+    }
+   ],
+   "normals_non_finite": [
+    {
+     "path": "/World/Normals",
+     "normalized_path": "/World/Normals",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "normals_length_mismatch": [
+       {
+        "issue": "normals_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 2
+       }
+      ],
+      "normals_non_finite": [
+       {
+        "issue": "normals_non_finite",
+        "index_examples": [
+         1
+        ]
+       }
+      ]
+     }
+    }
+   ],
+   "negative_transform_determinant": [
+    {
+     "path": "/World/Flipped/Mesh",
+     "normalized_path": "/World/Flipped/Mesh",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ],
+   "near_zero_transform_determinant": [
+    {
+     "path": "/World/Flat/Mesh",
+     "normalized_path": "/World/Flat/Mesh",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ]
+  },
+  "worst_meshes": [
+   {
+    "path": "/World/NoTopology",
+    "normalized_path": "/World/NoTopology",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 0.0,
+    "issue_count": 3,
+    "issues": {
+     "missing_points": 1,
+     "missing_face_vertex_counts": 1,
+     "missing_face_vertex_indices": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/NaN",
+    "normalized_path": "/World/NaN",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 2,
+    "issues": {
+     "non_finite_points": 2
+    },
+    "details": {
+     "non_finite_point_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/Mismatch",
+    "normalized_path": "/World/Mismatch",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "expected_index_count": 6
+    }
+   },
+   {
+    "path": "/World/NegIndex",
+    "normalized_path": "/World/NegIndex",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_face_vertex_indices": 1
+    },
+    "details": {
+     "negative_index_examples": [
+      -1
+     ]
+    }
+   },
+   {
+    "path": "/World/OutOfRange",
+    "normalized_path": "/World/OutOfRange",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "out_of_range_face_vertex_indices": 1
+    },
+    "details": {
+     "out_of_range_index_examples": [
+      9
+     ]
+    }
+   },
+   {
+    "path": "/World/Degenerate",
+    "normalized_path": "/World/Degenerate",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 4,
+    "face_vertex_index_count": 6,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 3,
+    "issues": {
+     "empty_or_negative_faces": 1,
+     "one_or_two_vertex_faces": 2
+    },
+    "details": {
+     "empty_or_negative_face_examples": [
+      3
+     ],
+     "one_or_two_vertex_face_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/Primvars",
+    "normalized_path": "/World/Primvars",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 6,
+    "issues": {
+     "primvar_index_out_of_range": 1,
+     "primvar_element_size_mismatch": 1,
+     "primvar_length_mismatch": 2,
+     "uv_unusual_interpolation": 1,
+     "uv_empty": 1
+    },
+    "details": {
+     "primvar_index_out_of_range": [
+      {
+       "primvar": "color",
+       "issue": "primvar_index_out_of_range",
+       "value_count": 2,
+       "bad_index_examples": [
+        5
+       ]
+      }
+     ],
+     "primvar_element_size_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_element_size_mismatch",
+       "value_count": 5,
+       "element_size": 2
+      }
+     ],
+     "primvar_length_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "vertex",
+       "expected": 3,
+       "actual": 2,
+       "value_count": 5,
+       "index_count": 0,
+       "element_size": 2
+      },
+      {
+       "primvar": "uv1",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 0,
+       "value_count": 0,
+       "index_count": 0,
+       "element_size": 1
+      }
+     ],
+     "uv_unusual_interpolation": [
+      {
+       "primvar": "st",
+       "issue": "uv_unusual_interpolation",
+       "interpolation": "uniform"
+      }
+     ],
+     "uv_empty": [
+      {
+       "primvar": "uv1",
+       "issue": "uv_empty"
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Flat/Mesh",
+    "normalized_path": "/World/Flat/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "near_zero_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Repeated",
+    "normalized_path": "/World/Repeated",
+    "category": "render_like",
+    "point_count": 4,
+    "face_count": 1,
+    "face_vertex_index_count": 4,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "faces_with_repeated_vertices": 1,
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "repeated_vertex_face_examples": [
+      {
+       "indices": [
+        0,
+        1,
+        1,
+        2
+       ]
+      }
+     ],
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        1
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Normals",
+    "normalized_path": "/World/Normals",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "normals_length_mismatch": 1,
+     "normals_non_finite": 1
+    },
+    "details": {
+     "normals_length_mismatch": [
+      {
+       "issue": "normals_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 2
+      }
+     ],
+     "normals_non_finite": [
+      {
+       "issue": "normals_non_finite",
+       "index_examples": [
+        1
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Rock_COL",
+    "normalized_path": "/World/Rock_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/proxy/HelperMesh",
+    "normalized_path": "/World/proxy/HelperMesh",
+    "category": "unknown_helper_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Dup_A",
+    "normalized_path": "/World/Dup_A",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Dup_B",
+    "normalized_path": "/World/Dup_B",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/BadExtent",
+    "normalized_path": "/World/BadExtent",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "authored_extent_mismatch": 1
+    },
+    "details": {
+     "authored_extent_max_delta": 5.0
+    }
+   },
+   {
+    "path": "/World/Flipped/Mesh",
+    "normalized_path": "/World/Flipped/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Huge",
+    "normalized_path": "/World/Huge",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1000000000.0,
+    "issue_count": 1,
+    "issues": {
+     "huge_coordinate_points": 1
+    },
+    "details": {
+     "huge_coordinate_examples": [
+      {
+       "index": 1,
+       "point": [
+        1000000000.0,
+        0.0,
+        0.0
+       ],
+       "max_abs": 1000000000.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Empty",
+    "normalized_path": "/World/Empty",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Animated",
+    "normalized_path": "/World/Animated",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_points": [
+   {
+    "path": "/World/Repeated",
+    "normalized_path": "/World/Repeated",
+    "category": "render_like",
+    "point_count": 4,
+    "face_count": 1,
+    "face_vertex_index_count": 4,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "faces_with_repeated_vertices": 1,
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "repeated_vertex_face_examples": [
+      {
+       "indices": [
+        0,
+        1,
+        1,
+        2
+       ]
+      }
+     ],
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        1
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Degenerate",
+    "normalized_path": "/World/Degenerate",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 4,
+    "face_vertex_index_count": 6,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 3,
+    "issues": {
+     "empty_or_negative_faces": 1,
+     "one_or_two_vertex_faces": 2
+    },
+    "details": {
+     "empty_or_negative_face_examples": [
+      3
+     ],
+     "one_or_two_vertex_face_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/NegIndex",
+    "normalized_path": "/World/NegIndex",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_face_vertex_indices": 1
+    },
+    "details": {
+     "negative_index_examples": [
+      -1
+     ]
+    }
+   },
+   {
+    "path": "/World/OutOfRange",
+    "normalized_path": "/World/OutOfRange",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "out_of_range_face_vertex_indices": 1
+    },
+    "details": {
+     "out_of_range_index_examples": [
+      9
+     ]
+    }
+   },
+   {
+    "path": "/World/Huge",
+    "normalized_path": "/World/Huge",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1000000000.0,
+    "issue_count": 1,
+    "issues": {
+     "huge_coordinate_points": 1
+    },
+    "details": {
+     "huge_coordinate_examples": [
+      {
+       "index": 1,
+       "point": [
+        1000000000.0,
+        0.0,
+        0.0
+       ],
+       "max_abs": 1000000000.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/NaN",
+    "normalized_path": "/World/NaN",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 2,
+    "issues": {
+     "non_finite_points": 2
+    },
+    "details": {
+     "non_finite_point_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/Mismatch",
+    "normalized_path": "/World/Mismatch",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "expected_index_count": 6
+    }
+   },
+   {
+    "path": "/World/Empty",
+    "normalized_path": "/World/Empty",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/BadExtent",
+    "normalized_path": "/World/BadExtent",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "authored_extent_mismatch": 1
+    },
+    "details": {
+     "authored_extent_max_delta": 5.0
+    }
+   },
+   {
+    "path": "/World/Primvars",
+    "normalized_path": "/World/Primvars",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 6,
+    "issues": {
+     "primvar_index_out_of_range": 1,
+     "primvar_element_size_mismatch": 1,
+     "primvar_length_mismatch": 2,
+     "uv_unusual_interpolation": 1,
+     "uv_empty": 1
+    },
+    "details": {
+     "primvar_index_out_of_range": [
+      {
+       "primvar": "color",
+       "issue": "primvar_index_out_of_range",
+       "value_count": 2,
+       "bad_index_examples": [
+        5
+       ]
+      }
+     ],
+     "primvar_element_size_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_element_size_mismatch",
+       "value_count": 5,
+       "element_size": 2
+      }
+     ],
+     "primvar_length_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "vertex",
+       "expected": 3,
+       "actual": 2,
+       "value_count": 5,
+       "index_count": 0,
+       "element_size": 2
+      },
+      {
+       "primvar": "uv1",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 0,
+       "value_count": 0,
+       "index_count": 0,
+       "element_size": 1
+      }
+     ],
+     "uv_unusual_interpolation": [
+      {
+       "primvar": "st",
+       "issue": "uv_unusual_interpolation",
+       "interpolation": "uniform"
+      }
+     ],
+     "uv_empty": [
+      {
+       "primvar": "uv1",
+       "issue": "uv_empty"
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Normals",
+    "normalized_path": "/World/Normals",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "normals_length_mismatch": 1,
+     "normals_non_finite": 1
+    },
+    "details": {
+     "normals_length_mismatch": [
+      {
+       "issue": "normals_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 2
+      }
+     ],
+     "normals_non_finite": [
+      {
+       "issue": "normals_non_finite",
+       "index_examples": [
+        1
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Flipped/Mesh",
+    "normalized_path": "/World/Flipped/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Flat/Mesh",
+    "normalized_path": "/World/Flat/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "near_zero_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Rock_COL",
+    "normalized_path": "/World/Rock_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/proxy/HelperMesh",
+    "normalized_path": "/World/proxy/HelperMesh",
+    "category": "unknown_helper_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Animated",
+    "normalized_path": "/World/Animated",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Dup_A",
+    "normalized_path": "/World/Dup_A",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Dup_B",
+    "normalized_path": "/World/Dup_B",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/NoTopology",
+    "normalized_path": "/World/NoTopology",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 0.0,
+    "issue_count": 3,
+    "issues": {
+     "missing_points": 1,
+     "missing_face_vertex_counts": 1,
+     "missing_face_vertex_indices": 1
+    },
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_faces": [
+   {
+    "path": "/World/Degenerate",
+    "normalized_path": "/World/Degenerate",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 4,
+    "face_vertex_index_count": 6,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 3,
+    "issues": {
+     "empty_or_negative_faces": 1,
+     "one_or_two_vertex_faces": 2
+    },
+    "details": {
+     "empty_or_negative_face_examples": [
+      3
+     ],
+     "one_or_two_vertex_face_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/Mismatch",
+    "normalized_path": "/World/Mismatch",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "expected_index_count": 6
+    }
+   },
+   {
+    "path": "/World/Repeated",
+    "normalized_path": "/World/Repeated",
+    "category": "render_like",
+    "point_count": 4,
+    "face_count": 1,
+    "face_vertex_index_count": 4,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "faces_with_repeated_vertices": 1,
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "repeated_vertex_face_examples": [
+      {
+       "indices": [
+        0,
+        1,
+        1,
+        2
+       ]
+      }
+     ],
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        1
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/NegIndex",
+    "normalized_path": "/World/NegIndex",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_face_vertex_indices": 1
+    },
+    "details": {
+     "negative_index_examples": [
+      -1
+     ]
+    }
+   },
+   {
+    "path": "/World/OutOfRange",
+    "normalized_path": "/World/OutOfRange",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "out_of_range_face_vertex_indices": 1
+    },
+    "details": {
+     "out_of_range_index_examples": [
+      9
+     ]
+    }
+   },
+   {
+    "path": "/World/Huge",
+    "normalized_path": "/World/Huge",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1000000000.0,
+    "issue_count": 1,
+    "issues": {
+     "huge_coordinate_points": 1
+    },
+    "details": {
+     "huge_coordinate_examples": [
+      {
+       "index": 1,
+       "point": [
+        1000000000.0,
+        0.0,
+        0.0
+       ],
+       "max_abs": 1000000000.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/NaN",
+    "normalized_path": "/World/NaN",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 2,
+    "issues": {
+     "non_finite_points": 2
+    },
+    "details": {
+     "non_finite_point_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/BadExtent",
+    "normalized_path": "/World/BadExtent",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "authored_extent_mismatch": 1
+    },
+    "details": {
+     "authored_extent_max_delta": 5.0
+    }
+   },
+   {
+    "path": "/World/Primvars",
+    "normalized_path": "/World/Primvars",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 6,
+    "issues": {
+     "primvar_index_out_of_range": 1,
+     "primvar_element_size_mismatch": 1,
+     "primvar_length_mismatch": 2,
+     "uv_unusual_interpolation": 1,
+     "uv_empty": 1
+    },
+    "details": {
+     "primvar_index_out_of_range": [
+      {
+       "primvar": "color",
+       "issue": "primvar_index_out_of_range",
+       "value_count": 2,
+       "bad_index_examples": [
+        5
+       ]
+      }
+     ],
+     "primvar_element_size_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_element_size_mismatch",
+       "value_count": 5,
+       "element_size": 2
+      }
+     ],
+     "primvar_length_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "vertex",
+       "expected": 3,
+       "actual": 2,
+       "value_count": 5,
+       "index_count": 0,
+       "element_size": 2
+      },
+      {
+       "primvar": "uv1",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 0,
+       "value_count": 0,
+       "index_count": 0,
+       "element_size": 1
+      }
+     ],
+     "uv_unusual_interpolation": [
+      {
+       "primvar": "st",
+       "issue": "uv_unusual_interpolation",
+       "interpolation": "uniform"
+      }
+     ],
+     "uv_empty": [
+      {
+       "primvar": "uv1",
+       "issue": "uv_empty"
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Normals",
+    "normalized_path": "/World/Normals",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "normals_length_mismatch": 1,
+     "normals_non_finite": 1
+    },
+    "details": {
+     "normals_length_mismatch": [
+      {
+       "issue": "normals_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 2
+      }
+     ],
+     "normals_non_finite": [
+      {
+       "issue": "normals_non_finite",
+       "index_examples": [
+        1
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Flipped/Mesh",
+    "normalized_path": "/World/Flipped/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Flat/Mesh",
+    "normalized_path": "/World/Flat/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "near_zero_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Rock_COL",
+    "normalized_path": "/World/Rock_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/proxy/HelperMesh",
+    "normalized_path": "/World/proxy/HelperMesh",
+    "category": "unknown_helper_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Animated",
+    "normalized_path": "/World/Animated",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Dup_A",
+    "normalized_path": "/World/Dup_A",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Dup_B",
+    "normalized_path": "/World/Dup_B",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Empty",
+    "normalized_path": "/World/Empty",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/NoTopology",
+    "normalized_path": "/World/NoTopology",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 0.0,
+    "issue_count": 3,
+    "issues": {
+     "missing_points": 1,
+     "missing_face_vertex_counts": 1,
+     "missing_face_vertex_indices": 1
+    },
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_extent": [
+   {
+    "path": "/World/Huge",
+    "normalized_path": "/World/Huge",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1000000000.0,
+    "issue_count": 1,
+    "issues": {
+     "huge_coordinate_points": 1
+    },
+    "details": {
+     "huge_coordinate_examples": [
+      {
+       "index": 1,
+       "point": [
+        1000000000.0,
+        0.0,
+        0.0
+       ],
+       "max_abs": 1000000000.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Rock_COL",
+    "normalized_path": "/World/Rock_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/proxy/HelperMesh",
+    "normalized_path": "/World/proxy/HelperMesh",
+    "category": "unknown_helper_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Dup_A",
+    "normalized_path": "/World/Dup_A",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Dup_B",
+    "normalized_path": "/World/Dup_B",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Repeated",
+    "normalized_path": "/World/Repeated",
+    "category": "render_like",
+    "point_count": 4,
+    "face_count": 1,
+    "face_vertex_index_count": 4,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "faces_with_repeated_vertices": 1,
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "repeated_vertex_face_examples": [
+      {
+       "indices": [
+        0,
+        1,
+        1,
+        2
+       ]
+      }
+     ],
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        1
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Degenerate",
+    "normalized_path": "/World/Degenerate",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 4,
+    "face_vertex_index_count": 6,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 3,
+    "issues": {
+     "empty_or_negative_faces": 1,
+     "one_or_two_vertex_faces": 2
+    },
+    "details": {
+     "empty_or_negative_face_examples": [
+      3
+     ],
+     "one_or_two_vertex_face_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/NegIndex",
+    "normalized_path": "/World/NegIndex",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_face_vertex_indices": 1
+    },
+    "details": {
+     "negative_index_examples": [
+      -1
+     ]
+    }
+   },
+   {
+    "path": "/World/OutOfRange",
+    "normalized_path": "/World/OutOfRange",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "out_of_range_face_vertex_indices": 1
+    },
+    "details": {
+     "out_of_range_index_examples": [
+      9
+     ]
+    }
+   },
+   {
+    "path": "/World/Mismatch",
+    "normalized_path": "/World/Mismatch",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "expected_index_count": 6
+    }
+   },
+   {
+    "path": "/World/Empty",
+    "normalized_path": "/World/Empty",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/BadExtent",
+    "normalized_path": "/World/BadExtent",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "authored_extent_mismatch": 1
+    },
+    "details": {
+     "authored_extent_max_delta": 5.0
+    }
+   },
+   {
+    "path": "/World/Primvars",
+    "normalized_path": "/World/Primvars",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 6,
+    "issues": {
+     "primvar_index_out_of_range": 1,
+     "primvar_element_size_mismatch": 1,
+     "primvar_length_mismatch": 2,
+     "uv_unusual_interpolation": 1,
+     "uv_empty": 1
+    },
+    "details": {
+     "primvar_index_out_of_range": [
+      {
+       "primvar": "color",
+       "issue": "primvar_index_out_of_range",
+       "value_count": 2,
+       "bad_index_examples": [
+        5
+       ]
+      }
+     ],
+     "primvar_element_size_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_element_size_mismatch",
+       "value_count": 5,
+       "element_size": 2
+      }
+     ],
+     "primvar_length_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "vertex",
+       "expected": 3,
+       "actual": 2,
+       "value_count": 5,
+       "index_count": 0,
+       "element_size": 2
+      },
+      {
+       "primvar": "uv1",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 0,
+       "value_count": 0,
+       "index_count": 0,
+       "element_size": 1
+      }
+     ],
+     "uv_unusual_interpolation": [
+      {
+       "primvar": "st",
+       "issue": "uv_unusual_interpolation",
+       "interpolation": "uniform"
+      }
+     ],
+     "uv_empty": [
+      {
+       "primvar": "uv1",
+       "issue": "uv_empty"
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Normals",
+    "normalized_path": "/World/Normals",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "normals_length_mismatch": 1,
+     "normals_non_finite": 1
+    },
+    "details": {
+     "normals_length_mismatch": [
+      {
+       "issue": "normals_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 2
+      }
+     ],
+     "normals_non_finite": [
+      {
+       "issue": "normals_non_finite",
+       "index_examples": [
+        1
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Flipped/Mesh",
+    "normalized_path": "/World/Flipped/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Flat/Mesh",
+    "normalized_path": "/World/Flat/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "near_zero_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Animated",
+    "normalized_path": "/World/Animated",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/NaN",
+    "normalized_path": "/World/NaN",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 2,
+    "issues": {
+     "non_finite_points": 2
+    },
+    "details": {
+     "non_finite_point_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/NoTopology",
+    "normalized_path": "/World/NoTopology",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 0.0,
+    "issue_count": 3,
+    "issues": {
+     "missing_points": 1,
+     "missing_face_vertex_counts": 1,
+     "missing_face_vertex_indices": 1
+    },
+    "details": {}
+   }
+  ]
+ },
+ "geometry_fast_cached": {
+  "stage": "<fixtures>/golden_corpus/geometry.usda",
+  "default_prim": null,
+  "prototype_count": 0,
+  "mesh_count": 19,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "fast",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": null,
+  "time_code": 1.0,
+  "mesh_cache": {
+   "mode": "face-hash",
+   "entries": 3,
+   "hits": 11,
+   "misses": 7
+  },
+  "summary_counts": {
+   "one_or_two_vertex_faces": 2,
+   "non_finite_points": 2,
+   "empty_or_negative_faces": 1,
+   "negative_face_vertex_indices": 1,
+   "out_of_range_face_vertex_indices": 1,
+   "huge_coordinate_points": 1,
+   "face_vertex_count_index_length_mismatch": 1,
+   "missing_points": 1,
+   "missing_face_vertex_counts": 1,
+   "missing_face_vertex_indices": 1,
+   "authored_extent_mismatch": 1,
+   "negative_transform_determinant": 1,
+   "near_zero_transform_determinant": 1
+  },
+  "category_counts": {
+   "render_like": 17,
+   "collision_like": 1,
+   "unknown_helper_like": 1
+  },
+  "category_issue_counts": {
+   "render_like": {
+    "one_or_two_vertex_faces": 2,
+    "non_finite_points": 2,
+    "empty_or_negative_faces": 1,
+    "negative_face_vertex_indices": 1,
+    "out_of_range_face_vertex_indices": 1,
+    "huge_coordinate_points": 1,
+    "face_vertex_count_index_length_mismatch": 1,
+    "missing_points": 1,
+    "missing_face_vertex_counts": 1,
+    "missing_face_vertex_indices": 1,
+    "authored_extent_mismatch": 1,
+    "negative_transform_determinant": 1,
+    "near_zero_transform_determinant": 1
+   },
+   "collision_like": {}
+  },
+  "serious_geometry_failures": 12,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {
+   "empty_or_negative_faces": [
+    {
+     "path": "/World/Degenerate",
+     "normalized_path": "/World/Degenerate",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "empty_or_negative_face_examples": [
+       3
+      ],
+      "one_or_two_vertex_face_examples": [
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "one_or_two_vertex_faces": [
+    {
+     "path": "/World/Degenerate",
+     "normalized_path": "/World/Degenerate",
+     "category": "render_like",
+     "count": 2,
+     "details": {
+      "empty_or_negative_face_examples": [
+       3
+      ],
+      "one_or_two_vertex_face_examples": [
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "negative_face_vertex_indices": [
+    {
+     "path": "/World/NegIndex",
+     "normalized_path": "/World/NegIndex",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "negative_index_examples": [
+       -1
+      ]
+     }
+    }
+   ],
+   "out_of_range_face_vertex_indices": [
+    {
+     "path": "/World/OutOfRange",
+     "normalized_path": "/World/OutOfRange",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "out_of_range_index_examples": [
+       9
+      ]
+     }
+    }
+   ],
+   "huge_coordinate_points": [
+    {
+     "path": "/World/Huge",
+     "normalized_path": "/World/Huge",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "huge_coordinate_examples": [
+       {
+        "index": 1,
+        "point": [
+         1000000000.0,
+         0.0,
+         0.0
+        ],
+        "max_abs": 1000000000.0
+       }
+      ]
+     }
+    }
+   ],
+   "non_finite_points": [
+    {
+     "path": "/World/NaN",
+     "normalized_path": "/World/NaN",
+     "category": "render_like",
+     "count": 2,
+     "details": {
+      "non_finite_point_examples": [
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "face_vertex_count_index_length_mismatch": [
+    {
+     "path": "/World/Mismatch",
+     "normalized_path": "/World/Mismatch",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "expected_index_count": 6
+     }
+    }
+   ],
+   "missing_points": [
+    {
+     "path": "/World/NoTopology",
+     "normalized_path": "/World/NoTopology",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ],
+   "missing_face_vertex_counts": [
+    {
+     "path": "/World/NoTopology",
+     "normalized_path": "/World/NoTopology",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ],
+   "missing_face_vertex_indices": [
+    {
+     "path": "/World/NoTopology",
+     "normalized_path": "/World/NoTopology",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ],
+   "authored_extent_mismatch": [
+    {
+     "path": "/World/BadExtent",
+     "normalized_path": "/World/BadExtent",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "authored_extent_max_delta": 5.0
+     }
+    }
+   ],
+   "negative_transform_determinant": [
+    {
+     "path": "/World/Flipped/Mesh",
+     "normalized_path": "/World/Flipped/Mesh",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ],
+   "near_zero_transform_determinant": [
+    {
+     "path": "/World/Flat/Mesh",
+     "normalized_path": "/World/Flat/Mesh",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ]
+  },
+  "worst_meshes": [
+   {
+    "path": "/World/NoTopology",
+    "normalized_path": "/World/NoTopology",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 0.0,
+    "issue_count": 3,
+    "issues": {
+     "missing_points": 1,
+     "missing_face_vertex_counts": 1,
+     "missing_face_vertex_indices": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/NaN",
+    "normalized_path": "/World/NaN",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 2,
+    "issues": {
+     "non_finite_points": 2
+    },
+    "details": {
+     "non_finite_point_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/Mismatch",
+    "normalized_path": "/World/Mismatch",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "expected_index_count": 6
+    }
+   },
+   {
+    "path": "/World/NegIndex",
+    "normalized_path": "/World/NegIndex",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_face_vertex_indices": 1
+    },
+    "details": {
+     "negative_index_examples": [
+      -1
+     ]
+    }
+   },
+   {
+    "path": "/World/OutOfRange",
+    "normalized_path": "/World/OutOfRange",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "out_of_range_face_vertex_indices": 1
+    },
+    "details": {
+     "out_of_range_index_examples": [
+      9
+     ]
+    }
+   },
+   {
+    "path": "/World/Degenerate",
+    "normalized_path": "/World/Degenerate",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 4,
+    "face_vertex_index_count": 6,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 3,
+    "issues": {
+     "empty_or_negative_faces": 1,
+     "one_or_two_vertex_faces": 2
+    },
+    "details": {
+     "empty_or_negative_face_examples": [
+      3
+     ],
+     "one_or_two_vertex_face_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/Flat/Mesh",
+    "normalized_path": "/World/Flat/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "near_zero_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/BadExtent",
+    "normalized_path": "/World/BadExtent",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "authored_extent_mismatch": 1
+    },
+    "details": {
+     "authored_extent_max_delta": 5.0
+    }
+   },
+   {
+    "path": "/World/Flipped/Mesh",
+    "normalized_path": "/World/Flipped/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Huge",
+    "normalized_path": "/World/Huge",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1000000000.0,
+    "issue_count": 1,
+    "issues": {
+     "huge_coordinate_points": 1
+    },
+    "details": {
+     "huge_coordinate_examples": [
+      {
+       "index": 1,
+       "point": [
+        1000000000.0,
+        0.0,
+        0.0
+       ],
+       "max_abs": 1000000000.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Repeated",
+    "normalized_path": "/World/Repeated",
+    "category": "render_like",
+    "point_count": 4,
+    "face_count": 1,
+    "face_vertex_index_count": 4,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Empty",
+    "normalized_path": "/World/Empty",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Primvars",
+    "normalized_path": "/World/Primvars",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Normals",
+    "normalized_path": "/World/Normals",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Rock_COL",
+    "normalized_path": "/World/Rock_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/proxy/HelperMesh",
+    "normalized_path": "/World/proxy/HelperMesh",
+    "category": "unknown_helper_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Animated",
+    "normalized_path": "/World/Animated",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Dup_A",
+    "normalized_path": "/World/Dup_A",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Dup_B",
+    "normalized_path": "/World/Dup_B",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_points": [
+   {
+    "path": "/World/Repeated",
+    "normalized_path": "/World/Repeated",
+    "category": "render_like",
+    "point_count": 4,
+    "face_count": 1,
+    "face_vertex_index_count": 4,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Degenerate",
+    "normalized_path": "/World/Degenerate",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 4,
+    "face_vertex_index_count": 6,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 3,
+    "issues": {
+     "empty_or_negative_faces": 1,
+     "one_or_two_vertex_faces": 2
+    },
+    "details": {
+     "empty_or_negative_face_examples": [
+      3
+     ],
+     "one_or_two_vertex_face_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/NegIndex",
+    "normalized_path": "/World/NegIndex",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_face_vertex_indices": 1
+    },
+    "details": {
+     "negative_index_examples": [
+      -1
+     ]
+    }
+   },
+   {
+    "path": "/World/OutOfRange",
+    "normalized_path": "/World/OutOfRange",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "out_of_range_face_vertex_indices": 1
+    },
+    "details": {
+     "out_of_range_index_examples": [
+      9
+     ]
+    }
+   },
+   {
+    "path": "/World/Huge",
+    "normalized_path": "/World/Huge",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1000000000.0,
+    "issue_count": 1,
+    "issues": {
+     "huge_coordinate_points": 1
+    },
+    "details": {
+     "huge_coordinate_examples": [
+      {
+       "index": 1,
+       "point": [
+        1000000000.0,
+        0.0,
+        0.0
+       ],
+       "max_abs": 1000000000.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/NaN",
+    "normalized_path": "/World/NaN",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 2,
+    "issues": {
+     "non_finite_points": 2
+    },
+    "details": {
+     "non_finite_point_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/Mismatch",
+    "normalized_path": "/World/Mismatch",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "expected_index_count": 6
+    }
+   },
+   {
+    "path": "/World/Empty",
+    "normalized_path": "/World/Empty",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/BadExtent",
+    "normalized_path": "/World/BadExtent",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "authored_extent_mismatch": 1
+    },
+    "details": {
+     "authored_extent_max_delta": 5.0
+    }
+   },
+   {
+    "path": "/World/Primvars",
+    "normalized_path": "/World/Primvars",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Normals",
+    "normalized_path": "/World/Normals",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Flipped/Mesh",
+    "normalized_path": "/World/Flipped/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Flat/Mesh",
+    "normalized_path": "/World/Flat/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "near_zero_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Rock_COL",
+    "normalized_path": "/World/Rock_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/proxy/HelperMesh",
+    "normalized_path": "/World/proxy/HelperMesh",
+    "category": "unknown_helper_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Animated",
+    "normalized_path": "/World/Animated",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Dup_A",
+    "normalized_path": "/World/Dup_A",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Dup_B",
+    "normalized_path": "/World/Dup_B",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/NoTopology",
+    "normalized_path": "/World/NoTopology",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 0.0,
+    "issue_count": 3,
+    "issues": {
+     "missing_points": 1,
+     "missing_face_vertex_counts": 1,
+     "missing_face_vertex_indices": 1
+    },
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_faces": [
+   {
+    "path": "/World/Degenerate",
+    "normalized_path": "/World/Degenerate",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 4,
+    "face_vertex_index_count": 6,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 3,
+    "issues": {
+     "empty_or_negative_faces": 1,
+     "one_or_two_vertex_faces": 2
+    },
+    "details": {
+     "empty_or_negative_face_examples": [
+      3
+     ],
+     "one_or_two_vertex_face_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/Mismatch",
+    "normalized_path": "/World/Mismatch",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "expected_index_count": 6
+    }
+   },
+   {
+    "path": "/World/Repeated",
+    "normalized_path": "/World/Repeated",
+    "category": "render_like",
+    "point_count": 4,
+    "face_count": 1,
+    "face_vertex_index_count": 4,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/NegIndex",
+    "normalized_path": "/World/NegIndex",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_face_vertex_indices": 1
+    },
+    "details": {
+     "negative_index_examples": [
+      -1
+     ]
+    }
+   },
+   {
+    "path": "/World/OutOfRange",
+    "normalized_path": "/World/OutOfRange",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "out_of_range_face_vertex_indices": 1
+    },
+    "details": {
+     "out_of_range_index_examples": [
+      9
+     ]
+    }
+   },
+   {
+    "path": "/World/Huge",
+    "normalized_path": "/World/Huge",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1000000000.0,
+    "issue_count": 1,
+    "issues": {
+     "huge_coordinate_points": 1
+    },
+    "details": {
+     "huge_coordinate_examples": [
+      {
+       "index": 1,
+       "point": [
+        1000000000.0,
+        0.0,
+        0.0
+       ],
+       "max_abs": 1000000000.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/NaN",
+    "normalized_path": "/World/NaN",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 2,
+    "issues": {
+     "non_finite_points": 2
+    },
+    "details": {
+     "non_finite_point_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/BadExtent",
+    "normalized_path": "/World/BadExtent",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "authored_extent_mismatch": 1
+    },
+    "details": {
+     "authored_extent_max_delta": 5.0
+    }
+   },
+   {
+    "path": "/World/Primvars",
+    "normalized_path": "/World/Primvars",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Normals",
+    "normalized_path": "/World/Normals",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Flipped/Mesh",
+    "normalized_path": "/World/Flipped/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Flat/Mesh",
+    "normalized_path": "/World/Flat/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "near_zero_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Rock_COL",
+    "normalized_path": "/World/Rock_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/proxy/HelperMesh",
+    "normalized_path": "/World/proxy/HelperMesh",
+    "category": "unknown_helper_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Animated",
+    "normalized_path": "/World/Animated",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Dup_A",
+    "normalized_path": "/World/Dup_A",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Dup_B",
+    "normalized_path": "/World/Dup_B",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Empty",
+    "normalized_path": "/World/Empty",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/NoTopology",
+    "normalized_path": "/World/NoTopology",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 0.0,
+    "issue_count": 3,
+    "issues": {
+     "missing_points": 1,
+     "missing_face_vertex_counts": 1,
+     "missing_face_vertex_indices": 1
+    },
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_extent": [
+   {
+    "path": "/World/Huge",
+    "normalized_path": "/World/Huge",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1000000000.0,
+    "issue_count": 1,
+    "issues": {
+     "huge_coordinate_points": 1
+    },
+    "details": {
+     "huge_coordinate_examples": [
+      {
+       "index": 1,
+       "point": [
+        1000000000.0,
+        0.0,
+        0.0
+       ],
+       "max_abs": 1000000000.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Rock_COL",
+    "normalized_path": "/World/Rock_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/proxy/HelperMesh",
+    "normalized_path": "/World/proxy/HelperMesh",
+    "category": "unknown_helper_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Dup_A",
+    "normalized_path": "/World/Dup_A",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Dup_B",
+    "normalized_path": "/World/Dup_B",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Repeated",
+    "normalized_path": "/World/Repeated",
+    "category": "render_like",
+    "point_count": 4,
+    "face_count": 1,
+    "face_vertex_index_count": 4,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Degenerate",
+    "normalized_path": "/World/Degenerate",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 4,
+    "face_vertex_index_count": 6,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 3,
+    "issues": {
+     "empty_or_negative_faces": 1,
+     "one_or_two_vertex_faces": 2
+    },
+    "details": {
+     "empty_or_negative_face_examples": [
+      3
+     ],
+     "one_or_two_vertex_face_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/NegIndex",
+    "normalized_path": "/World/NegIndex",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_face_vertex_indices": 1
+    },
+    "details": {
+     "negative_index_examples": [
+      -1
+     ]
+    }
+   },
+   {
+    "path": "/World/OutOfRange",
+    "normalized_path": "/World/OutOfRange",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "out_of_range_face_vertex_indices": 1
+    },
+    "details": {
+     "out_of_range_index_examples": [
+      9
+     ]
+    }
+   },
+   {
+    "path": "/World/Mismatch",
+    "normalized_path": "/World/Mismatch",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "expected_index_count": 6
+    }
+   },
+   {
+    "path": "/World/Empty",
+    "normalized_path": "/World/Empty",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/BadExtent",
+    "normalized_path": "/World/BadExtent",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "authored_extent_mismatch": 1
+    },
+    "details": {
+     "authored_extent_max_delta": 5.0
+    }
+   },
+   {
+    "path": "/World/Primvars",
+    "normalized_path": "/World/Primvars",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Normals",
+    "normalized_path": "/World/Normals",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Flipped/Mesh",
+    "normalized_path": "/World/Flipped/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Flat/Mesh",
+    "normalized_path": "/World/Flat/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "near_zero_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Animated",
+    "normalized_path": "/World/Animated",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/NaN",
+    "normalized_path": "/World/NaN",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 2,
+    "issues": {
+     "non_finite_points": 2
+    },
+    "details": {
+     "non_finite_point_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/NoTopology",
+    "normalized_path": "/World/NoTopology",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 0.0,
+    "issue_count": 3,
+    "issues": {
+     "missing_points": 1,
+     "missing_face_vertex_counts": 1,
+     "missing_face_vertex_indices": 1
+    },
+    "details": {}
+   }
+  ]
+ },
+ "geometry_standard_frame1": {
+  "stage": "<fixtures>/golden_corpus/geometry.usda",
+  "default_prim": null,
+  "prototype_count": 0,
+  "mesh_count": 19,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "standard",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": 1.0,
+  "time_code": 1.0,
+  "mesh_cache": {
+   "mode": "off",
+   "entries": 0,
+   "hits": 0,
+   "misses": 0
+  },
+  "summary_counts": {
+   "zero_area_triangles": 4,
+   "one_or_two_vertex_faces": 2,
+   "non_finite_points": 2,
+   "primvar_length_mismatch": 2,
+   "faces_with_repeated_vertices": 1,
+   "empty_or_negative_faces": 1,
+   "negative_face_vertex_indices": 1,
+   "out_of_range_face_vertex_indices": 1,
+   "huge_coordinate_points": 1,
+   "face_vertex_count_index_length_mismatch": 1,
+   "missing_points": 1,
+   "missing_face_vertex_counts": 1,
+   "missing_face_vertex_indices": 1,
+   "authored_extent_mismatch": 1,
+   "primvar_index_out_of_range": 1,
+   "primvar_element_size_mismatch": 1,
+   "uv_unusual_interpolation": 1,
+   "uv_empty": 1,
+   "normals_length_mismatch": 1,
+   "normals_non_finite": 1,
+   "negative_transform_determinant": 1,
+   "near_zero_transform_determinant": 1
+  },
+  "category_counts": {
+   "render_like": 17,
+   "collision_like": 1,
+   "unknown_helper_like": 1
+  },
+  "category_issue_counts": {
+   "render_like": {
+    "zero_area_triangles": 3,
+    "one_or_two_vertex_faces": 2,
+    "non_finite_points": 2,
+    "primvar_length_mismatch": 2,
+    "faces_with_repeated_vertices": 1,
+    "empty_or_negative_faces": 1,
+    "negative_face_vertex_indices": 1,
+    "out_of_range_face_vertex_indices": 1,
+    "huge_coordinate_points": 1,
+    "face_vertex_count_index_length_mismatch": 1,
+    "missing_points": 1,
+    "missing_face_vertex_counts": 1,
+    "missing_face_vertex_indices": 1,
+    "authored_extent_mismatch": 1,
+    "primvar_index_out_of_range": 1,
+    "primvar_element_size_mismatch": 1,
+    "uv_unusual_interpolation": 1,
+    "uv_empty": 1,
+    "normals_length_mismatch": 1,
+    "normals_non_finite": 1,
+    "negative_transform_determinant": 1,
+    "near_zero_transform_determinant": 1
+   },
+   "unknown_helper_like": {
+    "zero_area_triangles": 1
+   },
+   "collision_like": {}
+  },
+  "serious_geometry_failures": 13,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {
+   "faces_with_repeated_vertices": [
+    {
+     "path": "/World/Repeated",
+     "normalized_path": "/World/Repeated",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "repeated_vertex_face_examples": [
+       {
+        "indices": [
+         0,
+         1,
+         1,
+         2
+        ]
+       }
+      ],
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         1
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    }
+   ],
+   "zero_area_triangles": [
+    {
+     "path": "/World/Repeated",
+     "normalized_path": "/World/Repeated",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "repeated_vertex_face_examples": [
+       {
+        "indices": [
+         0,
+         1,
+         1,
+         2
+        ]
+       }
+      ],
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         1
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    },
+    {
+     "path": "/World/proxy/HelperMesh",
+     "normalized_path": "/World/proxy/HelperMesh",
+     "category": "unknown_helper_like",
+     "count": 1,
+     "details": {
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         2
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    },
+    {
+     "path": "/World/Dup_A",
+     "normalized_path": "/World/Dup_A",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         2
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    },
+    {
+     "path": "/World/Dup_B",
+     "normalized_path": "/World/Dup_B",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         2
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    }
+   ],
+   "empty_or_negative_faces": [
+    {
+     "path": "/World/Degenerate",
+     "normalized_path": "/World/Degenerate",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "empty_or_negative_face_examples": [
+       3
+      ],
+      "one_or_two_vertex_face_examples": [
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "one_or_two_vertex_faces": [
+    {
+     "path": "/World/Degenerate",
+     "normalized_path": "/World/Degenerate",
+     "category": "render_like",
+     "count": 2,
+     "details": {
+      "empty_or_negative_face_examples": [
+       3
+      ],
+      "one_or_two_vertex_face_examples": [
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "negative_face_vertex_indices": [
+    {
+     "path": "/World/NegIndex",
+     "normalized_path": "/World/NegIndex",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "negative_index_examples": [
+       -1
+      ]
+     }
+    }
+   ],
+   "out_of_range_face_vertex_indices": [
+    {
+     "path": "/World/OutOfRange",
+     "normalized_path": "/World/OutOfRange",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "out_of_range_index_examples": [
+       9
+      ]
+     }
+    }
+   ],
+   "huge_coordinate_points": [
+    {
+     "path": "/World/Huge",
+     "normalized_path": "/World/Huge",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "huge_coordinate_examples": [
+       {
+        "index": 1,
+        "point": [
+         1000000000.0,
+         0.0,
+         0.0
+        ],
+        "max_abs": 1000000000.0
+       }
+      ]
+     }
+    }
+   ],
+   "non_finite_points": [
+    {
+     "path": "/World/NaN",
+     "normalized_path": "/World/NaN",
+     "category": "render_like",
+     "count": 2,
+     "details": {
+      "non_finite_point_examples": [
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "face_vertex_count_index_length_mismatch": [
+    {
+     "path": "/World/Mismatch",
+     "normalized_path": "/World/Mismatch",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "expected_index_count": 6
+     }
+    }
+   ],
+   "missing_points": [
+    {
+     "path": "/World/NoTopology",
+     "normalized_path": "/World/NoTopology",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ],
+   "missing_face_vertex_counts": [
+    {
+     "path": "/World/NoTopology",
+     "normalized_path": "/World/NoTopology",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ],
+   "missing_face_vertex_indices": [
+    {
+     "path": "/World/NoTopology",
+     "normalized_path": "/World/NoTopology",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ],
+   "authored_extent_mismatch": [
+    {
+     "path": "/World/BadExtent",
+     "normalized_path": "/World/BadExtent",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "authored_extent_max_delta": 5.0
+     }
+    }
+   ],
+   "primvar_index_out_of_range": [
+    {
+     "path": "/World/Primvars",
+     "normalized_path": "/World/Primvars",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "primvar_index_out_of_range": [
+       {
+        "primvar": "color",
+        "issue": "primvar_index_out_of_range",
+        "value_count": 2,
+        "bad_index_examples": [
+         5
+        ]
+       }
+      ],
+      "primvar_element_size_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_element_size_mismatch",
+        "value_count": 5,
+        "element_size": 2
+       }
+      ],
+      "primvar_length_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "vertex",
+        "expected": 3,
+        "actual": 2,
+        "value_count": 5,
+        "index_count": 0,
+        "element_size": 2
+       },
+       {
+        "primvar": "uv1",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 0,
+        "value_count": 0,
+        "index_count": 0,
+        "element_size": 1
+       }
+      ],
+      "uv_unusual_interpolation": [
+       {
+        "primvar": "st",
+        "issue": "uv_unusual_interpolation",
+        "interpolation": "uniform"
+       }
+      ],
+      "uv_empty": [
+       {
+        "primvar": "uv1",
+        "issue": "uv_empty"
+       }
+      ]
+     }
+    }
+   ],
+   "primvar_element_size_mismatch": [
+    {
+     "path": "/World/Primvars",
+     "normalized_path": "/World/Primvars",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "primvar_index_out_of_range": [
+       {
+        "primvar": "color",
+        "issue": "primvar_index_out_of_range",
+        "value_count": 2,
+        "bad_index_examples": [
+         5
+        ]
+       }
+      ],
+      "primvar_element_size_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_element_size_mismatch",
+        "value_count": 5,
+        "element_size": 2
+       }
+      ],
+      "primvar_length_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "vertex",
+        "expected": 3,
+        "actual": 2,
+        "value_count": 5,
+        "index_count": 0,
+        "element_size": 2
+       },
+       {
+        "primvar": "uv1",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 0,
+        "value_count": 0,
+        "index_count": 0,
+        "element_size": 1
+       }
+      ],
+      "uv_unusual_interpolation": [
+       {
+        "primvar": "st",
+        "issue": "uv_unusual_interpolation",
+        "interpolation": "uniform"
+       }
+      ],
+      "uv_empty": [
+       {
+        "primvar": "uv1",
+        "issue": "uv_empty"
+       }
+      ]
+     }
+    }
+   ],
+   "primvar_length_mismatch": [
+    {
+     "path": "/World/Primvars",
+     "normalized_path": "/World/Primvars",
+     "category": "render_like",
+     "count": 2,
+     "details": {
+      "primvar_index_out_of_range": [
+       {
+        "primvar": "color",
+        "issue": "primvar_index_out_of_range",
+        "value_count": 2,
+        "bad_index_examples": [
+         5
+        ]
+       }
+      ],
+      "primvar_element_size_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_element_size_mismatch",
+        "value_count": 5,
+        "element_size": 2
+       }
+      ],
+      "primvar_length_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "vertex",
+        "expected": 3,
+        "actual": 2,
+        "value_count": 5,
+        "index_count": 0,
+        "element_size": 2
+       },
+       {
+        "primvar": "uv1",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 0,
+        "value_count": 0,
+        "index_count": 0,
+        "element_size": 1
+       }
+      ],
+      "uv_unusual_interpolation": [
+       {
+        "primvar": "st",
+        "issue": "uv_unusual_interpolation",
+        "interpolation": "uniform"
+       }
+      ],
+      "uv_empty": [
+       {
+        "primvar": "uv1",
+        "issue": "uv_empty"
+       }
+      ]
+     }
+    }
+   ],
+   "uv_unusual_interpolation": [
+    {
+     "path": "/World/Primvars",
+     "normalized_path": "/World/Primvars",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "primvar_index_out_of_range": [
+       {
+        "primvar": "color",
+        "issue": "primvar_index_out_of_range",
+        "value_count": 2,
+        "bad_index_examples": [
+         5
+        ]
+       }
+      ],
+      "primvar_element_size_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_element_size_mismatch",
+        "value_count": 5,
+        "element_size": 2
+       }
+      ],
+      "primvar_length_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "vertex",
+        "expected": 3,
+        "actual": 2,
+        "value_count": 5,
+        "index_count": 0,
+        "element_size": 2
+       },
+       {
+        "primvar": "uv1",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 0,
+        "value_count": 0,
+        "index_count": 0,
+        "element_size": 1
+       }
+      ],
+      "uv_unusual_interpolation": [
+       {
+        "primvar": "st",
+        "issue": "uv_unusual_interpolation",
+        "interpolation": "uniform"
+       }
+      ],
+      "uv_empty": [
+       {
+        "primvar": "uv1",
+        "issue": "uv_empty"
+       }
+      ]
+     }
+    }
+   ],
+   "uv_empty": [
+    {
+     "path": "/World/Primvars",
+     "normalized_path": "/World/Primvars",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "primvar_index_out_of_range": [
+       {
+        "primvar": "color",
+        "issue": "primvar_index_out_of_range",
+        "value_count": 2,
+        "bad_index_examples": [
+         5
+        ]
+       }
+      ],
+      "primvar_element_size_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_element_size_mismatch",
+        "value_count": 5,
+        "element_size": 2
+       }
+      ],
+      "primvar_length_mismatch": [
+       {
+        "primvar": "grouped",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "vertex",
+        "expected": 3,
+        "actual": 2,
+        "value_count": 5,
+        "index_count": 0,
+        "element_size": 2
+       },
+       {
+        "primvar": "uv1",
+        "issue": "primvar_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 0,
+        "value_count": 0,
+        "index_count": 0,
+        "element_size": 1
+       }
+      ],
+      "uv_unusual_interpolation": [
+       {
+        "primvar": "st",
+        "issue": "uv_unusual_interpolation",
+        "interpolation": "uniform"
+       }
+      ],
+      "uv_empty": [
+       {
+        "primvar": "uv1",
+        "issue": "uv_empty"
+       }
+      ]
+     }
+    }
+   ],
+   "normals_length_mismatch": [
+    {
+     "path": "/World/Normals",
+     "normalized_path": "/World/Normals",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "normals_length_mismatch": [
+       {
+        "issue": "normals_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 2
+       }
+      ],
+      "normals_non_finite": [
+       {
+        "issue": "normals_non_finite",
+        "index_examples": [
+         1
+        ]
+       }
+      ]
+     }
+    }
+   ],
+   "normals_non_finite": [
+    {
+     "path": "/World/Normals",
+     "normalized_path": "/World/Normals",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "normals_length_mismatch": [
+       {
+        "issue": "normals_length_mismatch",
+        "interpolation": "faceVarying",
+        "expected": 3,
+        "actual": 2
+       }
+      ],
+      "normals_non_finite": [
+       {
+        "issue": "normals_non_finite",
+        "index_examples": [
+         1
+        ]
+       }
+      ]
+     }
+    }
+   ],
+   "negative_transform_determinant": [
+    {
+     "path": "/World/Flipped/Mesh",
+     "normalized_path": "/World/Flipped/Mesh",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ],
+   "near_zero_transform_determinant": [
+    {
+     "path": "/World/Flat/Mesh",
+     "normalized_path": "/World/Flat/Mesh",
+     "category": "render_like",
+     "count": 1,
+     "details": {}
+    }
+   ]
+  },
+  "worst_meshes": [
+   {
+    "path": "/World/NoTopology",
+    "normalized_path": "/World/NoTopology",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 0.0,
+    "issue_count": 3,
+    "issues": {
+     "missing_points": 1,
+     "missing_face_vertex_counts": 1,
+     "missing_face_vertex_indices": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/NaN",
+    "normalized_path": "/World/NaN",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 2,
+    "issues": {
+     "non_finite_points": 2
+    },
+    "details": {
+     "non_finite_point_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/Mismatch",
+    "normalized_path": "/World/Mismatch",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "expected_index_count": 6
+    }
+   },
+   {
+    "path": "/World/NegIndex",
+    "normalized_path": "/World/NegIndex",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_face_vertex_indices": 1
+    },
+    "details": {
+     "negative_index_examples": [
+      -1
+     ]
+    }
+   },
+   {
+    "path": "/World/OutOfRange",
+    "normalized_path": "/World/OutOfRange",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "out_of_range_face_vertex_indices": 1
+    },
+    "details": {
+     "out_of_range_index_examples": [
+      9
+     ]
+    }
+   },
+   {
+    "path": "/World/Degenerate",
+    "normalized_path": "/World/Degenerate",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 4,
+    "face_vertex_index_count": 6,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 3,
+    "issues": {
+     "empty_or_negative_faces": 1,
+     "one_or_two_vertex_faces": 2
+    },
+    "details": {
+     "empty_or_negative_face_examples": [
+      3
+     ],
+     "one_or_two_vertex_face_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/Primvars",
+    "normalized_path": "/World/Primvars",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 6,
+    "issues": {
+     "primvar_index_out_of_range": 1,
+     "primvar_element_size_mismatch": 1,
+     "primvar_length_mismatch": 2,
+     "uv_unusual_interpolation": 1,
+     "uv_empty": 1
+    },
+    "details": {
+     "primvar_index_out_of_range": [
+      {
+       "primvar": "color",
+       "issue": "primvar_index_out_of_range",
+       "value_count": 2,
+       "bad_index_examples": [
+        5
+       ]
+      }
+     ],
+     "primvar_element_size_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_element_size_mismatch",
+       "value_count": 5,
+       "element_size": 2
+      }
+     ],
+     "primvar_length_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "vertex",
+       "expected": 3,
+       "actual": 2,
+       "value_count": 5,
+       "index_count": 0,
+       "element_size": 2
+      },
+      {
+       "primvar": "uv1",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 0,
+       "value_count": 0,
+       "index_count": 0,
+       "element_size": 1
+      }
+     ],
+     "uv_unusual_interpolation": [
+      {
+       "primvar": "st",
+       "issue": "uv_unusual_interpolation",
+       "interpolation": "uniform"
+      }
+     ],
+     "uv_empty": [
+      {
+       "primvar": "uv1",
+       "issue": "uv_empty"
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Flat/Mesh",
+    "normalized_path": "/World/Flat/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "near_zero_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Repeated",
+    "normalized_path": "/World/Repeated",
+    "category": "render_like",
+    "point_count": 4,
+    "face_count": 1,
+    "face_vertex_index_count": 4,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "faces_with_repeated_vertices": 1,
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "repeated_vertex_face_examples": [
+      {
+       "indices": [
+        0,
+        1,
+        1,
+        2
+       ]
+      }
+     ],
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        1
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Normals",
+    "normalized_path": "/World/Normals",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "normals_length_mismatch": 1,
+     "normals_non_finite": 1
+    },
+    "details": {
+     "normals_length_mismatch": [
+      {
+       "issue": "normals_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 2
+      }
+     ],
+     "normals_non_finite": [
+      {
+       "issue": "normals_non_finite",
+       "index_examples": [
+        1
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/proxy/HelperMesh",
+    "normalized_path": "/World/proxy/HelperMesh",
+    "category": "unknown_helper_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Dup_A",
+    "normalized_path": "/World/Dup_A",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Dup_B",
+    "normalized_path": "/World/Dup_B",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/BadExtent",
+    "normalized_path": "/World/BadExtent",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "authored_extent_mismatch": 1
+    },
+    "details": {
+     "authored_extent_max_delta": 5.0
+    }
+   },
+   {
+    "path": "/World/Flipped/Mesh",
+    "normalized_path": "/World/Flipped/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Huge",
+    "normalized_path": "/World/Huge",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1000000000.0,
+    "issue_count": 1,
+    "issues": {
+     "huge_coordinate_points": 1
+    },
+    "details": {
+     "huge_coordinate_examples": [
+      {
+       "index": 1,
+       "point": [
+        1000000000.0,
+        0.0,
+        0.0
+       ],
+       "max_abs": 1000000000.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Empty",
+    "normalized_path": "/World/Empty",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Rock_COL",
+    "normalized_path": "/World/Rock_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Animated",
+    "normalized_path": "/World/Animated",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_points": [
+   {
+    "path": "/World/Repeated",
+    "normalized_path": "/World/Repeated",
+    "category": "render_like",
+    "point_count": 4,
+    "face_count": 1,
+    "face_vertex_index_count": 4,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "faces_with_repeated_vertices": 1,
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "repeated_vertex_face_examples": [
+      {
+       "indices": [
+        0,
+        1,
+        1,
+        2
+       ]
+      }
+     ],
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        1
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Degenerate",
+    "normalized_path": "/World/Degenerate",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 4,
+    "face_vertex_index_count": 6,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 3,
+    "issues": {
+     "empty_or_negative_faces": 1,
+     "one_or_two_vertex_faces": 2
+    },
+    "details": {
+     "empty_or_negative_face_examples": [
+      3
+     ],
+     "one_or_two_vertex_face_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/NegIndex",
+    "normalized_path": "/World/NegIndex",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_face_vertex_indices": 1
+    },
+    "details": {
+     "negative_index_examples": [
+      -1
+     ]
+    }
+   },
+   {
+    "path": "/World/OutOfRange",
+    "normalized_path": "/World/OutOfRange",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "out_of_range_face_vertex_indices": 1
+    },
+    "details": {
+     "out_of_range_index_examples": [
+      9
+     ]
+    }
+   },
+   {
+    "path": "/World/Huge",
+    "normalized_path": "/World/Huge",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1000000000.0,
+    "issue_count": 1,
+    "issues": {
+     "huge_coordinate_points": 1
+    },
+    "details": {
+     "huge_coordinate_examples": [
+      {
+       "index": 1,
+       "point": [
+        1000000000.0,
+        0.0,
+        0.0
+       ],
+       "max_abs": 1000000000.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/NaN",
+    "normalized_path": "/World/NaN",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 2,
+    "issues": {
+     "non_finite_points": 2
+    },
+    "details": {
+     "non_finite_point_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/Mismatch",
+    "normalized_path": "/World/Mismatch",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "expected_index_count": 6
+    }
+   },
+   {
+    "path": "/World/Empty",
+    "normalized_path": "/World/Empty",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/BadExtent",
+    "normalized_path": "/World/BadExtent",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "authored_extent_mismatch": 1
+    },
+    "details": {
+     "authored_extent_max_delta": 5.0
+    }
+   },
+   {
+    "path": "/World/Primvars",
+    "normalized_path": "/World/Primvars",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 6,
+    "issues": {
+     "primvar_index_out_of_range": 1,
+     "primvar_element_size_mismatch": 1,
+     "primvar_length_mismatch": 2,
+     "uv_unusual_interpolation": 1,
+     "uv_empty": 1
+    },
+    "details": {
+     "primvar_index_out_of_range": [
+      {
+       "primvar": "color",
+       "issue": "primvar_index_out_of_range",
+       "value_count": 2,
+       "bad_index_examples": [
+        5
+       ]
+      }
+     ],
+     "primvar_element_size_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_element_size_mismatch",
+       "value_count": 5,
+       "element_size": 2
+      }
+     ],
+     "primvar_length_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "vertex",
+       "expected": 3,
+       "actual": 2,
+       "value_count": 5,
+       "index_count": 0,
+       "element_size": 2
+      },
+      {
+       "primvar": "uv1",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 0,
+       "value_count": 0,
+       "index_count": 0,
+       "element_size": 1
+      }
+     ],
+     "uv_unusual_interpolation": [
+      {
+       "primvar": "st",
+       "issue": "uv_unusual_interpolation",
+       "interpolation": "uniform"
+      }
+     ],
+     "uv_empty": [
+      {
+       "primvar": "uv1",
+       "issue": "uv_empty"
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Normals",
+    "normalized_path": "/World/Normals",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "normals_length_mismatch": 1,
+     "normals_non_finite": 1
+    },
+    "details": {
+     "normals_length_mismatch": [
+      {
+       "issue": "normals_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 2
+      }
+     ],
+     "normals_non_finite": [
+      {
+       "issue": "normals_non_finite",
+       "index_examples": [
+        1
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Flipped/Mesh",
+    "normalized_path": "/World/Flipped/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Flat/Mesh",
+    "normalized_path": "/World/Flat/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "near_zero_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Rock_COL",
+    "normalized_path": "/World/Rock_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/proxy/HelperMesh",
+    "normalized_path": "/World/proxy/HelperMesh",
+    "category": "unknown_helper_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Animated",
+    "normalized_path": "/World/Animated",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Dup_A",
+    "normalized_path": "/World/Dup_A",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Dup_B",
+    "normalized_path": "/World/Dup_B",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/NoTopology",
+    "normalized_path": "/World/NoTopology",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 0.0,
+    "issue_count": 3,
+    "issues": {
+     "missing_points": 1,
+     "missing_face_vertex_counts": 1,
+     "missing_face_vertex_indices": 1
+    },
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_faces": [
+   {
+    "path": "/World/Degenerate",
+    "normalized_path": "/World/Degenerate",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 4,
+    "face_vertex_index_count": 6,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 3,
+    "issues": {
+     "empty_or_negative_faces": 1,
+     "one_or_two_vertex_faces": 2
+    },
+    "details": {
+     "empty_or_negative_face_examples": [
+      3
+     ],
+     "one_or_two_vertex_face_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/Mismatch",
+    "normalized_path": "/World/Mismatch",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "expected_index_count": 6
+    }
+   },
+   {
+    "path": "/World/Repeated",
+    "normalized_path": "/World/Repeated",
+    "category": "render_like",
+    "point_count": 4,
+    "face_count": 1,
+    "face_vertex_index_count": 4,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "faces_with_repeated_vertices": 1,
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "repeated_vertex_face_examples": [
+      {
+       "indices": [
+        0,
+        1,
+        1,
+        2
+       ]
+      }
+     ],
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        1
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/NegIndex",
+    "normalized_path": "/World/NegIndex",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_face_vertex_indices": 1
+    },
+    "details": {
+     "negative_index_examples": [
+      -1
+     ]
+    }
+   },
+   {
+    "path": "/World/OutOfRange",
+    "normalized_path": "/World/OutOfRange",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "out_of_range_face_vertex_indices": 1
+    },
+    "details": {
+     "out_of_range_index_examples": [
+      9
+     ]
+    }
+   },
+   {
+    "path": "/World/Huge",
+    "normalized_path": "/World/Huge",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1000000000.0,
+    "issue_count": 1,
+    "issues": {
+     "huge_coordinate_points": 1
+    },
+    "details": {
+     "huge_coordinate_examples": [
+      {
+       "index": 1,
+       "point": [
+        1000000000.0,
+        0.0,
+        0.0
+       ],
+       "max_abs": 1000000000.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/NaN",
+    "normalized_path": "/World/NaN",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 2,
+    "issues": {
+     "non_finite_points": 2
+    },
+    "details": {
+     "non_finite_point_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/BadExtent",
+    "normalized_path": "/World/BadExtent",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "authored_extent_mismatch": 1
+    },
+    "details": {
+     "authored_extent_max_delta": 5.0
+    }
+   },
+   {
+    "path": "/World/Primvars",
+    "normalized_path": "/World/Primvars",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 6,
+    "issues": {
+     "primvar_index_out_of_range": 1,
+     "primvar_element_size_mismatch": 1,
+     "primvar_length_mismatch": 2,
+     "uv_unusual_interpolation": 1,
+     "uv_empty": 1
+    },
+    "details": {
+     "primvar_index_out_of_range": [
+      {
+       "primvar": "color",
+       "issue": "primvar_index_out_of_range",
+       "value_count": 2,
+       "bad_index_examples": [
+        5
+       ]
+      }
+     ],
+     "primvar_element_size_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_element_size_mismatch",
+       "value_count": 5,
+       "element_size": 2
+      }
+     ],
+     "primvar_length_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "vertex",
+       "expected": 3,
+       "actual": 2,
+       "value_count": 5,
+       "index_count": 0,
+       "element_size": 2
+      },
+      {
+       "primvar": "uv1",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 0,
+       "value_count": 0,
+       "index_count": 0,
+       "element_size": 1
+      }
+     ],
+     "uv_unusual_interpolation": [
+      {
+       "primvar": "st",
+       "issue": "uv_unusual_interpolation",
+       "interpolation": "uniform"
+      }
+     ],
+     "uv_empty": [
+      {
+       "primvar": "uv1",
+       "issue": "uv_empty"
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Normals",
+    "normalized_path": "/World/Normals",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "normals_length_mismatch": 1,
+     "normals_non_finite": 1
+    },
+    "details": {
+     "normals_length_mismatch": [
+      {
+       "issue": "normals_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 2
+      }
+     ],
+     "normals_non_finite": [
+      {
+       "issue": "normals_non_finite",
+       "index_examples": [
+        1
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Flipped/Mesh",
+    "normalized_path": "/World/Flipped/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Flat/Mesh",
+    "normalized_path": "/World/Flat/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "near_zero_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Rock_COL",
+    "normalized_path": "/World/Rock_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/proxy/HelperMesh",
+    "normalized_path": "/World/proxy/HelperMesh",
+    "category": "unknown_helper_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Animated",
+    "normalized_path": "/World/Animated",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Dup_A",
+    "normalized_path": "/World/Dup_A",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Dup_B",
+    "normalized_path": "/World/Dup_B",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Empty",
+    "normalized_path": "/World/Empty",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/NoTopology",
+    "normalized_path": "/World/NoTopology",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 0.0,
+    "issue_count": 3,
+    "issues": {
+     "missing_points": 1,
+     "missing_face_vertex_counts": 1,
+     "missing_face_vertex_indices": 1
+    },
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_extent": [
+   {
+    "path": "/World/Huge",
+    "normalized_path": "/World/Huge",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1000000000.0,
+    "issue_count": 1,
+    "issues": {
+     "huge_coordinate_points": 1
+    },
+    "details": {
+     "huge_coordinate_examples": [
+      {
+       "index": 1,
+       "point": [
+        1000000000.0,
+        0.0,
+        0.0
+       ],
+       "max_abs": 1000000000.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Rock_COL",
+    "normalized_path": "/World/Rock_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/proxy/HelperMesh",
+    "normalized_path": "/World/proxy/HelperMesh",
+    "category": "unknown_helper_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Dup_A",
+    "normalized_path": "/World/Dup_A",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Dup_B",
+    "normalized_path": "/World/Dup_B",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Repeated",
+    "normalized_path": "/World/Repeated",
+    "category": "render_like",
+    "point_count": 4,
+    "face_count": 1,
+    "face_vertex_index_count": 4,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "faces_with_repeated_vertices": 1,
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "repeated_vertex_face_examples": [
+      {
+       "indices": [
+        0,
+        1,
+        1,
+        2
+       ]
+      }
+     ],
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        1
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Degenerate",
+    "normalized_path": "/World/Degenerate",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 4,
+    "face_vertex_index_count": 6,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 3,
+    "issues": {
+     "empty_or_negative_faces": 1,
+     "one_or_two_vertex_faces": 2
+    },
+    "details": {
+     "empty_or_negative_face_examples": [
+      3
+     ],
+     "one_or_two_vertex_face_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/NegIndex",
+    "normalized_path": "/World/NegIndex",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_face_vertex_indices": 1
+    },
+    "details": {
+     "negative_index_examples": [
+      -1
+     ]
+    }
+   },
+   {
+    "path": "/World/OutOfRange",
+    "normalized_path": "/World/OutOfRange",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "out_of_range_face_vertex_indices": 1
+    },
+    "details": {
+     "out_of_range_index_examples": [
+      9
+     ]
+    }
+   },
+   {
+    "path": "/World/Mismatch",
+    "normalized_path": "/World/Mismatch",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "expected_index_count": 6
+    }
+   },
+   {
+    "path": "/World/Empty",
+    "normalized_path": "/World/Empty",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/BadExtent",
+    "normalized_path": "/World/BadExtent",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "authored_extent_mismatch": 1
+    },
+    "details": {
+     "authored_extent_max_delta": 5.0
+    }
+   },
+   {
+    "path": "/World/Primvars",
+    "normalized_path": "/World/Primvars",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 6,
+    "issues": {
+     "primvar_index_out_of_range": 1,
+     "primvar_element_size_mismatch": 1,
+     "primvar_length_mismatch": 2,
+     "uv_unusual_interpolation": 1,
+     "uv_empty": 1
+    },
+    "details": {
+     "primvar_index_out_of_range": [
+      {
+       "primvar": "color",
+       "issue": "primvar_index_out_of_range",
+       "value_count": 2,
+       "bad_index_examples": [
+        5
+       ]
+      }
+     ],
+     "primvar_element_size_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_element_size_mismatch",
+       "value_count": 5,
+       "element_size": 2
+      }
+     ],
+     "primvar_length_mismatch": [
+      {
+       "primvar": "grouped",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "vertex",
+       "expected": 3,
+       "actual": 2,
+       "value_count": 5,
+       "index_count": 0,
+       "element_size": 2
+      },
+      {
+       "primvar": "uv1",
+       "issue": "primvar_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 0,
+       "value_count": 0,
+       "index_count": 0,
+       "element_size": 1
+      }
+     ],
+     "uv_unusual_interpolation": [
+      {
+       "primvar": "st",
+       "issue": "uv_unusual_interpolation",
+       "interpolation": "uniform"
+      }
+     ],
+     "uv_empty": [
+      {
+       "primvar": "uv1",
+       "issue": "uv_empty"
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Normals",
+    "normalized_path": "/World/Normals",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "normals_length_mismatch": 1,
+     "normals_non_finite": 1
+    },
+    "details": {
+     "normals_length_mismatch": [
+      {
+       "issue": "normals_length_mismatch",
+       "interpolation": "faceVarying",
+       "expected": 3,
+       "actual": 2
+      }
+     ],
+     "normals_non_finite": [
+      {
+       "issue": "normals_non_finite",
+       "index_examples": [
+        1
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Flipped/Mesh",
+    "normalized_path": "/World/Flipped/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "negative_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Flat/Mesh",
+    "normalized_path": "/World/Flat/Mesh",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "near_zero_transform_determinant": 1
+    },
+    "details": {}
+   },
+   {
+    "path": "/World/Animated",
+    "normalized_path": "/World/Animated",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/NaN",
+    "normalized_path": "/World/NaN",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 2,
+    "issues": {
+     "non_finite_points": 2
+    },
+    "details": {
+     "non_finite_point_examples": [
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/World/NoTopology",
+    "normalized_path": "/World/NoTopology",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 0,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 0.0,
+    "issue_count": 3,
+    "issues": {
+     "missing_points": 1,
+     "missing_face_vertex_counts": 1,
+     "missing_face_vertex_indices": 1
+    },
+    "details": {}
+   }
+  ]
+ },
+ "names": {
+  "stage": "<fixtures>/golden_corpus/geometry.usda",
+  "default_prim": null,
+  "prototype_count": 0,
+  "total_prims_including_prototypes": 23,
+  "type_counts": {
+   "Mesh": 19,
+   "Xform": 3,
+   "<untyped>": 1
+  },
+  "name_oddities": {
+   "duplicate_sibling_names": [],
+   "case_collision_names": []
+  },
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": false,
+    "pattern": null
+   }
+  },
+  "name_counts": {},
+  "hierarchy": {
+   "max_depth": 3,
+   "max_depth_examples": [
+    "/World/Flipped/Mesh",
+    "/World/Flat/Mesh",
+    "/World/proxy/HelperMesh"
+   ],
+   "single_child_chain_count": 0,
+   "single_child_chain_examples": [],
+   "leaf_scope_count": 0,
+   "leaf_scope_examples": [],
+   "empty_scope_count": 0,
+   "empty_scope_examples": [],
+   "same_name_parent_child_count": 0,
+   "same_name_parent_child_examples": [],
+   "xform_mesh_same_name_count": 0,
+   "xform_mesh_same_name_examples": [],
+   "mesh_with_mesh_child_count": 0,
+   "mesh_with_mesh_child_examples": [],
+   "mesh_parent_type_counts": {
+    "Xform": 18,
+    "<untyped>": 1
+   },
+   "deep_collision_like_mesh_count": 0,
+   "deep_collision_like_mesh_examples": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "name_oddity_counts": {}
+ },
+ "names_prefix": {
+  "stage": "<fixtures>/golden_corpus/geometry.usda",
+  "default_prim": null,
+  "prototype_count": 0,
+  "total_prims_including_prototypes": 23,
+  "type_counts": {
+   "Mesh": 19,
+   "Xform": 3,
+   "<untyped>": 1
+  },
+  "name_oddities": {
+   "non_prefix_style": [
+    "/World/Rock_COL",
+    "/World/Dup_A",
+    "/World/Dup_B"
+   ],
+   "duplicate_sibling_names": [],
+   "case_collision_names": []
+  },
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": true,
+    "pattern": "[A-Z][A-Za-z0-9]*"
+   }
+  },
+  "name_counts": {},
+  "hierarchy": {
+   "max_depth": 3,
+   "max_depth_examples": [
+    "/World/Flipped/Mesh",
+    "/World/Flat/Mesh",
+    "/World/proxy/HelperMesh"
+   ],
+   "single_child_chain_count": 0,
+   "single_child_chain_examples": [],
+   "leaf_scope_count": 0,
+   "leaf_scope_examples": [],
+   "empty_scope_count": 0,
+   "empty_scope_examples": [],
+   "same_name_parent_child_count": 0,
+   "same_name_parent_child_examples": [],
+   "xform_mesh_same_name_count": 0,
+   "xform_mesh_same_name_examples": [],
+   "mesh_with_mesh_child_count": 0,
+   "mesh_with_mesh_child_examples": [],
+   "mesh_parent_type_counts": {
+    "Xform": 18,
+    "<untyped>": 1
+   },
+   "deep_collision_like_mesh_count": 0,
+   "deep_collision_like_mesh_examples": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "name_oddity_counts": {
+   "non_prefix_style": 3
+  }
+ },
+ "scene": {
+  "stage": "<fixtures>/golden_corpus/geometry.usda",
+  "root_layer": "<fixtures>/golden_corpus/geometry.usda",
+  "default_prim": null,
+  "meters_per_unit": 0.01,
+  "up_axis": "Y",
+  "layer_count": 2,
+  "prims": {
+   "total": 23,
+   "by_type": {
+    "Mesh": 19,
+    "Xform": 3,
+    "<untyped>": 1
+   }
+  },
+  "prototype_count": 0,
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": false,
+    "pattern": null
+   }
+  },
+  "naming": {
+   "suspicious_count": 0,
+   "non_prefix_style_count": 0,
+   "duplicate_sibling_count": 0,
+   "duplicate_sibling_names": [],
+   "case_collision_count": 0,
+   "case_collision_names": [],
+   "examples": {}
+  },
+  "materials": {
+   "material_prim_count": 0,
+   "shader_prim_count": 0,
+   "mesh_count": 19,
+   "geom_subset_count": 0,
+   "mesh_with_computed_material": 0,
+   "mesh_without_computed_material": 19,
+   "geom_subset_with_computed_material": 0,
+   "geom_subset_without_computed_material": 0,
+   "mesh_without_mesh_or_subset_material": 19,
+   "bound_materials_used_by_mesh_count": 0,
+   "unbound_material_prim_count": 0,
+   "direct_binding_relation_count": 0,
+   "direct_binding_targets_missing_count": 0,
+   "direct_binding_targets_missing": [],
+   "direct_binding_targets_not_material_count": 0,
+   "direct_binding_targets_not_material": [],
+   "mesh_without_material_examples": [
+    "/World/Repeated",
+    "/World/Degenerate",
+    "/World/NegIndex",
+    "/World/OutOfRange",
+    "/World/Huge",
+    "/World/NaN",
+    "/World/Mismatch",
+    "/World/Empty",
+    "/World/NoTopology",
+    "/World/BadExtent",
+    "/World/Primvars",
+    "/World/Normals",
+    "/World/Flipped/Mesh",
+    "/World/Flat/Mesh",
+    "/World/Rock_COL",
+    "/World/proxy/HelperMesh",
+    "/World/Animated",
+    "/World/Dup_A",
+    "/World/Dup_B"
+   ],
+   "mesh_without_mesh_or_subset_material_examples": [
+    "/World/Repeated",
+    "/World/Degenerate",
+    "/World/NegIndex",
+    "/World/OutOfRange",
+    "/World/Huge",
+    "/World/NaN",
+    "/World/Mismatch",
+    "/World/Empty",
+    "/World/NoTopology",
+    "/World/BadExtent",
+    "/World/Primvars",
+    "/World/Normals",
+    "/World/Flipped/Mesh",
+    "/World/Flat/Mesh",
+    "/World/Rock_COL",
+    "/World/proxy/HelperMesh",
+    "/World/Animated",
+    "/World/Dup_A",
+    "/World/Dup_B"
+   ],
+   "geom_subset_without_material_examples": [],
+   "materials_without_surface_output": [],
+   "materials_without_surface_output_count": 0
+  },
+  "assets": {
+   "authored_asset_count": 0,
+   "resolved_asset_count": 0,
+   "missing_authored_asset_count": 0,
+   "missing_authored_assets": [],
+   "unverifiable_asset_count": 0,
+   "unverifiable_assets": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  }
+ },
+ "scene_prefix": {
+  "stage": "<fixtures>/golden_corpus/geometry.usda",
+  "root_layer": "<fixtures>/golden_corpus/geometry.usda",
+  "default_prim": null,
+  "meters_per_unit": 0.01,
+  "up_axis": "Y",
+  "layer_count": 2,
+  "prims": {
+   "total": 23,
+   "by_type": {
+    "Mesh": 19,
+    "Xform": 3,
+    "<untyped>": 1
+   }
+  },
+  "prototype_count": 0,
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": true,
+    "pattern": "[A-Z][A-Za-z0-9]*"
+   }
+  },
+  "naming": {
+   "suspicious_count": 0,
+   "non_prefix_style_count": 3,
+   "duplicate_sibling_count": 0,
+   "duplicate_sibling_names": [],
+   "case_collision_count": 0,
+   "case_collision_names": [],
+   "examples": {
+    "non_prefix_style": [
+     "/World/Rock_COL",
+     "/World/Dup_A",
+     "/World/Dup_B"
+    ]
+   }
+  },
+  "materials": {
+   "material_prim_count": 0,
+   "shader_prim_count": 0,
+   "mesh_count": 19,
+   "geom_subset_count": 0,
+   "mesh_with_computed_material": 0,
+   "mesh_without_computed_material": 19,
+   "geom_subset_with_computed_material": 0,
+   "geom_subset_without_computed_material": 0,
+   "mesh_without_mesh_or_subset_material": 19,
+   "bound_materials_used_by_mesh_count": 0,
+   "unbound_material_prim_count": 0,
+   "direct_binding_relation_count": 0,
+   "direct_binding_targets_missing_count": 0,
+   "direct_binding_targets_missing": [],
+   "direct_binding_targets_not_material_count": 0,
+   "direct_binding_targets_not_material": [],
+   "mesh_without_material_examples": [
+    "/World/Repeated",
+    "/World/Degenerate",
+    "/World/NegIndex",
+    "/World/OutOfRange",
+    "/World/Huge",
+    "/World/NaN",
+    "/World/Mismatch",
+    "/World/Empty",
+    "/World/NoTopology",
+    "/World/BadExtent",
+    "/World/Primvars",
+    "/World/Normals",
+    "/World/Flipped/Mesh",
+    "/World/Flat/Mesh",
+    "/World/Rock_COL",
+    "/World/proxy/HelperMesh",
+    "/World/Animated",
+    "/World/Dup_A",
+    "/World/Dup_B"
+   ],
+   "mesh_without_mesh_or_subset_material_examples": [
+    "/World/Repeated",
+    "/World/Degenerate",
+    "/World/NegIndex",
+    "/World/OutOfRange",
+    "/World/Huge",
+    "/World/NaN",
+    "/World/Mismatch",
+    "/World/Empty",
+    "/World/NoTopology",
+    "/World/BadExtent",
+    "/World/Primvars",
+    "/World/Normals",
+    "/World/Flipped/Mesh",
+    "/World/Flat/Mesh",
+    "/World/Rock_COL",
+    "/World/proxy/HelperMesh",
+    "/World/Animated",
+    "/World/Dup_A",
+    "/World/Dup_B"
+   ],
+   "geom_subset_without_material_examples": [],
+   "materials_without_surface_output": [],
+   "materials_without_surface_output_count": 0
+  },
+  "assets": {
+   "authored_asset_count": 0,
+   "resolved_asset_count": 0,
+   "missing_authored_asset_count": 0,
+   "missing_authored_assets": [],
+   "unverifiable_asset_count": 0,
+   "unverifiable_assets": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  }
+ }
+}

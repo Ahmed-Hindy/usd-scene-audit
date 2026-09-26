@@ -1,0 +1,179 @@
+#usda 1.0
+(
+    endTimeCode = 3
+    startTimeCode = 1
+)
+
+def Xform "World"
+{
+    def Mesh "Repeated"
+    {
+        int[] faceVertexCounts = [4]
+        int[] faceVertexIndices = [0, 1, 1, 2]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0)]
+    }
+
+    def Mesh "Degenerate"
+    {
+        int[] faceVertexCounts = [3, 1, 2, 0]
+        int[] faceVertexIndices = [0, 1, 2, 0, 1, 2]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+    }
+
+    def Mesh "NegIndex"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, -1, 2]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+    }
+
+    def Mesh "OutOfRange"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 9]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+    }
+
+    def Mesh "Huge"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points = [(0, 0, 0), (1000000000, 0, 0), (0, 1, 0)]
+    }
+
+    def Mesh "NaN"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points = [(0, 0, 0), (nan, 0, 0), (0, inf, 0)]
+    }
+
+    def Mesh "Mismatch"
+    {
+        int[] faceVertexCounts = [3, 3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+    }
+
+    def Mesh "Empty"
+    {
+        int[] faceVertexCounts = []
+        int[] faceVertexIndices = []
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+    }
+
+    def Mesh "NoTopology"
+    {
+    }
+
+    def Mesh "BadExtent"
+    {
+        float3[] extent = [(-5, -5, -5), (5, 5, 5)]
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+    }
+
+    def Mesh "Primvars"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        color3f[] primvars:color = [(1, 0, 0), (0, 1, 0)] (
+            interpolation = "vertex"
+        )
+        int[] primvars:color:indices = [0, 1, 5]
+        float[] primvars:grouped = [1, 2, 3, 4, 5] (
+            elementSize = 2
+            interpolation = "vertex"
+        )
+        texCoord2f[] primvars:st = [(0, 0)] (
+            interpolation = "uniform"
+        )
+        texCoord2f[] primvars:uv1 = [] (
+            interpolation = "faceVarying"
+        )
+        float[] primvars:weird = [1] (
+            interpolation = "bogusInterp"
+        )
+    }
+
+    def Mesh "Normals"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        normal3f[] normals = [(0, 0, 1), (nan, 0, 1)] (
+            interpolation = "faceVarying"
+        )
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+    }
+
+    def Xform "Flipped"
+    {
+        float3 xformOp:scale = (-1, 1, 1)
+        uniform token[] xformOpOrder = ["xformOp:scale"]
+
+        def Mesh "Mesh"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+    }
+
+    def Xform "Flat"
+    {
+        float3 xformOp:scale = (1, 1, 0)
+        uniform token[] xformOpOrder = ["xformOp:scale"]
+
+        def Mesh "Mesh"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+    }
+
+    def Mesh "Rock_COL"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (2, 0, 0)]
+    }
+
+    def "proxy"
+    {
+        def Mesh "HelperMesh"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (2, 0, 0)]
+        }
+    }
+
+    def Mesh "Animated"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points.timeSamples = {
+            1: [(0, 0, 1), (1, 0, 1), (0, 1, 1)],
+            2: [(0, 0, 2), (1, 0, 2), (0, 0, 2)],
+            3: [(0, 0, 3), (1, 0, 3), (0, 1, 3)],
+        }
+    }
+
+    def Mesh "Dup_A"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (2, 0, 0)]
+    }
+
+    def Mesh "Dup_B"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (2, 0, 0)]
+    }
+}
+

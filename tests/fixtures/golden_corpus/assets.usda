@@ -1,0 +1,25 @@
+#usda 1.0
+(
+    subLayers = [
+        @./assets_sub.usda@
+    ]
+)
+
+def "Assets" (
+    customData = {
+        asset inDict = @./tex/dict_missing.exr@
+    }
+    prepend references = @./assets_sub.usda@</FromSub>
+    delete references = @./tex/deleted_ref.usda@
+)
+{
+    asset inputs:found = @./tex/found.exr@
+    asset[] inputs:many = [@./tex/found.exr@, @./tex/also_missing.exr@]
+    asset inputs:missing = @./tex/missing.exr@
+    asset inputs:search = @tex/search_path_only.exr@
+    asset inputs:seq = @./tex/beauty.####.exr@
+    asset inputs:udim = @./tex/color.<UDIM>.exr@
+    asset inputs:udim_missing = @./tex/nope.<UDIM>.exr@
+    asset inputs:uri = @s3://bucket/tex.exr@
+}
+

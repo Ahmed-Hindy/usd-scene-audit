@@ -1,0 +1,1348 @@
+{
+ "geometry": {
+  "stage": "<fixtures>/golden_corpus/naming.usda",
+  "default_prim": "/World",
+  "prototype_count": 0,
+  "mesh_count": 5,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "exhaustive",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": null,
+  "time_code": "earliest",
+  "mesh_cache": {
+   "mode": "off",
+   "entries": 0,
+   "hits": 0,
+   "misses": 0
+  },
+  "summary_counts": {},
+  "category_counts": {
+   "render_like": 4,
+   "collision_like": 1
+  },
+  "category_issue_counts": {
+   "collision_like": {}
+  },
+  "serious_geometry_failures": 0,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {},
+  "worst_meshes": [
+   {
+    "path": "/World/Tree/Tree",
+    "normalized_path": "/World/Tree/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer",
+    "normalized_path": "/World/Outer",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer/Inner",
+    "normalized_path": "/World/Outer/Inner",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/a/b/c/d/Deep_COL",
+    "normalized_path": "/World/a/b/c/d/Deep_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/RefScope/Tree",
+    "normalized_path": "/World/RefScope/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_points": [
+   {
+    "path": "/World/Tree/Tree",
+    "normalized_path": "/World/Tree/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer",
+    "normalized_path": "/World/Outer",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer/Inner",
+    "normalized_path": "/World/Outer/Inner",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/a/b/c/d/Deep_COL",
+    "normalized_path": "/World/a/b/c/d/Deep_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/RefScope/Tree",
+    "normalized_path": "/World/RefScope/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_faces": [
+   {
+    "path": "/World/Tree/Tree",
+    "normalized_path": "/World/Tree/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer",
+    "normalized_path": "/World/Outer",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer/Inner",
+    "normalized_path": "/World/Outer/Inner",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/a/b/c/d/Deep_COL",
+    "normalized_path": "/World/a/b/c/d/Deep_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/RefScope/Tree",
+    "normalized_path": "/World/RefScope/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_extent": [
+   {
+    "path": "/World/Tree/Tree",
+    "normalized_path": "/World/Tree/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer",
+    "normalized_path": "/World/Outer",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer/Inner",
+    "normalized_path": "/World/Outer/Inner",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/a/b/c/d/Deep_COL",
+    "normalized_path": "/World/a/b/c/d/Deep_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/RefScope/Tree",
+    "normalized_path": "/World/RefScope/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ]
+ },
+ "geometry_fast_cached": {
+  "stage": "<fixtures>/golden_corpus/naming.usda",
+  "default_prim": "/World",
+  "prototype_count": 0,
+  "mesh_count": 5,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "fast",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": null,
+  "time_code": "earliest",
+  "mesh_cache": {
+   "mode": "face-hash",
+   "entries": 1,
+   "hits": 4,
+   "misses": 1
+  },
+  "summary_counts": {},
+  "category_counts": {
+   "render_like": 4,
+   "collision_like": 1
+  },
+  "category_issue_counts": {
+   "collision_like": {}
+  },
+  "serious_geometry_failures": 0,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {},
+  "worst_meshes": [
+   {
+    "path": "/World/Tree/Tree",
+    "normalized_path": "/World/Tree/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer",
+    "normalized_path": "/World/Outer",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer/Inner",
+    "normalized_path": "/World/Outer/Inner",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/a/b/c/d/Deep_COL",
+    "normalized_path": "/World/a/b/c/d/Deep_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/RefScope/Tree",
+    "normalized_path": "/World/RefScope/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_points": [
+   {
+    "path": "/World/Tree/Tree",
+    "normalized_path": "/World/Tree/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer",
+    "normalized_path": "/World/Outer",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer/Inner",
+    "normalized_path": "/World/Outer/Inner",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/a/b/c/d/Deep_COL",
+    "normalized_path": "/World/a/b/c/d/Deep_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/RefScope/Tree",
+    "normalized_path": "/World/RefScope/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_faces": [
+   {
+    "path": "/World/Tree/Tree",
+    "normalized_path": "/World/Tree/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer",
+    "normalized_path": "/World/Outer",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer/Inner",
+    "normalized_path": "/World/Outer/Inner",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/a/b/c/d/Deep_COL",
+    "normalized_path": "/World/a/b/c/d/Deep_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/RefScope/Tree",
+    "normalized_path": "/World/RefScope/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_extent": [
+   {
+    "path": "/World/Tree/Tree",
+    "normalized_path": "/World/Tree/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer",
+    "normalized_path": "/World/Outer",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer/Inner",
+    "normalized_path": "/World/Outer/Inner",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/a/b/c/d/Deep_COL",
+    "normalized_path": "/World/a/b/c/d/Deep_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/RefScope/Tree",
+    "normalized_path": "/World/RefScope/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ]
+ },
+ "geometry_standard_frame1": {
+  "stage": "<fixtures>/golden_corpus/naming.usda",
+  "default_prim": "/World",
+  "prototype_count": 0,
+  "mesh_count": 5,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "standard",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": 1.0,
+  "time_code": 1.0,
+  "mesh_cache": {
+   "mode": "off",
+   "entries": 0,
+   "hits": 0,
+   "misses": 0
+  },
+  "summary_counts": {},
+  "category_counts": {
+   "render_like": 4,
+   "collision_like": 1
+  },
+  "category_issue_counts": {
+   "collision_like": {}
+  },
+  "serious_geometry_failures": 0,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {},
+  "worst_meshes": [
+   {
+    "path": "/World/Tree/Tree",
+    "normalized_path": "/World/Tree/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer",
+    "normalized_path": "/World/Outer",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer/Inner",
+    "normalized_path": "/World/Outer/Inner",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/a/b/c/d/Deep_COL",
+    "normalized_path": "/World/a/b/c/d/Deep_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/RefScope/Tree",
+    "normalized_path": "/World/RefScope/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_points": [
+   {
+    "path": "/World/Tree/Tree",
+    "normalized_path": "/World/Tree/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer",
+    "normalized_path": "/World/Outer",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer/Inner",
+    "normalized_path": "/World/Outer/Inner",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/a/b/c/d/Deep_COL",
+    "normalized_path": "/World/a/b/c/d/Deep_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/RefScope/Tree",
+    "normalized_path": "/World/RefScope/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_faces": [
+   {
+    "path": "/World/Tree/Tree",
+    "normalized_path": "/World/Tree/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer",
+    "normalized_path": "/World/Outer",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer/Inner",
+    "normalized_path": "/World/Outer/Inner",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/a/b/c/d/Deep_COL",
+    "normalized_path": "/World/a/b/c/d/Deep_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/RefScope/Tree",
+    "normalized_path": "/World/RefScope/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_extent": [
+   {
+    "path": "/World/Tree/Tree",
+    "normalized_path": "/World/Tree/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer",
+    "normalized_path": "/World/Outer",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Outer/Inner",
+    "normalized_path": "/World/Outer/Inner",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/a/b/c/d/Deep_COL",
+    "normalized_path": "/World/a/b/c/d/Deep_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/RefScope/Tree",
+    "normalized_path": "/World/RefScope/Tree",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ]
+ },
+ "names": {
+  "stage": "<fixtures>/golden_corpus/naming.usda",
+  "default_prim": "/World",
+  "prototype_count": 0,
+  "total_prims_including_prototypes": 115,
+  "type_counts": {
+   "Xform": 67,
+   "<untyped>": 37,
+   "Mesh": 5,
+   "Scope": 5,
+   "Material": 1
+  },
+  "name_oddities": {
+   "trailing_underscore": [
+    "/World/trailing_",
+    "/World/Wall_COL_"
+   ],
+   "trailing_col_underscore": [
+    "/World/Wall_COL_"
+   ],
+   "possible_tunnel_typo": [
+    "/World/tunel_A"
+   ],
+   "possible_foliage_typo": [
+    "/World/Foiliage"
+   ],
+   "lowercase_token_in_name": [
+    "/World/exteriorWall"
+   ],
+   "truncated_collision_suffix": [
+    "/World/Rock/Rock_C",
+    "/World/Rock/Rock_C_2",
+    "/World/Rock/Rock_CO"
+   ],
+   "duplicate_sibling_names": [],
+   "case_collision_names": [
+    "/World/Case: PART, Part, part"
+   ]
+  },
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": false,
+    "pattern": null
+   }
+  },
+  "name_counts": {
+   "Leaf": 25
+  },
+  "hierarchy": {
+   "max_depth": 6,
+   "max_depth_examples": [
+    "/World/a/b/c/d/Deep_COL"
+   ],
+   "single_child_chain_count": 4,
+   "single_child_chain_examples": [
+    "/World/Same -> Same",
+    "/World/Chain -> Chain_child",
+    "/World/Chain/Chain_child -> Chain_child_leaf",
+    "/World/Tree -> Tree"
+   ],
+   "leaf_scope_count": 4,
+   "leaf_scope_examples": [
+    "/World/EmptyScope",
+    "/World/FullScope/child",
+    "/RefLeafScope",
+    "/PayloadLeafScope"
+   ],
+   "empty_scope_count": 2,
+   "empty_scope_examples": [
+    "/World/EmptyScope",
+    "/World/FullScope/child"
+   ],
+   "same_name_parent_child_count": 2,
+   "same_name_parent_child_examples": [
+    "/World/Same/Same",
+    "/World/Tree/Tree"
+   ],
+   "xform_mesh_same_name_count": 0,
+   "xform_mesh_same_name_examples": [],
+   "mesh_with_mesh_child_count": 1,
+   "mesh_with_mesh_child_examples": [
+    "/World/Outer/Inner"
+   ],
+   "mesh_parent_type_counts": {
+    "<untyped>": 2,
+    "Xform": 1,
+    "Mesh": 1,
+    "Scope": 1
+   },
+   "deep_collision_like_mesh_count": 1,
+   "deep_collision_like_mesh_examples": [
+    "/World/a/b/c/d/Deep_COL"
+   ]
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "name_oddity_counts": {
+   "trailing_underscore": 2,
+   "trailing_col_underscore": 1,
+   "possible_tunnel_typo": 1,
+   "possible_foliage_typo": 1,
+   "lowercase_token_in_name": 1,
+   "truncated_collision_suffix": 3,
+   "case_collision_names": 1
+  }
+ },
+ "names_prefix": {
+  "stage": "<fixtures>/golden_corpus/naming.usda",
+  "default_prim": "/World",
+  "prototype_count": 0,
+  "total_prims_including_prototypes": 115,
+  "type_counts": {
+   "Xform": 67,
+   "<untyped>": 37,
+   "Mesh": 5,
+   "Scope": 5,
+   "Material": 1
+  },
+  "name_oddities": {
+   "non_prefix_style": [
+    "/World/trailing_",
+    "/World/Wall_COL_",
+    "/World/tunel_A",
+    "/World/exteriorWall",
+    "/World/name__dunder",
+    "/World/caf\u00e9",
+    "/World/Rock/Rock_C",
+    "/World/Rock/Rock_C_2",
+    "/World/Rock/Rock_CO",
+    "/World/Chain/Chain_child",
+    "/World/Chain/Chain_child/Chain_child_leaf",
+    "/World/a",
+    "/World/a/b",
+    "/World/a/b/c",
+    "/World/a/b/c/d",
+    "/World/a/b/c/d/Deep_COL",
+    "/World/FullScope/child",
+    "/World/Case/part",
+    "/World/Rep_0",
+    "/World/Rep_1",
+    "/World/Rep_2",
+    "/World/Rep_3",
+    "/World/Rep_4",
+    "/World/Rep_5",
+    "/World/Rep_6",
+    "/World/Rep_7",
+    "/World/Rep_8",
+    "/World/Rep_9",
+    "/World/Rep_10",
+    "/World/Rep_11",
+    "/World/Rep_12",
+    "/World/Rep_13",
+    "/World/Rep_14",
+    "/World/Rep_15",
+    "/World/Rep_16",
+    "/World/Rep_17",
+    "/World/Rep_18",
+    "/World/Rep_19",
+    "/World/Rep_20",
+    "/World/Rep_21",
+    "/World/Rep_22",
+    "/World/Rep_23",
+    "/World/Rep_24"
+   ],
+   "trailing_underscore": [
+    "/World/trailing_",
+    "/World/Wall_COL_"
+   ],
+   "trailing_col_underscore": [
+    "/World/Wall_COL_"
+   ],
+   "possible_tunnel_typo": [
+    "/World/tunel_A"
+   ],
+   "possible_foliage_typo": [
+    "/World/Foiliage"
+   ],
+   "lowercase_token_in_name": [
+    "/World/exteriorWall"
+   ],
+   "truncated_collision_suffix": [
+    "/World/Rock/Rock_C",
+    "/World/Rock/Rock_C_2",
+    "/World/Rock/Rock_CO"
+   ],
+   "duplicate_sibling_names": [],
+   "case_collision_names": [
+    "/World/Case: PART, Part, part"
+   ]
+  },
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": true,
+    "pattern": "[A-Z][A-Za-z0-9]*"
+   }
+  },
+  "name_counts": {
+   "Leaf": 25
+  },
+  "hierarchy": {
+   "max_depth": 6,
+   "max_depth_examples": [
+    "/World/a/b/c/d/Deep_COL"
+   ],
+   "single_child_chain_count": 4,
+   "single_child_chain_examples": [
+    "/World/Same -> Same",
+    "/World/Chain -> Chain_child",
+    "/World/Chain/Chain_child -> Chain_child_leaf",
+    "/World/Tree -> Tree"
+   ],
+   "leaf_scope_count": 4,
+   "leaf_scope_examples": [
+    "/World/EmptyScope",
+    "/World/FullScope/child",
+    "/RefLeafScope",
+    "/PayloadLeafScope"
+   ],
+   "empty_scope_count": 2,
+   "empty_scope_examples": [
+    "/World/EmptyScope",
+    "/World/FullScope/child"
+   ],
+   "same_name_parent_child_count": 2,
+   "same_name_parent_child_examples": [
+    "/World/Same/Same",
+    "/World/Tree/Tree"
+   ],
+   "xform_mesh_same_name_count": 0,
+   "xform_mesh_same_name_examples": [],
+   "mesh_with_mesh_child_count": 1,
+   "mesh_with_mesh_child_examples": [
+    "/World/Outer/Inner"
+   ],
+   "mesh_parent_type_counts": {
+    "<untyped>": 2,
+    "Xform": 1,
+    "Mesh": 1,
+    "Scope": 1
+   },
+   "deep_collision_like_mesh_count": 1,
+   "deep_collision_like_mesh_examples": [
+    "/World/a/b/c/d/Deep_COL"
+   ]
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "name_oddity_counts": {
+   "non_prefix_style": 43,
+   "trailing_underscore": 2,
+   "trailing_col_underscore": 1,
+   "possible_tunnel_typo": 1,
+   "possible_foliage_typo": 1,
+   "lowercase_token_in_name": 1,
+   "truncated_collision_suffix": 3,
+   "case_collision_names": 1
+  }
+ },
+ "scene": {
+  "stage": "<fixtures>/golden_corpus/naming.usda",
+  "root_layer": "<fixtures>/golden_corpus/naming.usda",
+  "default_prim": "/World",
+  "meters_per_unit": 0.01,
+  "up_axis": "Y",
+  "layer_count": 2,
+  "prims": {
+   "total": 115,
+   "by_type": {
+    "Xform": 67,
+    "<untyped>": 37,
+    "Mesh": 5,
+    "Scope": 5,
+    "Material": 1
+   }
+  },
+  "prototype_count": 0,
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": false,
+    "pattern": null
+   }
+  },
+  "naming": {
+   "suspicious_count": 2,
+   "non_prefix_style_count": 0,
+   "duplicate_sibling_count": 0,
+   "duplicate_sibling_names": [],
+   "case_collision_count": 1,
+   "case_collision_names": [
+    "/World/Case: PART, Part, part"
+   ],
+   "examples": {
+    "double_underscore": [
+     "/World/name__dunder"
+    ],
+    "non_ascii_identifier_chars": [
+     "/World/caf\u00e9"
+    ]
+   }
+  },
+  "materials": {
+   "material_prim_count": 1,
+   "shader_prim_count": 0,
+   "mesh_count": 5,
+   "geom_subset_count": 0,
+   "mesh_with_computed_material": 0,
+   "mesh_without_computed_material": 5,
+   "geom_subset_with_computed_material": 0,
+   "geom_subset_without_computed_material": 0,
+   "mesh_without_mesh_or_subset_material": 5,
+   "bound_materials_used_by_mesh_count": 0,
+   "unbound_material_prim_count": 1,
+   "direct_binding_relation_count": 0,
+   "direct_binding_targets_missing_count": 0,
+   "direct_binding_targets_missing": [],
+   "direct_binding_targets_not_material_count": 0,
+   "direct_binding_targets_not_material": [],
+   "mesh_without_material_examples": [
+    "/World/Tree/Tree",
+    "/World/Outer",
+    "/World/Outer/Inner",
+    "/World/a/b/c/d/Deep_COL",
+    "/World/RefScope/Tree"
+   ],
+   "mesh_without_mesh_or_subset_material_examples": [
+    "/World/Tree/Tree",
+    "/World/Outer",
+    "/World/Outer/Inner",
+    "/World/a/b/c/d/Deep_COL",
+    "/World/RefScope/Tree"
+   ],
+   "geom_subset_without_material_examples": [],
+   "materials_without_surface_output": [
+    "/World/mtl/OnlyChild"
+   ],
+   "materials_without_surface_output_count": 1
+  },
+  "assets": {
+   "authored_asset_count": 0,
+   "resolved_asset_count": 0,
+   "missing_authored_asset_count": 0,
+   "missing_authored_assets": [],
+   "unverifiable_asset_count": 0,
+   "unverifiable_assets": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  }
+ },
+ "scene_prefix": {
+  "stage": "<fixtures>/golden_corpus/naming.usda",
+  "root_layer": "<fixtures>/golden_corpus/naming.usda",
+  "default_prim": "/World",
+  "meters_per_unit": 0.01,
+  "up_axis": "Y",
+  "layer_count": 2,
+  "prims": {
+   "total": 115,
+   "by_type": {
+    "Xform": 67,
+    "<untyped>": 37,
+    "Mesh": 5,
+    "Scope": 5,
+    "Material": 1
+   }
+  },
+  "prototype_count": 0,
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": true,
+    "pattern": "[A-Z][A-Za-z0-9]*"
+   }
+  },
+  "naming": {
+   "suspicious_count": 2,
+   "non_prefix_style_count": 43,
+   "duplicate_sibling_count": 0,
+   "duplicate_sibling_names": [],
+   "case_collision_count": 1,
+   "case_collision_names": [
+    "/World/Case: PART, Part, part"
+   ],
+   "examples": {
+    "non_prefix_style": [
+     "/World/trailing_",
+     "/World/Wall_COL_",
+     "/World/tunel_A",
+     "/World/exteriorWall",
+     "/World/name__dunder",
+     "/World/caf\u00e9",
+     "/World/Rock/Rock_C",
+     "/World/Rock/Rock_C_2",
+     "/World/Rock/Rock_CO",
+     "/World/Chain/Chain_child",
+     "/World/Chain/Chain_child/Chain_child_leaf",
+     "/World/a",
+     "/World/a/b",
+     "/World/a/b/c",
+     "/World/a/b/c/d",
+     "/World/a/b/c/d/Deep_COL",
+     "/World/FullScope/child",
+     "/World/Case/part",
+     "/World/Rep_0",
+     "/World/Rep_1",
+     "/World/Rep_2",
+     "/World/Rep_3",
+     "/World/Rep_4",
+     "/World/Rep_5",
+     "/World/Rep_6",
+     "/World/Rep_7",
+     "/World/Rep_8",
+     "/World/Rep_9",
+     "/World/Rep_10",
+     "/World/Rep_11",
+     "/World/Rep_12",
+     "/World/Rep_13",
+     "/World/Rep_14",
+     "/World/Rep_15",
+     "/World/Rep_16",
+     "/World/Rep_17",
+     "/World/Rep_18",
+     "/World/Rep_19",
+     "/World/Rep_20",
+     "/World/Rep_21"
+    ],
+    "double_underscore": [
+     "/World/name__dunder"
+    ],
+    "non_ascii_identifier_chars": [
+     "/World/caf\u00e9"
+    ]
+   }
+  },
+  "materials": {
+   "material_prim_count": 1,
+   "shader_prim_count": 0,
+   "mesh_count": 5,
+   "geom_subset_count": 0,
+   "mesh_with_computed_material": 0,
+   "mesh_without_computed_material": 5,
+   "geom_subset_with_computed_material": 0,
+   "geom_subset_without_computed_material": 0,
+   "mesh_without_mesh_or_subset_material": 5,
+   "bound_materials_used_by_mesh_count": 0,
+   "unbound_material_prim_count": 1,
+   "direct_binding_relation_count": 0,
+   "direct_binding_targets_missing_count": 0,
+   "direct_binding_targets_missing": [],
+   "direct_binding_targets_not_material_count": 0,
+   "direct_binding_targets_not_material": [],
+   "mesh_without_material_examples": [
+    "/World/Tree/Tree",
+    "/World/Outer",
+    "/World/Outer/Inner",
+    "/World/a/b/c/d/Deep_COL",
+    "/World/RefScope/Tree"
+   ],
+   "mesh_without_mesh_or_subset_material_examples": [
+    "/World/Tree/Tree",
+    "/World/Outer",
+    "/World/Outer/Inner",
+    "/World/a/b/c/d/Deep_COL",
+    "/World/RefScope/Tree"
+   ],
+   "geom_subset_without_material_examples": [],
+   "materials_without_surface_output": [
+    "/World/mtl/OnlyChild"
+   ],
+   "materials_without_surface_output_count": 1
+  },
+  "assets": {
+   "authored_asset_count": 0,
+   "resolved_asset_count": 0,
+   "missing_authored_asset_count": 0,
+   "missing_authored_assets": [],
+   "unverifiable_asset_count": 0,
+   "unverifiable_assets": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  }
+ }
+}

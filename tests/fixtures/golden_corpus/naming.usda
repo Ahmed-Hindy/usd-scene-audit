@@ -1,0 +1,441 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+)
+
+def Xform "World"
+{
+    def Xform "trailing_"
+    {
+    }
+
+    def Xform "Wall_COL_"
+    {
+    }
+
+    def Xform "tunel_A"
+    {
+    }
+
+    def Xform "Foiliage"
+    {
+    }
+
+    def Xform "exteriorWall"
+    {
+    }
+
+    def Xform "name__dunder"
+    {
+    }
+
+    def Xform "café"
+    {
+    }
+
+    def "Rock"
+    {
+        def Xform "Rock_C"
+        {
+        }
+
+        def Xform "Rock_C_2"
+        {
+        }
+
+        def Xform "Rock_CO"
+        {
+        }
+    }
+
+    def "Same"
+    {
+        def Xform "Same"
+        {
+        }
+    }
+
+    def "Chain"
+    {
+        def "Chain_child"
+        {
+            def Xform "Chain_child_leaf"
+            {
+            }
+        }
+    }
+
+    def "Tree"
+    {
+        def Mesh "Tree"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+    }
+
+    def Mesh "Outer"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+
+        def Mesh "Inner"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+    }
+
+    def "a"
+    {
+        def "b"
+        {
+            def "c"
+            {
+                def "d"
+                {
+                    def Mesh "Deep_COL"
+                    {
+                        int[] faceVertexCounts = [3]
+                        int[] faceVertexIndices = [0, 1, 2]
+                        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+                    }
+                }
+            }
+        }
+    }
+
+    def Scope "EmptyScope"
+    {
+    }
+
+    def Scope "RefScope" (
+        prepend references = </World/Tree>
+    )
+    {
+    }
+
+    def "FullScope"
+    {
+        def Scope "child"
+        {
+        }
+    }
+
+    def "mtl"
+    {
+        def Material "OnlyChild"
+        {
+        }
+    }
+
+    def "Case"
+    {
+        def Xform "part"
+        {
+        }
+
+        def Xform "Part"
+        {
+        }
+
+        def Xform "PART"
+        {
+        }
+    }
+
+    def "Rep_0"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_1"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_2"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_3"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_4"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_5"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_6"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_7"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_8"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_9"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_10"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_11"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_12"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_13"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_14"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_15"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_16"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_17"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_18"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_19"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_20"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_21"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_22"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_23"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+
+    def "Rep_24"
+    {
+        def Xform "Leaf"
+        {
+        }
+
+        def Xform "geo"
+        {
+        }
+    }
+}
+
+
+def Xform "EmptyTarget"
+{
+}
+
+def Scope "RefLeafScope" (
+    prepend references = </EmptyTarget>
+)
+{
+}
+
+def Scope "PayloadLeafScope" (
+    prepend payload = </EmptyTarget>
+)
+{
+}
