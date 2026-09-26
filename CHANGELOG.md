@@ -16,6 +16,7 @@
 - `names_hierarchy`: case-collision and duplicate-sibling counts are no longer capped at 80 ([#37](https://github.com/Ahmed-Hindy/usd-scene-audit/issues/37)).
 - `MeshCheckSettings` rejects negative or non-finite thresholds, and `analyze()` validates them before opening the stage.
 - Requesting the Numba engine without Numba installed raises instead of silently reporting no repeated-vertex or zero-area findings.
+- Scene: the asset walk now finds asset paths in `asset[]` values and inside variants, selected or not, and no longer reports references a layer deletes or only reorders ([#55](https://github.com/Ahmed-Hindy/usd-scene-audit/issues/55)).
 
 ### Deprecated
 

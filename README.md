@@ -129,6 +129,8 @@ Authored asset references are resolved through USD's asset resolution layer (`Ar
   - The path names a family of files rather than one file, such as a `<UDIM>` tile set or a `<f4>` frame sequence, and no probe resolved.
   - The path carries a URI scheme that no registered resolver claims. Without this, a stage referencing cloud assets would report every such reference as missing on any machine lacking the matching resolver plugin.
 
+The walk collects every asset path a used layer authors: attribute defaults and time samples (including `asset[]` arrays), metadata and dictionaries, references and payloads, and everything inside variants, whether or not the variant is selected. List-op entries that add nothing are skipped: a `delete` removes a reference and a `reorder` only reorders ones added elsewhere, so neither is reported.
+
 Two notes on the counters:
 
 - A *bare* relative path such as `tex/color.exr` is a USD search path. USD resolves it against the resolver's search path rather than against the authoring layer, so where it resolves from can depend on the process working directory. Explicitly relative paths such as `./tex/color.exr` always anchor to the layer.
