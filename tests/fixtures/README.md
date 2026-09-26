@@ -19,20 +19,9 @@ These are the false-positive guards. A finding against any of them is a bug in t
 | `static_mesh_clean.usda` | A wholly valid static mesh with matching extent, normals, and UVs |
 | `animated_points_valid.usda` | Valid deforming mesh; `points` authored only as time samples |
 | `animated_normals_primvars.usda` | Valid deforming mesh; points, normals, extent, and UVs all time-sampled only |
+
+| `assets_udim_texture.usda` | Texture authored as a `<UDIM>` pattern, with tiles present in `tex/` |
 | `animated_preroll_extent.usda` | Points carry a pre-roll sample while `extent` covers only the shot range; guards against comparing two attributes at two different times |
-
-## Stages with genuine defects
-
-| Fixture | Expected finding |
-|---|---|
-| `static_mesh_out_of_range_indices.usda` | `out_of_range_face_vertex_indices` |
-| `static_mesh_missing_points.usda` | `missing_points` |
-
-## Stages pinning down known gaps
-
-| Fixture | Status |
-|---|---|
-| `animated_topology_change.usda` | Point count changes mid-sequence and points go non-finite at frame 5. Each defect is reachable by auditing the frame it occurs on; only establishing that the count *changed* needs a sampling pass. The fixture asserts no *false* findings at the default time code and is the regression target for time-sampled checks. |
 
 ## Stages pinning a fix positively
 
@@ -41,6 +30,29 @@ Some fixes cannot be pinned by a zero-findings assertion, because the pre-fix co
 | Fixture | Expected finding |
 |---|---|
 | `animated_mesh_authoring_defects.usda` | `normals_length_mismatch` and `authored_extent_mismatch` in time-sampled data |
+
+## Stages with genuine defects
+
+| Fixture | Expected finding |
+|---|---|
+| `static_mesh_out_of_range_indices.usda` | `out_of_range_face_vertex_indices` |
+| `static_mesh_missing_points.usda` | `missing_points` |
+| `assets_missing_texture.usda` | One missing authored asset (`./tex/absent.exr`) |
+
+## Supporting files
+
+`tex/` holds placeholder texture files for the asset-resolution fixtures. They are
+not real EXRs — asset auditing only asks the resolver whether a path resolves, so
+the contents are irrelevant and small text files keep the repository light.
+
+Fixtures needing binary artifacts, such as a `.usdz` package, are built at test
+runtime into `tmp_path` rather than committed.
+
+## Stages pinning down known gaps
+
+| Fixture | Status |
+|---|---|
+| `animated_topology_change.usda` | Point count changes mid-sequence and points go non-finite at frame 5. Both are real defects invisible to a single-sample audit; the fixture asserts no *false* findings today and is the regression target for time-sampled checks. |
 
 ## Adding a fixture
 
