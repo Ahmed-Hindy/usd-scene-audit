@@ -13,7 +13,7 @@ from pxr import Ar, Sdf, Usd, UsdGeom, UsdShade
 
 # TODO(#22): CheckErrorLog belongs in a shared module once one exists; it is not
 # geometry-specific.
-from usd_scene_audit.geometry import CheckErrorLog
+from usd_scene_audit.geometry import CheckErrorLog, PrototypePaths
 
 
 MAX_EXAMPLES = 40
@@ -230,7 +230,14 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
         raise RuntimeError(f"Could not open stage: {stage_path}")
 
     root_layer = stage.GetRootLayer()
-    used_layers = stage.GetUsedLayers()
+    # GetUsedLayers() order follows memory addresses, so it changes between
+    # runs. Sorting keeps the order of recorded check_errors, which is capped,
+    # identical across runs. Anonymous identifiers embed an address, so those
+    # layers sort after file-backed ones and by their display name.
+    used_layers = sorted(
+        stage.GetUsedLayers(),
+        key=lambda layer: (layer.anonymous, layer.GetDisplayName() if layer.anonymous else layer.identifier),
+    )
     naming_policy = {
         "prefix_style": {
             "enabled": prefix_style_re is not None,
@@ -290,16 +297,22 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
 
     type_counts: Counter[str] = Counter()
     child_names_by_parent: dict[str, list[str]] = defaultdict(list)
-    material_paths: set[str] = set()
+    # A list, not a set: materials_without_surface_output is reported in this
+    # order, and set order changes with the per-process string hash seed.
+    material_paths: list[str] = []
     mesh_paths: list[str] = []
     geom_subset_paths: list[str] = []
     subsets_by_parent_mesh: dict[str, list[str]] = defaultdict(list)
     computed_materials: Counter[str] = Counter()
 
+    # Prototypes are walked in a stable order and reported under stable names;
+    # lookups keep using the real prim paths. See PrototypePaths.
+    prototype_paths = PrototypePaths(stage)
+    shown = prototype_paths.stable
     prims_to_scan = list(stage.Traverse())
-    prototypes = list(stage.GetPrototypes())
+    prototypes = prototype_paths.ordered()
     for prototype in prototypes:
-        prims_to_scan.extend(list(Usd.PrimRange(prototype)))
+        prims_to_scan.extend(Usd.PrimRange(prototype))
     report["prototype_count"] = len(prototypes)
 
     for prim in prims_to_scan:
@@ -317,16 +330,16 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
             # flag it regardless. tests/test_scene_audit.py pins that assumption.
             if re.search(r"[^A-Za-z0-9_]", name):
                 report["naming"]["suspicious_count"] += 1
-                add_example(report["naming"]["examples"]["non_ascii_identifier_chars"], path)
+                add_example(report["naming"]["examples"]["non_ascii_identifier_chars"], shown(path))
             if "__" in name:
                 report["naming"]["suspicious_count"] += 1
-                add_example(report["naming"]["examples"]["double_underscore"], path)
+                add_example(report["naming"]["examples"]["double_underscore"], shown(path))
             if prefix_style_re and not is_expected_prefix_name(name, prefix_style_re):
                 report["naming"]["non_prefix_style_count"] += 1
-                add_example(report["naming"]["examples"]["non_prefix_style"], path)
+                add_example(report["naming"]["examples"]["non_prefix_style"], shown(path))
 
         if prim.IsA(UsdShade.Material):
-            material_paths.add(path)
+            material_paths.append(path)
         if prim.IsA(UsdShade.Shader):
             report["materials"]["shader_prim_count"] += 1
         if prim.IsA(UsdGeom.Mesh):
@@ -345,18 +358,20 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
             for target in targets:
                 target_prim = stage.GetPrimAtPath(target)
                 if not target_prim:
-                    add_example(report["materials"]["direct_binding_targets_missing"], f"{path} -> {target}")
+                    add_example(
+                        report["materials"]["direct_binding_targets_missing"], f"{shown(path)} -> {shown(target)}"
+                    )
                 elif not target_prim.IsA(UsdShade.Material):
                     add_example(
                         report["materials"]["direct_binding_targets_not_material"],
-                        f"{path} -> {target} ({target_prim.GetTypeName() or '<untyped>'})",
+                        f"{shown(path)} -> {shown(target)} ({target_prim.GetTypeName() or '<untyped>'})",
                     )
 
     for parent, names in child_names_by_parent.items():
         counts = Counter(names)
         for name, count in counts.items():
             if count > 1:
-                add_example(report["naming"]["duplicate_sibling_names"], f"{parent}/{name} x{count}")
+                add_example(report["naming"]["duplicate_sibling_names"], f"{shown(parent)}/{name} x{count}")
         by_lower: dict[str, set[str]] = defaultdict(set)
         for name in names:
             by_lower[name.lower()].add(name)
@@ -364,7 +379,7 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
             if len(originals) > 1:
                 add_example(
                     report["naming"]["case_collision_names"],
-                    f"{parent}: {', '.join(sorted(originals))}",
+                    f"{shown(parent)}: {', '.join(sorted(originals))}",
                 )
 
     mesh_bindings = computed_material_bindings(stage, mesh_paths)
@@ -378,27 +393,27 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     report["materials"]["mesh_without_computed_material"] = len(mesh_paths) - len(mesh_has_material)
     for mesh_path, material_path in mesh_bindings.items():
         if material_path is None:
-            add_example(report["materials"]["mesh_without_material_examples"], mesh_path)
+            add_example(report["materials"]["mesh_without_material_examples"], shown(mesh_path))
 
     report["materials"]["geom_subset_with_computed_material"] = len(subset_has_material)
     report["materials"]["geom_subset_without_computed_material"] = len(geom_subset_paths) - len(subset_has_material)
     for subset_path, material_path in subset_bindings.items():
         if material_path is None:
-            add_example(report["materials"]["geom_subset_without_material_examples"], subset_path)
+            add_example(report["materials"]["geom_subset_without_material_examples"], shown(subset_path))
     for mesh_path in mesh_paths:
         if mesh_path in mesh_has_material:
             continue
         if any(subset_path in subset_has_material for subset_path in subsets_by_parent_mesh.get(mesh_path, [])):
             continue
         report["materials"]["mesh_without_mesh_or_subset_material"] += 1
-        add_example(report["materials"]["mesh_without_mesh_or_subset_material_examples"], mesh_path)
+        add_example(report["materials"]["mesh_without_mesh_or_subset_material_examples"], shown(mesh_path))
 
     for material_path in material_paths:
         material = UsdShade.Material(stage.GetPrimAtPath(material_path))
         surface = material.GetSurfaceOutput()
         if not surface or not surface.HasConnectedSource():
             report["materials"]["materials_without_surface_output_count"] += 1
-            add_example(report["materials"]["materials_without_surface_output"], material_path)
+            add_example(report["materials"]["materials_without_surface_output"], shown(material_path))
 
     missing_assets: dict[str, set[str]] = defaultdict(set)
     unverifiable_assets: dict[str, set[str]] = defaultdict(set)
@@ -435,7 +450,7 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     report["materials"]["mesh_count"] = len(mesh_paths)
     report["materials"]["geom_subset_count"] = len(geom_subset_paths)
     report["materials"]["bound_materials_used_by_mesh_count"] = len(computed_materials)
-    report["materials"]["unbound_material_prim_count"] = len(material_paths - set(computed_materials))
+    report["materials"]["unbound_material_prim_count"] = len(set(material_paths) - set(computed_materials))
     report["assets"]["missing_authored_asset_count"] = len(missing_assets)
     report["assets"]["unverifiable_asset_count"] = len(unverifiable_assets)
     report["check_errors"] = error_log.as_report()

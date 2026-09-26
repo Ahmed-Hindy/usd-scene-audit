@@ -187,12 +187,62 @@ def describe_time_code(time_code: Usd.TimeCode) -> str | float:
     return float(time_code.GetValue())
 
 
+PROTOTYPE_ROOT_PATTERN = re.compile(r"^/__Prototype_\d+")
+
+
+class PrototypePaths:
+    """Stable names and a stable order for a stage's instancing prototypes.
+
+    OpenUSD numbers prototypes ``/__Prototype_1``, ``/__Prototype_2``, ... in an
+    order that changes between opens of the same stage, even in one process
+    with one hash seed. A report that iterates ``GetPrototypes()`` or prints a
+    raw prototype path therefore differs from run to run.
+
+    Each prototype is named after its first instance in sorted path order, with
+    any enclosing prototype resolved the same way, so ``/__Prototype_7/Body``
+    is reported as ``/World/Asset_0/Body`` -- the instance-proxy path of the
+    first instance that shares it. Prototypes are visited in that order.
+
+    Only report output uses these names. Lookups such as material binding
+    resolution keep the real prototype path, because an instance proxy can
+    resolve differently.
+    """
+
+    def __init__(self, stage: Usd.Stage) -> None:
+        self._prototypes = {str(prototype.GetPath()): prototype for prototype in stage.GetPrototypes()}
+        self._labels: dict[str, str] = {}
+
+    def label(self, prototype_root: str) -> str:
+        """Return the stable name for a prototype root path."""
+        if prototype_root not in self._labels:
+            instances = self._prototypes[prototype_root].GetInstances()
+            # Nesting is acyclic, so resolving enclosing prototypes terminates.
+            self._labels[prototype_root] = min(
+                (self.stable(str(instance.GetPath())) for instance in instances), default=prototype_root
+            )
+        return self._labels[prototype_root]
+
+    def stable(self, path: str) -> str:
+        """Return ``path`` with a leading prototype root replaced by its stable name."""
+        match = PROTOTYPE_ROOT_PATTERN.match(path)
+        if match is None or match.group(0) not in self._prototypes:
+            return path
+        return self.label(match.group(0)) + path[match.end() :]
+
+    def ordered(self) -> list[Usd.Prim]:
+        """Return the prototypes sorted by stable name."""
+        return [self._prototypes[root] for root in sorted(self._prototypes, key=self.label)]
+
+    def __len__(self) -> int:
+        return len(self._prototypes)
+
+
 def prims_with_prototypes(stage: Usd.Stage) -> tuple[list[Usd.Prim], int]:
-    """Return ordinary stage traversal plus prototype contents."""
+    """Return ordinary stage traversal plus prototype contents, prototypes in stable order."""
     prims = list(stage.Traverse())
-    prototypes = list(stage.GetPrototypes())
+    prototypes = PrototypePaths(stage).ordered()
     for prototype in prototypes:
-        prims.extend(list(Usd.PrimRange(prototype)))
+        prims.extend(Usd.PrimRange(prototype))
     return prims, len(prototypes)
 
 
@@ -934,6 +984,7 @@ def transform_determinant(
     prim: Usd.Prim,
     xform_cache: UsdGeom.XformCache,
     error_log: CheckErrorLog | None = None,
+    subject: str | None = None,
 ) -> float | None:
     """Return local-to-world transform determinant, if computable.
 
@@ -945,7 +996,7 @@ def transform_determinant(
         return float(transform.GetDeterminant())
     except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
         if error_log is not None:
-            error_log.record("transform_determinant", str(prim.GetPath()), error)
+            error_log.record("transform_determinant", subject or str(prim.GetPath()), error)
         return None
 
 
@@ -978,8 +1029,13 @@ def mesh_record(
     face_cache: FaceAnalysisCache,
     time_code: Usd.TimeCode | None = None,
     error_log: CheckErrorLog | None = None,
+    prototype_paths: PrototypePaths | None = None,
 ) -> dict[str, Any]:
     """Analyze a single mesh prim and return a report record.
+
+    ``prototype_paths`` renames prims inside instancing prototypes in the
+    record's ``path``; see ``PrototypePaths``. ``normalized_path`` and the mesh
+    category are always derived from the real prim path.
 
     ``time_code`` defaults to ``default_time_code(prim)``, the time code
     ``analyze()`` would use. Transforms are read from ``xform_cache`` at the
@@ -989,10 +1045,11 @@ def mesh_record(
     """
     if time_code is None:
         time_code = default_time_code(prim)
-    path = str(prim.GetPath())
+    prim_path = str(prim.GetPath())
+    path = prototype_paths.stable(prim_path) if prototype_paths is not None else prim_path
     name = prim.GetName()
     mesh = UsdGeom.Mesh(prim)
-    category = classify_mesh(path, name)
+    category = classify_mesh(prim_path, name)
     issues: Counter[str] = Counter()
     details: dict[str, Any] = {}
 
@@ -1100,7 +1157,7 @@ def mesh_record(
                 add_example(details, primvar_issue["issue"], primvar_issue, 10)
 
     with phase_timer.phase("mesh.transforms"):
-        determinant = transform_determinant(prim, xform_cache, error_log)
+        determinant = transform_determinant(prim, xform_cache, error_log, subject=path)
         if determinant is not None:
             if abs(determinant) <= 1e-12:
                 issues["near_zero_transform_determinant"] += 1
@@ -1109,7 +1166,7 @@ def mesh_record(
 
     return {
         "path": path,
-        "normalized_path": normalized_path(path),
+        "normalized_path": normalized_path(prim_path),
         "name": name,
         "category": category,
         "point_count": point_count,
@@ -1185,6 +1242,7 @@ def analyze(
     with phase_timer.phase("stage.traverse"):
         prims, prototype_count = prims_with_prototypes(stage)
         mesh_prims = [prim for prim in prims if prim.IsA(UsdGeom.Mesh)]
+        prototype_paths = PrototypePaths(stage)
 
     summary_counts: Counter[str] = Counter()
     category_counts: Counter[str] = Counter()
@@ -1207,13 +1265,14 @@ def analyze(
                 face_cache,
                 time_code,
                 error_log,
+                prototype_paths,
             )
         except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
             # Last resort: each check phase inside mesh_record() already records
             # its own failures and keeps the rest of the record. Anything that
             # still escapes must not abort a multi-minute audit of every other
             # mesh. Such a mesh is counted in unaudited_mesh_count.
-            error_log.record("mesh_record", str(prim.GetPath()), error)
+            error_log.record("mesh_record", prototype_paths.stable(str(prim.GetPath())), error)
             continue
         records.append(record)
         category = record["category"]

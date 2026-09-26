@@ -4,6 +4,8 @@ Command-line OpenUSD scene audit tools for geometry, naming, hierarchy, material
 
 The tools are built for large composed USD stages where the root stage may be mostly layout and the real mesh data may live inside instance prototypes. Each command traverses the normal stage plus `stage.GetPrototypes()` so instanceable component geometry is included.
 
+OpenUSD numbers prototypes `/__Prototype_1`, `/__Prototype_2`, ... in an order that changes every time a stage is opened, so reports never print those paths. A prim inside a prototype is reported at the instance-proxy path of the first instance that shares it, in sorted path order: `/__Prototype_7/Body` becomes `/World/Asset_0/Body`. Prototypes are also walked in that order, so two runs of the same stage produce the same report. `usd-names-hierarchy-audit` and the geometry audit's `normalized_path` keep their `/<prototype>/...` form.
+
 ## Install
 
 Use `uv`:
