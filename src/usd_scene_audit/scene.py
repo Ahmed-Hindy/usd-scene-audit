@@ -73,6 +73,15 @@ def direct_material_targets(prim: Usd.Prim) -> list[str]:
     return targets
 
 
+def prims_with_prototypes(stage: Usd.Stage) -> tuple[list[Usd.Prim], int]:
+    """Return ordinary stage traversal plus prototype contents, and the prototype count."""
+    prims = list(stage.Traverse())
+    prototypes = list(stage.GetPrototypes())
+    for prototype in prototypes:
+        prims.extend(Usd.PrimRange(prototype))
+    return prims, len(prototypes)
+
+
 def computed_material_bindings(stage: Usd.Stage, prim_paths: list[str]) -> dict[str, str | None]:
     """Map each prim path to its computed bound material path, or None when unbound.
 
@@ -251,7 +260,9 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
         "naming": {
             "suspicious_count": 0,
             "non_prefix_style_count": 0,
+            "duplicate_sibling_count": 0,
             "duplicate_sibling_names": [],
+            "case_collision_count": 0,
             "case_collision_names": [],
             "examples": defaultdict(list),
         },
@@ -268,7 +279,9 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
             "bound_materials_used_by_mesh_count": 0,
             "unbound_material_prim_count": 0,
             "direct_binding_relation_count": 0,
+            "direct_binding_targets_missing_count": 0,
             "direct_binding_targets_missing": [],
+            "direct_binding_targets_not_material_count": 0,
             "direct_binding_targets_not_material": [],
             "mesh_without_material_examples": [],
             "mesh_without_mesh_or_subset_material_examples": [],
@@ -296,11 +309,7 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     subsets_by_parent_mesh: dict[str, list[str]] = defaultdict(list)
     computed_materials: Counter[str] = Counter()
 
-    prims_to_scan = list(stage.Traverse())
-    prototypes = list(stage.GetPrototypes())
-    for prototype in prototypes:
-        prims_to_scan.extend(list(Usd.PrimRange(prototype)))
-    report["prototype_count"] = len(prototypes)
+    prims_to_scan, report["prototype_count"] = prims_with_prototypes(stage)
 
     for prim in prims_to_scan:
         path = str(prim.GetPath())
@@ -345,23 +354,28 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
             for target in targets:
                 target_prim = stage.GetPrimAtPath(target)
                 if not target_prim:
+                    report["materials"]["direct_binding_targets_missing_count"] += 1
                     add_example(report["materials"]["direct_binding_targets_missing"], f"{path} -> {target}")
                 elif not target_prim.IsA(UsdShade.Material):
+                    report["materials"]["direct_binding_targets_not_material_count"] += 1
                     add_example(
                         report["materials"]["direct_binding_targets_not_material"],
                         f"{path} -> {target} ({target_prim.GetTypeName() or '<untyped>'})",
                     )
 
+    # Sibling counts are one per colliding group, matching usd-names-hierarchy-audit.
     for parent, names in child_names_by_parent.items():
         counts = Counter(names)
         for name, count in counts.items():
             if count > 1:
+                report["naming"]["duplicate_sibling_count"] += 1
                 add_example(report["naming"]["duplicate_sibling_names"], f"{parent}/{name} x{count}")
         by_lower: dict[str, set[str]] = defaultdict(set)
         for name in names:
             by_lower[name.lower()].add(name)
         for originals in by_lower.values():
             if len(originals) > 1:
+                report["naming"]["case_collision_count"] += 1
                 add_example(
                     report["naming"]["case_collision_names"],
                     f"{parent}: {', '.join(sorted(originals))}",
