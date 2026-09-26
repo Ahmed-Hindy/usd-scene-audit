@@ -206,8 +206,9 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
         by_lower: dict[str, set[str]] = defaultdict(set)
         for child_name in child_names:
             by_lower[child_name.lower()].add(child_name)
-        # Count every occurrence; only the example lists are bounded, matching
-        # note_oddity() for every other oddity in this module.
+        # These two counts are one per colliding sibling group, not one per prim
+        # (unlike note_oddity()), so each count pairs with one example string.
+        # Counts are exact; only the example lists are capped.
         for variants in by_lower.values():
             if len(variants) > 1:
                 oddity_counts["case_collision_names"] += 1
