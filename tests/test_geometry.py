@@ -6,6 +6,7 @@ import pytest
 import numpy as np
 from pxr import Gf, Sdf, Usd, UsdGeom, Vt
 
+from usd_scene_audit import geometry
 from usd_scene_audit.geometry import (
     FaceAnalysisCache,
     PhaseTimer,
@@ -176,3 +177,33 @@ def test_face_analysis_cache_reuses_duplicate_array_results() -> None:
 
     assert dict(first) == dict(second)
     assert face_cache.stats()["hits"] == 1
+
+
+@pytest.mark.parametrize("face_cache", [None, FaceAnalysisCache(False)], ids=["no-cache", "disabled-cache"])
+def test_disabled_face_cache_does_not_hash_arrays(monkeypatch, face_cache) -> None:
+    """With the cache off, building a cache key is pure overhead: a full hash pass per mesh."""
+
+    def fail_digest(array):
+        raise AssertionError("array_digest called while the face cache is disabled")
+
+    monkeypatch.setattr(geometry, "array_digest", fail_digest)
+    points = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], dtype=np.float64)
+    counts = np.array([3], dtype=np.int64)
+    indices = np.array([0, 1, 2], dtype=np.int64)
+
+    issues, _ = analyze_face_geometry(counts, indices, points, 3, 1e-12, "numpy", face_cache=face_cache)
+
+    assert dict(issues) == {}
+
+
+def test_analyze_with_mesh_cache_off_does_not_hash_arrays(monkeypatch, stage_path) -> None:
+    """The default --mesh-cache off must not pay the hashing cost of face-hash."""
+    calls = []
+    real_digest = geometry.array_digest
+    monkeypatch.setattr(geometry, "array_digest", lambda array: calls.append(1) or real_digest(array))
+
+    geometry.analyze(stage_path("static_mesh_clean.usda"), 1e-12, 1e6, 1e-4, mesh_cache_mode="off")
+    assert calls == []
+
+    geometry.analyze(stage_path("static_mesh_clean.usda"), 1e-12, 1e6, 1e-4, mesh_cache_mode="face-hash")
+    assert calls, "face-hash mode should still hash arrays to build cache keys"

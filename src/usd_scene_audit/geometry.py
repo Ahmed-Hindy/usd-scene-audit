@@ -624,6 +624,10 @@ def analyze_face_geometry(
     face_cache: FaceAnalysisCache | None = None,
 ) -> tuple[Counter[str], dict[str, Any]]:
     """Validate face arrays with exact checks."""
+    # Building the key hashes every byte of the face and point arrays, so it
+    # must only happen when the cache can actually use it. analyze() always
+    # passes a cache object, enabled or not.
+    use_cache = face_cache is not None and face_cache.enabled
     cache_key = (
         face_cache_key(
             counts_np,
@@ -635,10 +639,10 @@ def analyze_face_geometry(
             check_repeated_vertices,
             check_zero_area,
         )
-        if face_cache is not None
+        if use_cache
         else None
     )
-    if face_cache is not None:
+    if use_cache:
         cached = face_cache.get(cache_key)
         if cached is not None:
             return cached
@@ -683,7 +687,7 @@ def analyze_face_geometry(
         return issues, details
 
     if not check_repeated_vertices and not check_zero_area:
-        if face_cache is not None:
+        if use_cache:
             face_cache.set(cache_key, issues, details)
         return issues, details
 
@@ -720,7 +724,7 @@ def analyze_face_geometry(
         issues["zero_area_triangles"] += zero_area_total
         details["zero_area_triangle_examples"] = zero_area_examples
 
-    if face_cache is not None:
+    if use_cache:
         face_cache.set(cache_key, issues, details)
     return issues, details
 
