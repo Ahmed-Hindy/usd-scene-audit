@@ -73,24 +73,17 @@ def direct_material_targets(prim: Usd.Prim) -> list[str]:
     return targets
 
 
-def split_by_computed_material(
-    stage: Usd.Stage, prim_paths: list[str], computed_materials: Counter[str]
-) -> tuple[list[str], list[str]]:
-    """Split prim paths into those with a computed bound material and those without.
+def computed_material_bindings(stage: Usd.Stage, prim_paths: list[str]) -> dict[str, str | None]:
+    """Map each prim path to its computed bound material path, or None when unbound.
 
-    Each bound material is also tallied in ``computed_materials``.
+    Keys keep the order of ``prim_paths``.
     """
-    bound: list[str] = []
-    unbound: list[str] = []
+    bindings: dict[str, str | None] = {}
     for prim_path in prim_paths:
         binding_api = UsdShade.MaterialBindingAPI(stage.GetPrimAtPath(prim_path))
         material, _relationship = binding_api.ComputeBoundMaterial()
-        if material and material.GetPrim():
-            bound.append(prim_path)
-            computed_materials[str(material.GetPath())] += 1
-        else:
-            unbound.append(prim_path)
-    return bound, unbound
+        bindings[prim_path] = str(material.GetPath()) if material and material.GetPrim() else None
+    return bindings
 
 
 def authored_asset_paths(layer: Sdf.Layer, error_log: CheckErrorLog | None = None) -> set[str]:
@@ -318,8 +311,10 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
 
         internal_generated = name == "__class__" or name.startswith("__Prototype_")
         if not internal_generated:
-            # No whitespace check: USD rejects whitespace in prim names when
-            # they are authored, so a composed stage can never contain one.
+            # No separate whitespace check: SdfPath rejects prim names containing
+            # whitespace on authoring and on read (.usda and .usdc), so a composed
+            # stage cannot hold one -- and the identifier-char check below would
+            # flag it regardless. tests/test_scene_audit.py pins that assumption.
             if re.search(r"[^A-Za-z0-9_]", name):
                 report["naming"]["suspicious_count"] += 1
                 add_example(report["naming"]["examples"]["non_ascii_identifier_chars"], path)
@@ -372,20 +367,24 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
                     f"{parent}: {', '.join(sorted(originals))}",
                 )
 
-    meshes_bound, meshes_unbound = split_by_computed_material(stage, mesh_paths, computed_materials)
-    report["materials"]["mesh_with_computed_material"] = len(meshes_bound)
-    report["materials"]["mesh_without_computed_material"] = len(meshes_unbound)
-    for mesh_path in meshes_unbound:
-        add_example(report["materials"]["mesh_without_material_examples"], mesh_path)
+    mesh_bindings = computed_material_bindings(stage, mesh_paths)
+    subset_bindings = computed_material_bindings(stage, geom_subset_paths)
+    computed_materials.update(m for m in mesh_bindings.values() if m)
+    computed_materials.update(m for m in subset_bindings.values() if m)
+    mesh_has_material = {path for path, m in mesh_bindings.items() if m}
+    subset_has_material = {path for path, m in subset_bindings.items() if m}
 
-    subsets_bound, subsets_unbound = split_by_computed_material(stage, geom_subset_paths, computed_materials)
-    report["materials"]["geom_subset_with_computed_material"] = len(subsets_bound)
-    report["materials"]["geom_subset_without_computed_material"] = len(subsets_unbound)
-    for subset_path in subsets_unbound:
-        add_example(report["materials"]["geom_subset_without_material_examples"], subset_path)
+    report["materials"]["mesh_with_computed_material"] = len(mesh_has_material)
+    report["materials"]["mesh_without_computed_material"] = len(mesh_paths) - len(mesh_has_material)
+    for mesh_path, material_path in mesh_bindings.items():
+        if material_path is None:
+            add_example(report["materials"]["mesh_without_material_examples"], mesh_path)
 
-    mesh_has_material = set(meshes_bound)
-    subset_has_material = set(subsets_bound)
+    report["materials"]["geom_subset_with_computed_material"] = len(subset_has_material)
+    report["materials"]["geom_subset_without_computed_material"] = len(geom_subset_paths) - len(subset_has_material)
+    for subset_path, material_path in subset_bindings.items():
+        if material_path is None:
+            add_example(report["materials"]["geom_subset_without_material_examples"], subset_path)
     for mesh_path in mesh_paths:
         if mesh_path in mesh_has_material:
             continue
