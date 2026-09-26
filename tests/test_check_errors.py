@@ -54,6 +54,7 @@ def test_error_log_starts_empty() -> None:
     assert log.as_report() == {"count": 0, "examples": []}
 
 
+@pytest.mark.expects_check_errors
 def test_error_log_records_type_and_message() -> None:
     """Recorded entries must identify the check, the subject, and the error."""
     log = CheckErrorLog()
@@ -65,6 +66,7 @@ def test_error_log_records_type_and_message() -> None:
     assert report["examples"] == [{"check": "some_check", "subject": "/World/Thing", "error": "ValueError: bad value"}]
 
 
+@pytest.mark.expects_check_errors
 def test_error_log_counts_beyond_its_example_limit() -> None:
     """Examples are bounded, but the count must stay exact."""
     log = CheckErrorLog(limit=3)
@@ -80,6 +82,7 @@ def test_error_log_counts_beyond_its_example_limit() -> None:
 # ------------------------------------------------------- transform_determinant
 
 
+@pytest.mark.expects_check_errors
 def test_failed_transform_is_recorded_not_swallowed() -> None:
     """A transform that cannot be computed must leave a trace."""
     stage = Usd.Stage.CreateInMemory()
@@ -115,6 +118,7 @@ def test_successful_transform_records_nothing() -> None:
     assert log.count == 0
 
 
+@pytest.mark.expects_check_errors
 def test_mesh_record_propagates_the_error_log() -> None:
     """A failure deep in a mesh record must reach the caller's log."""
     stage = Usd.Stage.CreateInMemory()
@@ -156,6 +160,7 @@ def test_scene_report_exposes_check_errors(stage_path) -> None:
     assert report["check_errors"] == {"count": 0, "examples": []}
 
 
+@pytest.mark.expects_check_errors
 def test_scene_records_unreadable_layer_fields(monkeypatch, stage_path) -> None:
     """An unreadable Sdf field could hide an asset reference, so it must be logged."""
 

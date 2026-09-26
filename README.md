@@ -4,6 +4,8 @@ Command-line OpenUSD scene audit tools for geometry, naming, hierarchy, material
 
 The tools are built for large composed USD stages where the root stage may be mostly layout and the real mesh data may live inside instance prototypes. Each command traverses the normal stage plus `stage.GetPrototypes()` so instanceable component geometry is included.
 
+OpenUSD numbers prototypes `/__Prototype_1`, `/__Prototype_2`, ... in an order that changes every time a stage is opened, so reports never print those paths. A prim inside a prototype is reported at the instance-proxy path of the first instance that shares it, in sorted path order: `/__Prototype_7/Body` becomes `/World/Asset_0/Body`. Prototypes are also walked in that order, so two runs of the same stage produce the same report. `usd-names-hierarchy-audit` and the geometry audit's `normalized_path` keep their `/<prototype>/...` form.
+
 ## Install
 
 Use `uv`:
@@ -132,10 +134,12 @@ Two notes on the counters:
 - A *bare* relative path such as `tex/color.exr` is a USD search path. USD resolves it against the resolver's search path rather than against the authoring layer, so where it resolves from can depend on the process working directory. Explicitly relative paths such as `./tex/color.exr` always anchor to the layer.
 - `authored_asset_count` counts authored references per layer, while `missing_authored_asset_count` and `unverifiable_asset_count` count unique resolved identifiers. The three buckets therefore do not sum to `authored_asset_count` when one asset is referenced from several layers.
 
-Example lists in the report are capped at 40 entries, so read the matching count for the true total rather than the list length:
+The sibling-name and binding-target example lists below are capped at 40 entries, so read the matching count for the true total rather than the list length:
 
-- `naming.case_collision_count` and `naming.duplicate_sibling_count` count colliding sibling groups, not prims, matching `usd-names-hierarchy-audit`.
-- `materials.direct_binding_targets_missing_count` and `materials.direct_binding_targets_not_material_count` count binding targets.
+- `naming.case_collision_count` and `naming.duplicate_sibling_count` count colliding sibling groups, not prims. This is the same unit as `case_collision_names` and `duplicate_sibling_names` in `usd-names-hierarchy-audit`'s `name_oddity_counts`, which omits a key when its count is zero.
+- `materials.direct_binding_targets_missing_count` and `materials.direct_binding_targets_not_material_count` count binding-relationship targets, so one relationship with two bad targets counts 2. A `material:binding:collection:*` relationship names a collection before its material; the collection target counts as missing only when that collection does not exist.
+
+Prims inside an instancing prototype are scanned once, so a problem inside an instanced asset counts once however many instances share it. `naming.suspicious_count` is a separate tally that one prim can increase more than once, and the asset lists (`missing_authored_assets`, `unverifiable_assets`) are capped at 120 and have their own `*_count` keys.
 
 Example:
 

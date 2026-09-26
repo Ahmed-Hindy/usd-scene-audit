@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from pxr import Gf, Usd, UsdGeom
+from pxr import Gf, Sdf, Usd, UsdGeom
 
 MAX_EXAMPLES = 80
 FACE_CHUNK_SIZE = 100_000
@@ -187,12 +187,62 @@ def describe_time_code(time_code: Usd.TimeCode) -> str | float:
     return float(time_code.GetValue())
 
 
+PROTOTYPE_ROOT_PATTERN = re.compile(r"^/__Prototype_\d+")
+
+
+class PrototypePaths:
+    """Stable names and a stable order for a stage's instancing prototypes.
+
+    OpenUSD numbers prototypes ``/__Prototype_1``, ``/__Prototype_2``, ... in an
+    order that changes between opens of the same stage, even in one process
+    with one hash seed. A report that iterates ``GetPrototypes()`` or prints a
+    raw prototype path therefore differs from run to run.
+
+    Each prototype is named after its first instance in sorted path order, with
+    any enclosing prototype resolved the same way, so ``/__Prototype_7/Body``
+    is reported as ``/World/Asset_0/Body`` -- the instance-proxy path of the
+    first instance that shares it. Prototypes are visited in that order.
+
+    Only report output uses these names. Lookups such as material binding
+    resolution keep the real prototype path, because an instance proxy can
+    resolve differently.
+    """
+
+    def __init__(self, stage: Usd.Stage) -> None:
+        self._prototypes = {str(prototype.GetPath()): prototype for prototype in stage.GetPrototypes()}
+        self._labels: dict[str, str] = {}
+
+    def label(self, prototype_root: str) -> str:
+        """Return the stable name for a prototype root path."""
+        if prototype_root not in self._labels:
+            instances = self._prototypes[prototype_root].GetInstances()
+            # Nesting is acyclic, so resolving enclosing prototypes terminates.
+            self._labels[prototype_root] = min(
+                (self.stable(str(instance.GetPath())) for instance in instances), default=prototype_root
+            )
+        return self._labels[prototype_root]
+
+    def stable(self, path: str) -> str:
+        """Return ``path`` with a leading prototype root replaced by its stable name."""
+        match = PROTOTYPE_ROOT_PATTERN.match(path)
+        if match is None or match.group(0) not in self._prototypes:
+            return path
+        return self.label(match.group(0)) + path[match.end() :]
+
+    def ordered(self) -> list[Usd.Prim]:
+        """Return the prototypes sorted by stable name."""
+        return [self._prototypes[root] for root in sorted(self._prototypes, key=self.label)]
+
+    def __len__(self) -> int:
+        return len(self._prototypes)
+
+
 def prims_with_prototypes(stage: Usd.Stage) -> tuple[list[Usd.Prim], int]:
-    """Return ordinary stage traversal plus prototype contents."""
+    """Return ordinary stage traversal plus prototype contents, prototypes in stable order."""
     prims = list(stage.Traverse())
-    prototypes = list(stage.GetPrototypes())
+    prototypes = PrototypePaths(stage).ordered()
     for prototype in prototypes:
-        prims.extend(list(Usd.PrimRange(prototype)))
+        prims.extend(Usd.PrimRange(prototype))
     return prims, len(prototypes)
 
 
@@ -211,11 +261,6 @@ def classify_mesh(path: str, name: str) -> str:
     if any(token in path.lower() for token in ("/proxy", "/helper", "/helpers", "/guide", "/guides")):
         return "unknown_helper_like"
     return "render_like"
-
-
-def is_finite_vec3(value) -> bool:
-    """Return true when a vec-like value contains finite xyz values."""
-    return all(math.isfinite(float(value[i])) for i in range(3))
 
 
 def vec3_tuple(value) -> tuple[float, float, float]:
@@ -260,10 +305,28 @@ def authored_extent_bounds(mesh: UsdGeom.Mesh, time_code: Usd.TimeCode | None = 
     """
     if time_code is None:
         time_code = default_time_code(mesh.GetPrim())
-    extent = mesh.GetExtentAttr().Get(time_code)
-    if not extent or len(extent) != 2:
-        return None
-    return (vec3_tuple(extent[0]), vec3_tuple(extent[1]))
+    bounds, _problem = read_extent(mesh, time_code)
+    return bounds
+
+
+def read_extent(mesh: UsdGeom.Mesh, time_code: Usd.TimeCode):
+    """Return ``(bounds, problem)`` for the authored extent.
+
+    ``bounds`` is None when extent is absent, empty, or unusable. ``problem``
+    describes an extent that is authored but is not two finite-typed rows of
+    three values -- a ``float[]`` or ``string[]`` extent used to be skipped or
+    to raise.
+    """
+    attr = mesh.GetExtentAttr()
+    extent = attr.Get(time_code)
+    extent_np, problem = shaped_array(extent, 3)
+    if problem is None and extent_np is not None and extent_np.size and len(extent_np) != 2:
+        problem = {"reason": "extent must have exactly two rows", "shape": [int(v) for v in extent_np.shape]}
+    if problem is not None:
+        return None, {**attribute_types(attr, extent), **problem}
+    if extent_np is None or not extent_np.size:
+        return None, None
+    return (vec3_tuple(extent_np[0]), vec3_tuple(extent_np[1])), None
 
 
 def bounds_mismatch(
@@ -313,11 +376,71 @@ def issue_details(details: dict[str, Any], key: str, value: Any, limit: int = 10
         details[key].append(value)
 
 
-def vector_array(value, dtype=None):
-    """Convert a USD Vt array to a NumPy array, or None for an absent value."""
+def value_type_name(value) -> str:
+    """Return the Sdf type name of a resolved value, e.g. ``float[]`` for a Vt.FloatArray."""
+    type_name = str(Sdf.GetValueTypeNameForValue(value))
+    return type_name or type(value).__name__
+
+
+def attribute_types(attr: Usd.Attribute, value) -> dict[str, str]:
+    """Return the type the schema expects and the type of the value that resolved.
+
+    ``GetTypeName()`` reports the schema type, so a ``float[] normals`` opinion
+    still reads as ``normal3f[]`` there. The authored type is taken from the
+    resolved value itself rather than from a property spec: the strongest spec
+    may carry only metadata (an interpolation override), and value clips never
+    appear in the property stack at all. Roles do not survive into the value,
+    so a scalar ``point3f`` reads back as ``float3``.
+    """
+    return {"authored_type": value_type_name(value), "expected_type": str(attr.GetTypeName())}
+
+
+def shaped_array(value, row_width: int | None, *, integer: bool = False) -> tuple[Any, dict[str, Any] | None]:
+    """Convert an authored value to NumPy, rejecting values the checks cannot use.
+
+    ``row_width=None`` expects a flat array (face-vertex counts and indices); an
+    integer expects ``N x row_width`` rows (points, normals, extent).
+    ``integer=True`` additionally requires integer elements and returns int64.
+
+    An attribute authored with the wrong value type resolves to a value of that
+    type: ``float[] normals`` is flat, ``int faceVertexCounts`` is a scalar,
+    ``float[] faceVertexIndices`` holds floats. Feeding those to the vectorized
+    checks either raised or -- for float or bool indices cast to int64 --
+    silently truncated them into plausible-looking topology.
+
+    Returns ``(array, None)`` for a usable value, ``(None, problem)`` for an
+    unusable one, and ``(None, None)`` when the value is absent. Empty arrays of
+    any type are usable; they are reported as empty elsewhere.
+    """
     if value is None:
-        return None
-    return np.asarray(value, dtype=dtype)
+        return None, None
+    value_type = Sdf.GetValueTypeNameForValue(value)
+    if value_type and not value_type.isArray:
+        return None, {"reason": "authored as a scalar, not an array"}
+    try:
+        raw = np.asarray(value)
+    except (TypeError, ValueError) as error:
+        return None, {"reason": f"not convertible to an array ({type(error).__name__}: {error})"}
+    shape = [int(v) for v in raw.shape]
+    if raw.size == 0:
+        return (raw.astype(np.int64) if integer else raw).reshape(raw.shape), None
+    allowed_kinds = "iu" if integer else "fiu"
+    if raw.dtype.kind not in allowed_kinds:
+        expected = "integer" if integer else "numeric"
+        return None, {"reason": f"{raw.dtype} elements are not {expected}", "shape": shape}
+    expected_ndim = 1 if row_width is None else 2
+    if raw.ndim != expected_ndim or (row_width is not None and raw.shape[1] != row_width):
+        expected = "a flat array" if row_width is None else f"rows of {row_width} values"
+        return None, {"reason": f"shape is not {expected}", "shape": shape}
+    if integer:
+        if raw.dtype.kind == "u" and raw.max() > np.iinfo(np.int64).max:
+            return None, {"reason": "values exceed the int64 range", "shape": shape}
+        return raw.astype(np.int64, copy=False), None
+    if raw.dtype.kind == "f" and raw.dtype.itemsize < 4:
+        # half3[] points: float16 cannot represent the default 1e6 huge-coordinate
+        # threshold, so comparisons against it would overflow.
+        return raw.astype(np.float32), None
+    return raw, None
 
 
 def array_digest(array) -> tuple[str, tuple[int, ...], str] | None:
@@ -834,8 +957,11 @@ def validate_normals(
     normals = mesh.GetNormalsAttr().Get(time_code)
     if normals is None:
         return issues
+    normals_np, problem = shaped_array(normals, 3)
+    if problem is not None:
+        return [{"issue": "normals_wrong_type", **attribute_types(mesh.GetNormalsAttr(), normals), **problem}]
     interpolation = mesh.GetNormalsInterpolation() or ""
-    normal_count = len(normals)
+    normal_count = len(normals_np)
     expected = expected_primvar_length(interpolation, point_count, face_count, face_vertex_count)
     if expected is not None and normal_count != expected:
         issues.append(
@@ -846,14 +972,9 @@ def validate_normals(
                 "actual": normal_count,
             }
         )
-    normals_np = np.asarray(normals)
-    if normals_np.size == 0:
-        non_finite = []
-    elif normals_np.ndim == 2:
-        finite_mask = np.isfinite(normals_np).all(axis=1)
-        non_finite = np.flatnonzero(~finite_mask)[:10].astype(int).tolist()
-    else:
-        non_finite = [i for i, normal in enumerate(normals) if not is_finite_vec3(normal)][:10]
+    non_finite = (
+        np.flatnonzero(~np.isfinite(normals_np).all(axis=1))[:10].astype(int).tolist() if normals_np.size else []
+    )
     if non_finite:
         issues.append({"issue": "normals_non_finite", "index_examples": non_finite})
     return issues
@@ -863,6 +984,7 @@ def transform_determinant(
     prim: Usd.Prim,
     xform_cache: UsdGeom.XformCache,
     error_log: CheckErrorLog | None = None,
+    subject: str | None = None,
 ) -> float | None:
     """Return local-to-world transform determinant, if computable.
 
@@ -874,8 +996,25 @@ def transform_determinant(
         return float(transform.GetDeterminant())
     except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
         if error_log is not None:
-            error_log.record("transform_determinant", str(prim.GetPath()), error)
+            error_log.record("transform_determinant", subject or str(prim.GetPath()), error)
         return None
+
+
+@contextmanager
+def recorded_failure(check: str, subject: str, error_log: CheckErrorLog | None):
+    """Record an exception raised by one check phase, then carry on with the mesh.
+
+    Without an ``error_log`` the exception propagates, so direct callers of
+    ``mesh_record()`` still see it. With one, a failing phase costs only its own
+    findings: everything the mesh's other phases found still reaches the report.
+    """
+    if error_log is None:
+        yield
+        return
+    try:
+        yield
+    except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
+        error_log.record(check, subject, error)
 
 
 def mesh_record(
@@ -890,8 +1029,13 @@ def mesh_record(
     face_cache: FaceAnalysisCache,
     time_code: Usd.TimeCode | None = None,
     error_log: CheckErrorLog | None = None,
+    prototype_paths: PrototypePaths | None = None,
 ) -> dict[str, Any]:
     """Analyze a single mesh prim and return a report record.
+
+    ``prototype_paths`` renames prims inside instancing prototypes in the
+    record's ``path``; see ``PrototypePaths``. ``normalized_path`` and the mesh
+    category are always derived from the real prim path.
 
     ``time_code`` defaults to ``default_time_code(prim)``, the time code
     ``analyze()`` would use. Transforms are read from ``xform_cache`` at the
@@ -901,28 +1045,43 @@ def mesh_record(
     """
     if time_code is None:
         time_code = default_time_code(prim)
-    path = str(prim.GetPath())
+    prim_path = str(prim.GetPath())
+    path = prototype_paths.stable(prim_path) if prototype_paths is not None else prim_path
     name = prim.GetName()
     mesh = UsdGeom.Mesh(prim)
-    category = classify_mesh(path, name)
+    category = classify_mesh(prim_path, name)
     issues: Counter[str] = Counter()
     details: dict[str, Any] = {}
 
+    points_attr = mesh.GetPointsAttr()
+    counts_attr = mesh.GetFaceVertexCountsAttr()
+    indices_attr = mesh.GetFaceVertexIndicesAttr()
     with phase_timer.phase("mesh.read_attributes"):
-        points = mesh.GetPointsAttr().Get(time_code)
-        counts = mesh.GetFaceVertexCountsAttr().Get(time_code)
-        indices = mesh.GetFaceVertexIndicesAttr().Get(time_code)
+        points = points_attr.Get(time_code)
+        counts = counts_attr.Get(time_code)
+        indices = indices_attr.Get(time_code)
 
-    point_count = len(points) if points is not None else 0
-    face_count = len(counts) if counts is not None else 0
-    index_count = len(indices) if indices is not None else 0
-    points_np = vector_array(points)
-    counts_np = vector_array(counts, dtype="int64")
-    indices_np = vector_array(indices, dtype="int64")
+    # A wrongly typed attribute is reported as *_wrong_type and then treated as
+    # unusable, which cascades the same way a missing attribute does.
+    points_np, points_problem = shaped_array(points, 3)
+    counts_np, counts_problem = shaped_array(counts, None, integer=True)
+    indices_np, indices_problem = shaped_array(indices, None, integer=True)
+    for issue, attr, value, problem in (
+        ("points_wrong_type", points_attr, points, points_problem),
+        ("face_vertex_counts_wrong_type", counts_attr, counts, counts_problem),
+        ("face_vertex_indices_wrong_type", indices_attr, indices, indices_problem),
+    ):
+        if problem is not None:
+            issues[issue] += 1
+            add_example(details, issue, {**attribute_types(attr, value), **problem}, 10)
+
+    point_count = len(points_np) if points_np is not None else 0
+    face_count = len(counts_np) if counts_np is not None else 0
+    index_count = len(indices_np) if indices_np is not None else 0
 
     if points is None:
         issues["missing_points"] += 1
-    elif point_count == 0:
+    elif points_np is not None and point_count == 0:
         issues["empty_points"] += 1
 
     if counts is None:
@@ -935,7 +1094,7 @@ def mesh_record(
         issues["face_vertex_count_index_length_mismatch"] += 1
         details["expected_index_count"] = expected_index_count
 
-    with phase_timer.phase("mesh.point_checks"):
+    with phase_timer.phase("mesh.point_checks"), recorded_failure("point_checks", path, error_log):
         if points_np is not None and points_np.size:
             finite_mask = np.isfinite(points_np).all(axis=1)
             non_finite_indices = np.flatnonzero(~finite_mask)
@@ -959,7 +1118,7 @@ def mesh_record(
                     ]
 
     check_repeated_vertices, check_zero_area = face_checks_for_mode(audit_mode, category)
-    with phase_timer.phase("mesh.face_checks"):
+    with phase_timer.phase("mesh.face_checks"), recorded_failure("face_checks", path, error_log):
         face_issues, face_details = analyze_face_geometry(
             counts_np,
             indices_np,
@@ -971,29 +1130,34 @@ def mesh_record(
             check_zero_area,
             face_cache,
         )
-    issues.update(face_issues)
-    details.update(face_details)
+        issues.update(face_issues)
+        details.update(face_details)
 
-    with phase_timer.phase("mesh.bounds_extent"):
-        bounds = bbox_from_points(points if points is not None else [])
-        extent_delta = bounds_mismatch(authored_extent_bounds(mesh, time_code), bounds, extent_tolerance)
+    bounds = None
+    with phase_timer.phase("mesh.bounds_extent"), recorded_failure("bounds_extent", path, error_log):
+        bounds = bbox_from_points(points_np if points_np is not None else [])
+        authored_bounds, extent_problem = read_extent(mesh, time_code)
+        if extent_problem is not None:
+            issues["extent_wrong_type"] += 1
+            add_example(details, "extent_wrong_type", extent_problem, 10)
+        extent_delta = bounds_mismatch(authored_bounds, bounds, extent_tolerance)
         if extent_delta is not None:
             issues["authored_extent_mismatch"] += 1
             details["authored_extent_max_delta"] = extent_delta
 
     if audit_mode != "fast":
-        with phase_timer.phase("mesh.normals"):
+        with phase_timer.phase("mesh.normals"), recorded_failure("normals", path, error_log):
             for normal_issue in validate_normals(mesh, point_count, face_count, expected_index_count, time_code):
                 issues[normal_issue["issue"]] += 1
                 add_example(details, normal_issue["issue"], normal_issue, 10)
 
-        with phase_timer.phase("mesh.primvars"):
+        with phase_timer.phase("mesh.primvars"), recorded_failure("primvars", path, error_log):
             for primvar_issue in validate_primvars(prim, point_count, face_count, expected_index_count, time_code):
                 issues[primvar_issue["issue"]] += 1
                 add_example(details, primvar_issue["issue"], primvar_issue, 10)
 
     with phase_timer.phase("mesh.transforms"):
-        determinant = transform_determinant(prim, xform_cache, error_log)
+        determinant = transform_determinant(prim, xform_cache, error_log, subject=path)
         if determinant is not None:
             if abs(determinant) <= 1e-12:
                 issues["near_zero_transform_determinant"] += 1
@@ -1002,7 +1166,7 @@ def mesh_record(
 
     return {
         "path": path,
-        "normalized_path": normalized_path(path),
+        "normalized_path": normalized_path(prim_path),
         "name": name,
         "category": category,
         "point_count": point_count,
@@ -1023,6 +1187,9 @@ def seriousness_score(record: dict[str, Any]) -> int:
         "missing_points": 1000,
         "missing_face_vertex_counts": 1000,
         "missing_face_vertex_indices": 1000,
+        "points_wrong_type": 1000,
+        "face_vertex_counts_wrong_type": 1000,
+        "face_vertex_indices_wrong_type": 1000,
         "face_vertex_count_index_length_mismatch": 800,
         "negative_face_vertex_indices": 500,
         "out_of_range_face_vertex_indices": 500,
@@ -1036,7 +1203,9 @@ def seriousness_score(record: dict[str, Any]) -> int:
         "primvar_element_size_mismatch": 100,
         "primvar_index_out_of_range": 100,
         "normals_length_mismatch": 50,
+        "normals_wrong_type": 100,
         "authored_extent_mismatch": 10,
+        "extent_wrong_type": 10,
         "negative_transform_determinant": 5,
         "near_zero_transform_determinant": 100,
     }
@@ -1073,6 +1242,7 @@ def analyze(
     with phase_timer.phase("stage.traverse"):
         prims, prototype_count = prims_with_prototypes(stage)
         mesh_prims = [prim for prim in prims if prim.IsA(UsdGeom.Mesh)]
+        prototype_paths = PrototypePaths(stage)
 
     summary_counts: Counter[str] = Counter()
     category_counts: Counter[str] = Counter()
@@ -1082,19 +1252,28 @@ def analyze(
     xform_cache = UsdGeom.XformCache(time_code)
 
     for prim in mesh_prims:
-        record = mesh_record(
-            prim,
-            zero_area_epsilon,
-            huge_coord_threshold,
-            extent_tolerance,
-            xform_cache,
-            face_analysis_engine,
-            audit_mode,
-            phase_timer,
-            face_cache,
-            time_code,
-            error_log,
-        )
+        try:
+            record = mesh_record(
+                prim,
+                zero_area_epsilon,
+                huge_coord_threshold,
+                extent_tolerance,
+                xform_cache,
+                face_analysis_engine,
+                audit_mode,
+                phase_timer,
+                face_cache,
+                time_code,
+                error_log,
+                prototype_paths,
+            )
+        except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
+            # Last resort: each check phase inside mesh_record() already records
+            # its own failures and keeps the rest of the record. Anything that
+            # still escapes must not abort a multi-minute audit of every other
+            # mesh. Such a mesh is counted in unaudited_mesh_count.
+            error_log.record("mesh_record", prototype_paths.stable(str(prim.GetPath())), error)
+            continue
         records.append(record)
         category = record["category"]
         category_counts[category] += 1
@@ -1122,6 +1301,9 @@ def analyze(
         "missing_points",
         "missing_face_vertex_counts",
         "missing_face_vertex_indices",
+        "points_wrong_type",
+        "face_vertex_counts_wrong_type",
+        "face_vertex_indices_wrong_type",
         "face_vertex_count_index_length_mismatch",
         "negative_face_vertex_indices",
         "out_of_range_face_vertex_indices",
@@ -1160,6 +1342,7 @@ def analyze(
         "default_prim": str(stage.GetDefaultPrim().GetPath()) if stage.GetDefaultPrim() else None,
         "prototype_count": prototype_count,
         "mesh_count": len(mesh_prims),
+        "unaudited_mesh_count": len(mesh_prims) - len(records),
         "thresholds": {
             "zero_area_epsilon": zero_area_epsilon,
             "huge_coord_threshold": huge_coord_threshold,
@@ -1194,6 +1377,8 @@ def print_summary(report: dict[str, Any]) -> None:
     """Print a compact console summary."""
     print(f"Stage: {report['stage']}")
     print(f"Meshes scanned: {report['mesh_count']} (prototypes: {report['prototype_count']})")
+    if report["unaudited_mesh_count"]:
+        print(f"Meshes with no record: {report['unaudited_mesh_count']} (see check_errors in the JSON report)")
     print(f"Audit mode: {report['audit_mode']}")
     print(f"Evaluated at time code: {report['time_code']}")
     print(f"Face analysis engine: {report['face_analysis_engine']}")
