@@ -17,6 +17,8 @@ import usd_scene_audit
 from usd_scene_audit import geometry, names_hierarchy, scene  # noqa: F401 - resolved via getattr
 from usd_scene_audit.geometry import (
     CheckErrorLog,
+    FaceAnalysisCache,
+    PhaseTimer,
     analyze,
     mesh_record,
     transform_determinant,
@@ -52,6 +54,7 @@ def test_error_log_starts_empty() -> None:
     assert log.as_report() == {"count": 0, "examples": []}
 
 
+@pytest.mark.expects_check_errors
 def test_error_log_records_type_and_message() -> None:
     """Recorded entries must identify the check, the subject, and the error."""
     log = CheckErrorLog()
@@ -63,6 +66,7 @@ def test_error_log_records_type_and_message() -> None:
     assert report["examples"] == [{"check": "some_check", "subject": "/World/Thing", "error": "ValueError: bad value"}]
 
 
+@pytest.mark.expects_check_errors
 def test_error_log_counts_beyond_its_example_limit() -> None:
     """Examples are bounded, but the count must stay exact."""
     log = CheckErrorLog(limit=3)
@@ -78,6 +82,7 @@ def test_error_log_counts_beyond_its_example_limit() -> None:
 # ------------------------------------------------------- transform_determinant
 
 
+@pytest.mark.expects_check_errors
 def test_failed_transform_is_recorded_not_swallowed() -> None:
     """A transform that cannot be computed must leave a trace."""
     stage = Usd.Stage.CreateInMemory()
@@ -113,13 +118,26 @@ def test_successful_transform_records_nothing() -> None:
     assert log.count == 0
 
 
+@pytest.mark.expects_check_errors
 def test_mesh_record_propagates_the_error_log() -> None:
     """A failure deep in a mesh record must reach the caller's log."""
     stage = Usd.Stage.CreateInMemory()
     mesh = _triangle(stage)
     log = CheckErrorLog()
 
-    record = mesh_record(mesh.GetPrim(), xform_cache=Exploding(RuntimeError("no xform")), error_log=log)
+    record = mesh_record(
+        mesh.GetPrim(),
+        1e-12,
+        1e6,
+        1e-4,
+        Exploding(RuntimeError("no xform")),
+        "numpy",
+        "exhaustive",
+        PhaseTimer(),
+        FaceAnalysisCache(False),
+        None,
+        log,
+    )
 
     assert record["transform_determinant"] is None
     assert log.count == 1
@@ -130,7 +148,7 @@ def test_mesh_record_propagates_the_error_log() -> None:
 
 def test_geometry_report_exposes_check_errors(stage_path) -> None:
     """The geometry report must always carry a check_errors block."""
-    report = analyze(stage_path("static_mesh_clean.usda"))
+    report = analyze(stage_path("static_mesh_clean.usda"), 1e-12, 1e6, 1e-4)
 
     assert report["check_errors"] == {"count": 0, "examples": []}
 
@@ -142,6 +160,7 @@ def test_scene_report_exposes_check_errors(stage_path) -> None:
     assert report["check_errors"] == {"count": 0, "examples": []}
 
 
+@pytest.mark.expects_check_errors
 def test_scene_records_unreadable_layer_fields(monkeypatch, stage_path) -> None:
     """An unreadable Sdf field could hide an asset reference, so it must be logged."""
 
@@ -162,7 +181,7 @@ def test_geometry_summary_mentions_failed_checks(capsys, stage_path) -> None:
     """A non-zero failure count must be visible without opening the JSON."""
     from usd_scene_audit.geometry import print_summary
 
-    report = analyze(stage_path("static_mesh_clean.usda"))
+    report = analyze(stage_path("static_mesh_clean.usda"), 1e-12, 1e6, 1e-4)
     report["check_errors"] = {"count": 3, "examples": []}
     print_summary(report)
 
@@ -173,7 +192,7 @@ def test_geometry_summary_stays_quiet_when_all_checks_ran(capsys, stage_path) ->
     """A clean run must not print a zero-failure line."""
     from usd_scene_audit.geometry import print_summary
 
-    print_summary(analyze(stage_path("static_mesh_clean.usda")))
+    print_summary(analyze(stage_path("static_mesh_clean.usda"), 1e-12, 1e6, 1e-4))
 
     assert "Checks that failed to run" not in capsys.readouterr().out
 
@@ -256,6 +275,6 @@ def test_every_report_exposes_check_errors(module_name: str, stage_path) -> None
     """All three audits must expose the same check_errors contract."""
     module = getattr(usd_scene_audit, module_name)
     path = stage_path("static_mesh_clean.usda")
-    report = module.analyze(path)
+    report = module.analyze(path, 1e-12, 1e6, 1e-4) if module_name == "geometry" else module.analyze(path)
 
     assert report["check_errors"] == {"count": 0, "examples": []}

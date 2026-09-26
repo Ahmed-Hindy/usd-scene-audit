@@ -13,7 +13,7 @@ from pxr import Usd, UsdGeom, UsdShade
 
 # TODO(#22): CheckErrorLog belongs in a shared module once one exists; it is not
 # geometry-specific.
-from usd_scene_audit.geometry import CheckErrorLog
+from usd_scene_audit.geometry import CheckErrorLog, PrototypePaths
 
 
 MAX_EXAMPLES = 80
@@ -52,10 +52,14 @@ def is_prefix_style_name(name: str, prefix_style_re: re.Pattern[str]) -> bool:
 
 
 def prims_with_prototypes(stage: Usd.Stage) -> list[Usd.Prim]:
-    """Return normal traversal plus prototype contents."""
+    """Return normal traversal plus prototype contents, prototypes in stable order.
+
+    Paths are reported with prototype roots normalized to ``/<prototype>``, but
+    their order still followed OpenUSD's per-run prototype numbering.
+    """
     prims = list(stage.Traverse())
-    for prototype in stage.GetPrototypes():
-        prims.extend(list(Usd.PrimRange(prototype)))
+    for prototype in PrototypePaths(stage).ordered():
+        prims.extend(Usd.PrimRange(prototype))
     return prims
 
 

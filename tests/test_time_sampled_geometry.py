@@ -17,6 +17,8 @@ import pytest
 from pxr import Gf, Sdf, Usd, UsdGeom, Vt
 
 from usd_scene_audit.geometry import (
+    FaceAnalysisCache,
+    PhaseTimer,
     analyze,
     authored_extent_bounds,
     default_time_code,
@@ -36,7 +38,7 @@ CLEAN_FIXTURES = [
 
 def audit(path, **kwargs):
     """Run the geometry audit with the documented default thresholds."""
-    return analyze(path, **kwargs)
+    return analyze(path, 1e-12, 1e6, 1e-4, **kwargs)
 
 
 @pytest.mark.parametrize("fixture_name", CLEAN_FIXTURES)
@@ -183,7 +185,18 @@ def test_frame_selection_changes_the_data_read(stage_path) -> None:
 
     def bounds_at(frame: float):
         time_code = resolve_time_code(frame)
-        record = mesh_record(prim, xform_cache=UsdGeom.XformCache(time_code), time_code=time_code)
+        record = mesh_record(
+            prim,
+            1e-12,
+            1e6,
+            1e-4,
+            UsdGeom.XformCache(time_code),
+            "numpy",
+            "exhaustive",
+            PhaseTimer(),
+            FaceAnalysisCache(False),
+            time_code,
+        )
         assert record["point_count"] == 3
         return record["bounds"]
 
@@ -282,7 +295,17 @@ def test_mesh_record_default_time_code_matches_analyze(stage_path, tmp_path, fix
     stage = Usd.Stage.Open(str(path))
     prim = next(p for p in stage.Traverse() if p.IsA(UsdGeom.Mesh))
 
-    record = mesh_record(prim, xform_cache=UsdGeom.XformCache(default_time_code(prim)))
+    record = mesh_record(
+        prim,
+        1e-12,
+        1e6,
+        1e-4,
+        UsdGeom.XformCache(default_time_code(prim)),
+        "numpy",
+        "exhaustive",
+        PhaseTimer(),
+        FaceAnalysisCache(False),
+    )
 
     assert record["issues"] == audit(path)["summary_counts"] == {}
 

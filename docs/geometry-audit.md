@@ -64,6 +64,14 @@ The JSON report contains:
 - `largest_meshes_by_faces`
 - `largest_meshes_by_extent`
 - bounded examples for each issue type
+- `check_errors`: checks that raised instead of running. A failing check costs only its own findings; the rest of that mesh's record is kept. Treat a non-zero count as "this report is incomplete", not as a clean result.
+- `unaudited_mesh_count`: meshes counted in `mesh_count` that have no record at all, because a failure escaped every per-check guard. Each one also appears in `check_errors`.
+
+### Wrongly typed attributes
+
+Attribute getters return the value type a layer authored, not the schema type. When `points`, `faceVertexCounts`, `faceVertexIndices`, `normals`, or `extent` is authored with a value the checks cannot use, the audit reports `points_wrong_type`, `face_vertex_counts_wrong_type`, `face_vertex_indices_wrong_type`, `normals_wrong_type`, or `extent_wrong_type`. Examples are `float[] normals`, a scalar `int faceVertexCounts`, and `float[]` or `bool[]` face-vertex indices, which would otherwise be truncated into plausible-looking topology. Each detail records `authored_type`, `expected_type`, and a `reason`.
+
+An unusable topology attribute is then treated like a missing one, and the three topology codes count toward `serious_geometry_failures`. Numeric arrays of the right shape, such as `double3[]` or `half3[]` points or `int64[]` indices, are audited normally.
 
 ## Default Thresholds
 

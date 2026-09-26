@@ -11,17 +11,13 @@ import re
 import time
 from collections import Counter, defaultdict
 from contextlib import contextmanager
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import numpy as np
-from pxr import Gf, Usd, UsdGeom
+from pxr import Gf, Sdf, Usd, UsdGeom
 
 MAX_EXAMPLES = 80
-DEFAULT_ZERO_AREA_EPSILON = 1e-12
-DEFAULT_HUGE_COORD_THRESHOLD = 1e6
-DEFAULT_EXTENT_TOLERANCE = 1e-4
 FACE_CHUNK_SIZE = 100_000
 FACE_ANALYSIS_ENGINES = ("auto", "numpy", "numba")
 AUDIT_MODES = ("fast", "standard", "exhaustive")
@@ -191,12 +187,62 @@ def describe_time_code(time_code: Usd.TimeCode) -> str | float:
     return float(time_code.GetValue())
 
 
+PROTOTYPE_ROOT_PATTERN = re.compile(r"^/__Prototype_\d+")
+
+
+class PrototypePaths:
+    """Stable names and a stable order for a stage's instancing prototypes.
+
+    OpenUSD numbers prototypes ``/__Prototype_1``, ``/__Prototype_2``, ... in an
+    order that changes between opens of the same stage, even in one process
+    with one hash seed. A report that iterates ``GetPrototypes()`` or prints a
+    raw prototype path therefore differs from run to run.
+
+    Each prototype is named after its first instance in sorted path order, with
+    any enclosing prototype resolved the same way, so ``/__Prototype_7/Body``
+    is reported as ``/World/Asset_0/Body`` -- the instance-proxy path of the
+    first instance that shares it. Prototypes are visited in that order.
+
+    Only report output uses these names. Lookups such as material binding
+    resolution keep the real prototype path, because an instance proxy can
+    resolve differently.
+    """
+
+    def __init__(self, stage: Usd.Stage) -> None:
+        self._prototypes = {str(prototype.GetPath()): prototype for prototype in stage.GetPrototypes()}
+        self._labels: dict[str, str] = {}
+
+    def label(self, prototype_root: str) -> str:
+        """Return the stable name for a prototype root path."""
+        if prototype_root not in self._labels:
+            instances = self._prototypes[prototype_root].GetInstances()
+            # Nesting is acyclic, so resolving enclosing prototypes terminates.
+            self._labels[prototype_root] = min(
+                (self.stable(str(instance.GetPath())) for instance in instances), default=prototype_root
+            )
+        return self._labels[prototype_root]
+
+    def stable(self, path: str) -> str:
+        """Return ``path`` with a leading prototype root replaced by its stable name."""
+        match = PROTOTYPE_ROOT_PATTERN.match(path)
+        if match is None or match.group(0) not in self._prototypes:
+            return path
+        return self.label(match.group(0)) + path[match.end() :]
+
+    def ordered(self) -> list[Usd.Prim]:
+        """Return the prototypes sorted by stable name."""
+        return [self._prototypes[root] for root in sorted(self._prototypes, key=self.label)]
+
+    def __len__(self) -> int:
+        return len(self._prototypes)
+
+
 def prims_with_prototypes(stage: Usd.Stage) -> tuple[list[Usd.Prim], int]:
-    """Return ordinary stage traversal plus prototype contents."""
+    """Return ordinary stage traversal plus prototype contents, prototypes in stable order."""
     prims = list(stage.Traverse())
-    prototypes = list(stage.GetPrototypes())
+    prototypes = PrototypePaths(stage).ordered()
     for prototype in prototypes:
-        prims.extend(list(Usd.PrimRange(prototype)))
+        prims.extend(Usd.PrimRange(prototype))
     return prims, len(prototypes)
 
 
@@ -259,10 +305,28 @@ def authored_extent_bounds(mesh: UsdGeom.Mesh, time_code: Usd.TimeCode | None = 
     """
     if time_code is None:
         time_code = default_time_code(mesh.GetPrim())
-    extent = mesh.GetExtentAttr().Get(time_code)
-    if not extent or len(extent) != 2:
-        return None
-    return (vec3_tuple(extent[0]), vec3_tuple(extent[1]))
+    bounds, _problem = read_extent(mesh, time_code)
+    return bounds
+
+
+def read_extent(mesh: UsdGeom.Mesh, time_code: Usd.TimeCode):
+    """Return ``(bounds, problem)`` for the authored extent.
+
+    ``bounds`` is None when extent is absent, empty, or unusable. ``problem``
+    describes an extent that is authored but is not two finite-typed rows of
+    three values -- a ``float[]`` or ``string[]`` extent used to be skipped or
+    to raise.
+    """
+    attr = mesh.GetExtentAttr()
+    extent = attr.Get(time_code)
+    extent_np, problem = shaped_array(extent, 3)
+    if problem is None and extent_np is not None and extent_np.size and len(extent_np) != 2:
+        problem = {"reason": "extent must have exactly two rows", "shape": [int(v) for v in extent_np.shape]}
+    if problem is not None:
+        return None, {**attribute_types(attr, extent), **problem}
+    if extent_np is None or not extent_np.size:
+        return None, None
+    return (vec3_tuple(extent_np[0]), vec3_tuple(extent_np[1])), None
 
 
 def bounds_mismatch(
@@ -312,50 +376,71 @@ def issue_details(details: dict[str, Any], key: str, value: Any, limit: int = 10
         details[key].append(value)
 
 
-def vector_array(value, dtype=None):
-    """Convert a USD Vt array to a NumPy array, or None for an absent value."""
-    if value is None:
-        return None
-    return np.asarray(value, dtype=dtype)
+def value_type_name(value) -> str:
+    """Return the Sdf type name of a resolved value, e.g. ``float[]`` for a Vt.FloatArray."""
+    type_name = str(Sdf.GetValueTypeNameForValue(value))
+    return type_name or type(value).__name__
 
 
-def attribute_types(attr: Usd.Attribute) -> dict[str, str]:
-    """Return the type the schema expects and the type the strongest layer authored.
+def attribute_types(attr: Usd.Attribute, value) -> dict[str, str]:
+    """Return the type the schema expects and the type of the value that resolved.
 
     ``GetTypeName()`` reports the schema type, so a ``float[] normals`` opinion
-    still reads as ``normal3f[]`` there. The authored type comes from the
-    strongest property spec.
+    still reads as ``normal3f[]`` there. The authored type is taken from the
+    resolved value itself rather than from a property spec: the strongest spec
+    may carry only metadata (an interpolation override), and value clips never
+    appear in the property stack at all. Roles do not survive into the value,
+    so a scalar ``point3f`` reads back as ``float3``.
     """
-    stack = attr.GetPropertyStack()
-    authored = str(stack[0].typeName) if stack else str(attr.GetTypeName())
-    return {"authored_type": authored, "expected_type": str(attr.GetTypeName())}
+    return {"authored_type": value_type_name(value), "expected_type": str(attr.GetTypeName())}
 
 
-def shaped_array(value, row_width: int | None, dtype=None) -> tuple[Any, dict[str, Any] | None]:
-    """Convert an authored value to NumPy, rejecting shapes the checks cannot use.
+def shaped_array(value, row_width: int | None, *, integer: bool = False) -> tuple[Any, dict[str, Any] | None]:
+    """Convert an authored value to NumPy, rejecting values the checks cannot use.
 
     ``row_width=None`` expects a flat array (face-vertex counts and indices); an
-    integer expects ``N x row_width`` rows (points, normals). An attribute
-    authored with the wrong value type -- ``float[] normals``, a scalar
-    ``int faceVertexCounts`` -- resolves to a differently shaped value, and
-    feeding that to the vectorized checks raised instead of reporting it.
+    integer expects ``N x row_width`` rows (points, normals, extent).
+    ``integer=True`` additionally requires integer elements and returns int64.
+
+    An attribute authored with the wrong value type resolves to a value of that
+    type: ``float[] normals`` is flat, ``int faceVertexCounts`` is a scalar,
+    ``float[] faceVertexIndices`` holds floats. Feeding those to the vectorized
+    checks either raised or -- for float or bool indices cast to int64 --
+    silently truncated them into plausible-looking topology.
 
     Returns ``(array, None)`` for a usable value, ``(None, problem)`` for an
-    unusable one, and ``(None, None)`` when the value is absent. Empty arrays
-    are always usable; they are reported as empty elsewhere.
+    unusable one, and ``(None, None)`` when the value is absent. Empty arrays of
+    any type are usable; they are reported as empty elsewhere.
     """
     if value is None:
         return None, None
+    value_type = Sdf.GetValueTypeNameForValue(value)
+    if value_type and not value_type.isArray:
+        return None, {"reason": "authored as a scalar, not an array"}
     try:
-        array = np.asarray(value, dtype=dtype)
+        raw = np.asarray(value)
     except (TypeError, ValueError) as error:
-        return None, {"error": f"{type(error).__name__}: {error}"}
-    if array.size == 0:
-        return array, None
+        return None, {"reason": f"not convertible to an array ({type(error).__name__}: {error})"}
+    shape = [int(v) for v in raw.shape]
+    if raw.size == 0:
+        return (raw.astype(np.int64) if integer else raw).reshape(raw.shape), None
+    allowed_kinds = "iu" if integer else "fiu"
+    if raw.dtype.kind not in allowed_kinds:
+        expected = "integer" if integer else "numeric"
+        return None, {"reason": f"{raw.dtype} elements are not {expected}", "shape": shape}
     expected_ndim = 1 if row_width is None else 2
-    if array.ndim != expected_ndim or (row_width is not None and array.shape[1] != row_width):
-        return None, {"shape": [int(v) for v in array.shape]}
-    return array, None
+    if raw.ndim != expected_ndim or (row_width is not None and raw.shape[1] != row_width):
+        expected = "a flat array" if row_width is None else f"rows of {row_width} values"
+        return None, {"reason": f"shape is not {expected}", "shape": shape}
+    if integer:
+        if raw.dtype.kind == "u" and raw.max() > np.iinfo(np.int64).max:
+            return None, {"reason": "values exceed the int64 range", "shape": shape}
+        return raw.astype(np.int64, copy=False), None
+    if raw.dtype.kind == "f" and raw.dtype.itemsize < 4:
+        # half3[] points: float16 cannot represent the default 1e6 huge-coordinate
+        # threshold, so comparisons against it would overflow.
+        return raw.astype(np.float32), None
+    return raw, None
 
 
 def array_digest(array) -> tuple[str, tuple[int, ...], str] | None:
@@ -652,97 +737,13 @@ def count_face_geometry_numpy(
     return repeated_total, repeated_examples, zero_area_total, zero_area_examples
 
 
-def face_topology_issues(counts_np, indices_np, point_count: int) -> tuple[Counter[str], dict[str, Any]]:
-    """Report cheap per-face and per-index defects: bad face widths and out-of-range indices."""
-    issues: Counter[str] = Counter()
-    details: dict[str, Any] = {}
-    empty_or_negative = np.flatnonzero(counts_np <= 0)
-    one_or_two = np.flatnonzero((counts_np == 1) | (counts_np == 2))
-    if empty_or_negative.size:
-        issues["empty_or_negative_faces"] += int(empty_or_negative.size)
-        details["empty_or_negative_face_examples"] = empty_or_negative[:10].astype(int).tolist()
-    if one_or_two.size:
-        issues["one_or_two_vertex_faces"] += int(one_or_two.size)
-        details["one_or_two_vertex_face_examples"] = one_or_two[:10].astype(int).tolist()
-
-    if indices_np.size:
-        negative_mask = indices_np < 0
-        out_of_range_mask = indices_np >= point_count
-        if np.any(negative_mask):
-            bad = indices_np[negative_mask]
-            issues["negative_face_vertex_indices"] += int(bad.size)
-            details["negative_index_examples"] = bad[:10].astype(int).tolist()
-        if np.any(out_of_range_mask):
-            bad = indices_np[out_of_range_mask]
-            issues["out_of_range_face_vertex_indices"] += int(bad.size)
-            details["out_of_range_index_examples"] = bad[:10].astype(int).tolist()
-    return issues, details
-
-
-def deep_face_checks_are_safe(counts_np, indices_np, point_count: int) -> bool:
-    """Return true when face arrays are consistent enough to walk face by face.
-
-    The per-face checks index ``points`` through ``faceVertexIndices`` using
-    offsets derived from ``faceVertexCounts``; any inconsistency here would make
-    them read out of bounds. The defects themselves are reported by
-    ``face_topology_issues`` and the caller.
-    """
-    if int(counts_np.sum()) != indices_np.size:
-        return False
-    if point_count == 0 or indices_np.size == 0 or np.any(counts_np < 0):
-        return False
-    return not (np.any(indices_np < 0) or np.any(indices_np >= point_count))
-
-
-def face_offsets(counts_np):
-    """Return the start index of each face in ``faceVertexIndices``."""
-    offsets = np.empty(counts_np.size, dtype=np.int64)
-    offsets[0] = 0
-    if counts_np.size > 1:
-        offsets[1:] = np.cumsum(counts_np[:-1], dtype=np.int64)
-    return offsets
-
-
-def deep_face_issues(
-    counts_np,
-    indices_np,
-    points_np,
-    *,
-    zero_area_epsilon: float,
-    face_analysis_engine: str,
-    check_repeated_vertices: bool,
-    check_zero_area: bool,
-) -> tuple[Counter[str], dict[str, Any]]:
-    """Run the exact per-face checks: repeated vertices and zero-area fan triangles."""
-    count_face_geometry = count_face_geometry_numba if face_analysis_engine == "numba" else count_face_geometry_numpy
-    repeated_total, repeated_examples, zero_area_total, zero_area_examples = count_face_geometry(
-        counts_np,
-        indices_np,
-        points_np,
-        face_offsets(counts_np),
-        zero_area_epsilon,
-        check_repeated_vertices,
-        check_zero_area,
-    )
-    issues: Counter[str] = Counter()
-    details: dict[str, Any] = {}
-    if repeated_total:
-        issues["faces_with_repeated_vertices"] += repeated_total
-        details["repeated_vertex_face_examples"] = repeated_examples
-    if zero_area_total:
-        issues["zero_area_triangles"] += zero_area_total
-        details["zero_area_triangle_examples"] = zero_area_examples
-    return issues, details
-
-
 def analyze_face_geometry(
     counts_np,
     indices_np,
     points_np,
     point_count: int,
-    *,
-    zero_area_epsilon: float = DEFAULT_ZERO_AREA_EPSILON,
-    face_analysis_engine: str = "numpy",
+    zero_area_epsilon: float,
+    face_analysis_engine: str,
     check_repeated_vertices: bool = True,
     check_zero_area: bool = True,
     face_cache: FaceAnalysisCache | None = None,
@@ -771,27 +772,82 @@ def analyze_face_geometry(
         if cached is not None:
             return cached
 
-    if counts_np is None or indices_np is None or counts_np.size == 0:
-        return Counter(), {}
-
-    issues, details = face_topology_issues(counts_np, indices_np, point_count)
-    # Inconsistent arrays are never cached: their topology issues are cheap to
-    # recompute, and that keeps cache entries to meshes the deep checks ran on.
-    if not deep_face_checks_are_safe(counts_np, indices_np, point_count):
+    issues: Counter[str] = Counter()
+    details: dict[str, Any] = {}
+    if counts_np is None or indices_np is None:
         return issues, details
 
-    if check_repeated_vertices or check_zero_area:
-        deep_issues, deep_details = deep_face_issues(
+    if counts_np.size == 0:
+        return issues, details
+
+    empty_or_negative = np.flatnonzero(counts_np <= 0)
+    one_or_two = np.flatnonzero((counts_np == 1) | (counts_np == 2))
+    if empty_or_negative.size:
+        issues["empty_or_negative_faces"] += int(empty_or_negative.size)
+        details["empty_or_negative_face_examples"] = empty_or_negative[:10].astype(int).tolist()
+    if one_or_two.size:
+        issues["one_or_two_vertex_faces"] += int(one_or_two.size)
+        details["one_or_two_vertex_face_examples"] = one_or_two[:10].astype(int).tolist()
+
+    if indices_np.size:
+        negative_mask = indices_np < 0
+        out_of_range_mask = indices_np >= point_count
+        if np.any(negative_mask):
+            bad = indices_np[negative_mask]
+            issues["negative_face_vertex_indices"] += int(bad.size)
+            details["negative_index_examples"] = bad[:10].astype(int).tolist()
+        if np.any(out_of_range_mask):
+            bad = indices_np[out_of_range_mask]
+            issues["out_of_range_face_vertex_indices"] += int(bad.size)
+            details["out_of_range_index_examples"] = bad[:10].astype(int).tolist()
+
+    expected_index_count = int(counts_np.sum())
+    if expected_index_count != indices_np.size:
+        return issues, details
+
+    if point_count == 0 or indices_np.size == 0 or np.any(counts_np < 0):
+        return issues, details
+
+    if np.any(indices_np < 0) or np.any(indices_np >= point_count):
+        return issues, details
+
+    if not check_repeated_vertices and not check_zero_area:
+        if use_cache:
+            face_cache.set(cache_key, issues, details)
+        return issues, details
+
+    offsets = np.empty(counts_np.size, dtype=np.int64)
+    offsets[0] = 0
+    if counts_np.size > 1:
+        offsets[1:] = np.cumsum(counts_np[:-1], dtype=np.int64)
+
+    if face_analysis_engine == "numba":
+        repeated_total, repeated_examples, zero_area_total, zero_area_examples = count_face_geometry_numba(
             counts_np,
             indices_np,
             points_np,
-            zero_area_epsilon=zero_area_epsilon,
-            face_analysis_engine=face_analysis_engine,
-            check_repeated_vertices=check_repeated_vertices,
-            check_zero_area=check_zero_area,
+            offsets,
+            zero_area_epsilon,
+            check_repeated_vertices,
+            check_zero_area,
         )
-        issues.update(deep_issues)
-        details.update(deep_details)
+    else:
+        repeated_total, repeated_examples, zero_area_total, zero_area_examples = count_face_geometry_numpy(
+            counts_np,
+            indices_np,
+            points_np,
+            offsets,
+            zero_area_epsilon,
+            check_repeated_vertices,
+            check_zero_area,
+        )
+
+    if repeated_total:
+        issues["faces_with_repeated_vertices"] += repeated_total
+        details["repeated_vertex_face_examples"] = repeated_examples
+    if zero_area_total:
+        issues["zero_area_triangles"] += zero_area_total
+        details["zero_area_triangle_examples"] = zero_area_examples
 
     if use_cache:
         face_cache.set(cache_key, issues, details)
@@ -901,9 +957,9 @@ def validate_normals(
     normals = mesh.GetNormalsAttr().Get(time_code)
     if normals is None:
         return issues
-    normals_np, shape_problem = shaped_array(normals, 3)
-    if shape_problem is not None:
-        return [{"issue": "normals_bad_shape", **attribute_types(mesh.GetNormalsAttr()), **shape_problem}]
+    normals_np, problem = shaped_array(normals, 3)
+    if problem is not None:
+        return [{"issue": "normals_wrong_type", **attribute_types(mesh.GetNormalsAttr(), normals), **problem}]
     interpolation = mesh.GetNormalsInterpolation() or ""
     normal_count = len(normals_np)
     expected = expected_primvar_length(interpolation, point_count, face_count, face_vertex_count)
@@ -928,6 +984,7 @@ def transform_determinant(
     prim: Usd.Prim,
     xform_cache: UsdGeom.XformCache,
     error_log: CheckErrorLog | None = None,
+    subject: str | None = None,
 ) -> float | None:
     """Return local-to-world transform determinant, if computable.
 
@@ -939,46 +996,63 @@ def transform_determinant(
         return float(transform.GetDeterminant())
     except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
         if error_log is not None:
-            error_log.record("transform_determinant", str(prim.GetPath()), error)
+            error_log.record("transform_determinant", subject or str(prim.GetPath()), error)
         return None
 
 
-@dataclass(frozen=True)
-class MeshCheckSettings:
-    """Thresholds and switches for per-mesh checks.
+@contextmanager
+def recorded_failure(check: str, subject: str, error_log: CheckErrorLog | None):
+    """Record an exception raised by one check phase, then carry on with the mesh.
 
-    Grouped so they travel by name. Three adjacent float thresholds passed
-    positionally can be swapped without any error.
+    Without an ``error_log`` the exception propagates, so direct callers of
+    ``mesh_record()`` still see it. With one, a failing phase costs only its own
+    findings: everything the mesh's other phases found still reaches the report.
     """
-
-    zero_area_epsilon: float = DEFAULT_ZERO_AREA_EPSILON
-    huge_coord_threshold: float = DEFAULT_HUGE_COORD_THRESHOLD
-    extent_tolerance: float = DEFAULT_EXTENT_TOLERANCE
-    face_analysis_engine: str = "numpy"
-    audit_mode: str = "exhaustive"
-
-    def __post_init__(self) -> None:
-        if self.audit_mode not in AUDIT_MODES:
-            raise ValueError(f"Unsupported audit mode: {self.audit_mode}")
-        if self.face_analysis_engine not in ("numpy", "numba"):
-            raise ValueError(
-                f"Unsupported face analysis engine: {self.face_analysis_engine}; "
-                "resolve 'auto' with resolve_face_analysis_engine() first"
-            )
+    if error_log is None:
+        yield
+        return
+    try:
+        yield
+    except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
+        error_log.record(check, subject, error)
 
 
-def read_topology(
-    mesh: UsdGeom.Mesh, time_code: Usd.TimeCode, phase_timer: PhaseTimer
-) -> tuple[Any, Any, Any, Counter[str], dict[str, Any]]:
-    """Read points, face-vertex counts, and indices as usable NumPy arrays.
+def mesh_record(
+    prim: Usd.Prim,
+    zero_area_epsilon: float,
+    huge_coord_threshold: float,
+    extent_tolerance: float,
+    xform_cache: UsdGeom.XformCache,
+    face_analysis_engine: str,
+    audit_mode: str,
+    phase_timer: PhaseTimer,
+    face_cache: FaceAnalysisCache,
+    time_code: Usd.TimeCode | None = None,
+    error_log: CheckErrorLog | None = None,
+    prototype_paths: PrototypePaths | None = None,
+) -> dict[str, Any]:
+    """Analyze a single mesh prim and return a report record.
 
-    Returns the three arrays -- None when absent or unusable -- plus the
-    issues found while reading them. A wrongly typed attribute is reported as
-    ``*_bad_shape`` and then treated as unusable, which cascades the same way a
-    missing attribute does.
+    ``prototype_paths`` renames prims inside instancing prototypes in the
+    record's ``path``; see ``PrototypePaths``. ``normalized_path`` and the mesh
+    category are always derived from the real prim path.
+
+    ``time_code`` defaults to ``default_time_code(prim)``, the time code
+    ``analyze()`` would use. Transforms are read from ``xform_cache`` at the
+    time it was built with, so build it at the same time code, e.g.
+    ``UsdGeom.XformCache(default_time_code(prim))``. A default-constructed
+    ``XformCache()`` evaluates at ``Default`` and would miss animated transforms.
     """
+    if time_code is None:
+        time_code = default_time_code(prim)
+    prim_path = str(prim.GetPath())
+    path = prototype_paths.stable(prim_path) if prototype_paths is not None else prim_path
+    name = prim.GetName()
+    mesh = UsdGeom.Mesh(prim)
+    category = classify_mesh(prim_path, name)
     issues: Counter[str] = Counter()
     details: dict[str, Any] = {}
+
     points_attr = mesh.GetPointsAttr()
     counts_attr = mesh.GetFaceVertexCountsAttr()
     indices_attr = mesh.GetFaceVertexIndicesAttr()
@@ -987,153 +1061,112 @@ def read_topology(
         counts = counts_attr.Get(time_code)
         indices = indices_attr.Get(time_code)
 
+    # A wrongly typed attribute is reported as *_wrong_type and then treated as
+    # unusable, which cascades the same way a missing attribute does.
     points_np, points_problem = shaped_array(points, 3)
-    counts_np, counts_problem = shaped_array(counts, None, dtype="int64")
-    indices_np, indices_problem = shaped_array(indices, None, dtype="int64")
-    for issue, attr, problem in (
-        ("points_bad_shape", points_attr, points_problem),
-        ("face_vertex_counts_bad_shape", counts_attr, counts_problem),
-        ("face_vertex_indices_bad_shape", indices_attr, indices_problem),
+    counts_np, counts_problem = shaped_array(counts, None, integer=True)
+    indices_np, indices_problem = shaped_array(indices, None, integer=True)
+    for issue, attr, value, problem in (
+        ("points_wrong_type", points_attr, points, points_problem),
+        ("face_vertex_counts_wrong_type", counts_attr, counts, counts_problem),
+        ("face_vertex_indices_wrong_type", indices_attr, indices, indices_problem),
     ):
         if problem is not None:
             issues[issue] += 1
-            details[issue] = {**attribute_types(attr), **problem}
+            add_example(details, issue, {**attribute_types(attr, value), **problem}, 10)
+
+    point_count = len(points_np) if points_np is not None else 0
+    face_count = len(counts_np) if counts_np is not None else 0
+    index_count = len(indices_np) if indices_np is not None else 0
 
     if points is None:
         issues["missing_points"] += 1
-    elif points_np is not None and len(points_np) == 0:
+    elif points_np is not None and point_count == 0:
         issues["empty_points"] += 1
+
     if counts is None:
         issues["missing_face_vertex_counts"] += 1
     if indices is None:
         issues["missing_face_vertex_indices"] += 1
-    return points_np, counts_np, indices_np, issues, details
-
-
-def point_issues(points_np, huge_coord_threshold: float) -> tuple[Counter[str], dict[str, Any]]:
-    """Report non-finite points and points beyond the huge-coordinate threshold."""
-    issues: Counter[str] = Counter()
-    details: dict[str, Any] = {}
-    if points_np is None or not points_np.size:
-        return issues, details
-    finite_mask = np.isfinite(points_np).all(axis=1)
-    non_finite_indices = np.flatnonzero(~finite_mask)
-    if non_finite_indices.size:
-        issues["non_finite_points"] += int(non_finite_indices.size)
-        details["non_finite_point_examples"] = non_finite_indices[:10].astype(int).tolist()
-    finite_points = points_np[finite_mask]
-    if not finite_points.size:
-        return issues, details
-    max_abs = np.max(np.abs(finite_points), axis=1)
-    huge_positions = np.flatnonzero(max_abs > huge_coord_threshold)
-    if huge_positions.size:
-        original_indices = np.flatnonzero(finite_mask)[huge_positions]
-        issues["huge_coordinate_points"] += int(huge_positions.size)
-        details["huge_coordinate_examples"] = [
-            {
-                "index": int(original_indices[i]),
-                "point": finite_points[huge_positions[i]].astype(float).tolist(),
-                "max_abs": float(max_abs[huge_positions[i]]),
-            }
-            for i in range(min(10, huge_positions.size))
-        ]
-    return issues, details
-
-
-def determinant_issues(determinant: float | None) -> Counter[str]:
-    """Report degenerate or mirroring local-to-world transforms."""
-    issues: Counter[str] = Counter()
-    if determinant is None:
-        return issues
-    if abs(determinant) <= 1e-12:
-        issues["near_zero_transform_determinant"] += 1
-    elif determinant < 0:
-        issues["negative_transform_determinant"] += 1
-    return issues
-
-
-def mesh_record(
-    prim: Usd.Prim,
-    *,
-    settings: MeshCheckSettings | None = None,
-    xform_cache: UsdGeom.XformCache | None = None,
-    time_code: Usd.TimeCode | None = None,
-    phase_timer: PhaseTimer | None = None,
-    face_cache: FaceAnalysisCache | None = None,
-    error_log: CheckErrorLog | None = None,
-) -> dict[str, Any]:
-    """Analyze a single mesh prim and return a report record.
-
-    ``time_code`` defaults to ``default_time_code(prim)``, the time code
-    ``analyze()`` would use. ``xform_cache`` defaults to a cache built at that
-    same time code, so attributes and transforms are read at one moment. A
-    caller that passes its own cache must build it at ``time_code`` too; a
-    default-constructed ``XformCache()`` evaluates at ``Default`` and would miss
-    animated transforms.
-    """
-    settings = settings or MeshCheckSettings()
-    time_code = default_time_code(prim) if time_code is None else time_code
-    xform_cache = UsdGeom.XformCache(time_code) if xform_cache is None else xform_cache
-    phase_timer = phase_timer or PhaseTimer()
-    path = str(prim.GetPath())
-    name = prim.GetName()
-    mesh = UsdGeom.Mesh(prim)
-    category = classify_mesh(path, name)
-
-    points_np, counts_np, indices_np, issues, details = read_topology(mesh, time_code, phase_timer)
-    point_count = len(points_np) if points_np is not None else 0
-    face_count = len(counts_np) if counts_np is not None else 0
-    index_count = len(indices_np) if indices_np is not None else 0
 
     expected_index_count = int(counts_np.sum()) if counts_np is not None else 0
     if expected_index_count != index_count:
         issues["face_vertex_count_index_length_mismatch"] += 1
         details["expected_index_count"] = expected_index_count
 
-    with phase_timer.phase("mesh.point_checks"):
-        found, found_details = point_issues(points_np, settings.huge_coord_threshold)
-    issues.update(found)
-    details.update(found_details)
+    with phase_timer.phase("mesh.point_checks"), recorded_failure("point_checks", path, error_log):
+        if points_np is not None and points_np.size:
+            finite_mask = np.isfinite(points_np).all(axis=1)
+            non_finite_indices = np.flatnonzero(~finite_mask)
+            if non_finite_indices.size:
+                issues["non_finite_points"] += int(non_finite_indices.size)
+                details["non_finite_point_examples"] = non_finite_indices[:10].astype(int).tolist()
+            finite_points = points_np[finite_mask]
+            if finite_points.size:
+                max_abs = np.max(np.abs(finite_points), axis=1)
+                huge_positions = np.flatnonzero(max_abs > huge_coord_threshold)
+                if huge_positions.size:
+                    original_indices = np.flatnonzero(finite_mask)[huge_positions]
+                    issues["huge_coordinate_points"] += int(huge_positions.size)
+                    details["huge_coordinate_examples"] = [
+                        {
+                            "index": int(original_indices[i]),
+                            "point": finite_points[huge_positions[i]].astype(float).tolist(),
+                            "max_abs": float(max_abs[huge_positions[i]]),
+                        }
+                        for i in range(min(10, huge_positions.size))
+                    ]
 
-    check_repeated_vertices, check_zero_area = face_checks_for_mode(settings.audit_mode, category)
-    with phase_timer.phase("mesh.face_checks"):
-        found, found_details = analyze_face_geometry(
+    check_repeated_vertices, check_zero_area = face_checks_for_mode(audit_mode, category)
+    with phase_timer.phase("mesh.face_checks"), recorded_failure("face_checks", path, error_log):
+        face_issues, face_details = analyze_face_geometry(
             counts_np,
             indices_np,
             points_np,
             point_count,
-            zero_area_epsilon=settings.zero_area_epsilon,
-            face_analysis_engine=settings.face_analysis_engine,
-            check_repeated_vertices=check_repeated_vertices,
-            check_zero_area=check_zero_area,
-            face_cache=face_cache,
+            zero_area_epsilon,
+            face_analysis_engine,
+            check_repeated_vertices,
+            check_zero_area,
+            face_cache,
         )
-    issues.update(found)
-    details.update(found_details)
+        issues.update(face_issues)
+        details.update(face_details)
 
-    with phase_timer.phase("mesh.bounds_extent"):
+    bounds = None
+    with phase_timer.phase("mesh.bounds_extent"), recorded_failure("bounds_extent", path, error_log):
         bounds = bbox_from_points(points_np if points_np is not None else [])
-        extent_delta = bounds_mismatch(authored_extent_bounds(mesh, time_code), bounds, settings.extent_tolerance)
+        authored_bounds, extent_problem = read_extent(mesh, time_code)
+        if extent_problem is not None:
+            issues["extent_wrong_type"] += 1
+            add_example(details, "extent_wrong_type", extent_problem, 10)
+        extent_delta = bounds_mismatch(authored_bounds, bounds, extent_tolerance)
         if extent_delta is not None:
             issues["authored_extent_mismatch"] += 1
             details["authored_extent_max_delta"] = extent_delta
 
-    if settings.audit_mode != "fast":
-        with phase_timer.phase("mesh.normals"):
-            normal_issues = validate_normals(mesh, point_count, face_count, expected_index_count, time_code)
-        with phase_timer.phase("mesh.primvars"):
-            primvar_issues = validate_primvars(prim, point_count, face_count, expected_index_count, time_code)
-        for attribute_issue in normal_issues + primvar_issues:
-            issues[attribute_issue["issue"]] += 1
-            add_example(details, attribute_issue["issue"], attribute_issue, 10)
+    if audit_mode != "fast":
+        with phase_timer.phase("mesh.normals"), recorded_failure("normals", path, error_log):
+            for normal_issue in validate_normals(mesh, point_count, face_count, expected_index_count, time_code):
+                issues[normal_issue["issue"]] += 1
+                add_example(details, normal_issue["issue"], normal_issue, 10)
+
+        with phase_timer.phase("mesh.primvars"), recorded_failure("primvars", path, error_log):
+            for primvar_issue in validate_primvars(prim, point_count, face_count, expected_index_count, time_code):
+                issues[primvar_issue["issue"]] += 1
+                add_example(details, primvar_issue["issue"], primvar_issue, 10)
 
     with phase_timer.phase("mesh.transforms"):
-        determinant = transform_determinant(prim, xform_cache, error_log)
-    issues.update(determinant_issues(determinant))
+        determinant = transform_determinant(prim, xform_cache, error_log, subject=path)
+        if determinant is not None:
+            if abs(determinant) <= 1e-12:
+                issues["near_zero_transform_determinant"] += 1
+            elif determinant < 0:
+                issues["negative_transform_determinant"] += 1
 
     return {
         "path": path,
-        "normalized_path": normalized_path(path),
+        "normalized_path": normalized_path(prim_path),
         "name": name,
         "category": category,
         "point_count": point_count,
@@ -1148,122 +1181,100 @@ def mesh_record(
     }
 
 
-ISSUE_WEIGHTS = {
-    "missing_points": 1000,
-    "missing_face_vertex_counts": 1000,
-    "missing_face_vertex_indices": 1000,
-    "points_bad_shape": 1000,
-    "face_vertex_counts_bad_shape": 1000,
-    "face_vertex_indices_bad_shape": 1000,
-    "face_vertex_count_index_length_mismatch": 800,
-    "negative_face_vertex_indices": 500,
-    "out_of_range_face_vertex_indices": 500,
-    "non_finite_points": 500,
-    "empty_points": 300,
-    "empty_or_negative_faces": 250,
-    "one_or_two_vertex_faces": 100,
-    "faces_with_repeated_vertices": 50,
-    "zero_area_triangles": 20,
-    "primvar_length_mismatch": 100,
-    "primvar_element_size_mismatch": 100,
-    "primvar_index_out_of_range": 100,
-    "normals_length_mismatch": 50,
-    "normals_bad_shape": 100,
-    "authored_extent_mismatch": 10,
-    "negative_transform_determinant": 5,
-    "near_zero_transform_determinant": 100,
-}
-
-SERIOUS_ISSUE_NAMES = frozenset(
-    {
-        "missing_points",
-        "missing_face_vertex_counts",
-        "missing_face_vertex_indices",
-        "points_bad_shape",
-        "face_vertex_counts_bad_shape",
-        "face_vertex_indices_bad_shape",
-        "face_vertex_count_index_length_mismatch",
-        "negative_face_vertex_indices",
-        "out_of_range_face_vertex_indices",
-        "non_finite_points",
-        "empty_points",
-        "empty_or_negative_faces",
-        "one_or_two_vertex_faces",
-        "primvar_index_out_of_range",
-        "near_zero_transform_determinant",
-    }
-)
-
-LIKELY_BENIGN_COLLISION_ISSUES = frozenset(
-    {"faces_with_repeated_vertices", "zero_area_triangles", "authored_extent_mismatch"}
-)
-
-COMPACT_RECORD_KEYS = (
-    "path",
-    "normalized_path",
-    "category",
-    "point_count",
-    "face_count",
-    "face_vertex_index_count",
-    "extent_diagonal",
-    "issue_count",
-    "issues",
-    "details",
-)
-
-RANKING_LIMIT = 40
-
-
 def seriousness_score(record: dict[str, Any]) -> int:
     """Rank mesh records by likely severity."""
-    return sum(ISSUE_WEIGHTS.get(issue, 1) * count for issue, count in record["issues"].items())
+    weights = {
+        "missing_points": 1000,
+        "missing_face_vertex_counts": 1000,
+        "missing_face_vertex_indices": 1000,
+        "points_wrong_type": 1000,
+        "face_vertex_counts_wrong_type": 1000,
+        "face_vertex_indices_wrong_type": 1000,
+        "face_vertex_count_index_length_mismatch": 800,
+        "negative_face_vertex_indices": 500,
+        "out_of_range_face_vertex_indices": 500,
+        "non_finite_points": 500,
+        "empty_points": 300,
+        "empty_or_negative_faces": 250,
+        "one_or_two_vertex_faces": 100,
+        "faces_with_repeated_vertices": 50,
+        "zero_area_triangles": 20,
+        "primvar_length_mismatch": 100,
+        "primvar_element_size_mismatch": 100,
+        "primvar_index_out_of_range": 100,
+        "normals_length_mismatch": 50,
+        "normals_wrong_type": 100,
+        "authored_extent_mismatch": 10,
+        "extent_wrong_type": 10,
+        "negative_transform_determinant": 5,
+        "near_zero_transform_determinant": 100,
+    }
+    return sum(weights.get(issue, 1) * count for issue, count in record["issues"].items())
 
 
-def compact_record(record: dict[str, Any]) -> dict[str, Any]:
-    """Return the subset of a mesh record shown in ranked lists."""
-    return {key: record[key] for key in COMPACT_RECORD_KEYS if key in record}
+def analyze(
+    stage_path: Path,
+    zero_area_epsilon: float,
+    huge_coord_threshold: float,
+    extent_tolerance: float,
+    geometry_engine: str = "auto",
+    audit_mode: str = "exhaustive",
+    mesh_cache_mode: str = "off",
+    frame: float | None = None,
+) -> dict[str, Any]:
+    """Analyze all meshes in a USD stage and its prototypes."""
+    started = time.perf_counter()
+    phase_timer = PhaseTimer()
+    face_analysis_engine = resolve_face_analysis_engine(geometry_engine)
+    if audit_mode not in AUDIT_MODES:
+        raise ValueError(f"Unsupported audit mode: {audit_mode}")
+    if mesh_cache_mode not in MESH_CACHE_MODES:
+        raise ValueError(f"Unsupported mesh cache mode: {mesh_cache_mode}")
+    face_cache = FaceAnalysisCache(enabled=mesh_cache_mode == "face-hash")
+    error_log = CheckErrorLog()
+    with phase_timer.phase("stage.open"):
+        stage = Usd.Stage.Open(str(stage_path))
+    if stage is None:
+        raise RuntimeError(f"Could not open stage: {stage_path}")
 
+    time_code = resolve_time_code(frame, stage)
 
-def audit_meshes(
-    mesh_prims: list[Usd.Prim],
-    settings: MeshCheckSettings,
-    *,
-    time_code: Usd.TimeCode,
-    phase_timer: PhaseTimer,
-    face_cache: FaceAnalysisCache,
-    error_log: CheckErrorLog,
-) -> list[dict[str, Any]]:
-    """Return one record per mesh, recording any mesh whose checks raised."""
-    xform_cache = UsdGeom.XformCache(time_code)
-    records: list[dict[str, Any]] = []
-    for prim in mesh_prims:
-        try:
-            records.append(
-                mesh_record(
-                    prim,
-                    settings=settings,
-                    xform_cache=xform_cache,
-                    time_code=time_code,
-                    phase_timer=phase_timer,
-                    face_cache=face_cache,
-                    error_log=error_log,
-                )
-            )
-        except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
-            # Authored data the checks do not anticipate must not abort a
-            # multi-minute audit of every other mesh. The mesh is still counted
-            # in mesh_count; it has no record, and the failure is reported.
-            error_log.record("mesh_record", str(prim.GetPath()), error)
-    return records
+    with phase_timer.phase("stage.traverse"):
+        prims, prototype_count = prims_with_prototypes(stage)
+        mesh_prims = [prim for prim in prims if prim.IsA(UsdGeom.Mesh)]
+        prototype_paths = PrototypePaths(stage)
 
-
-def summarize_records(records: list[dict[str, Any]]) -> dict[str, Any]:
-    """Aggregate mesh records into the report's summary, example, and ranking sections."""
     summary_counts: Counter[str] = Counter()
     category_counts: Counter[str] = Counter()
     category_issue_counts: dict[str, Counter[str]] = defaultdict(Counter)
     examples: dict[str, list[Any]] = {}
-    for record in records:
+    records: list[dict[str, Any]] = []
+    xform_cache = UsdGeom.XformCache(time_code)
+
+    for prim in mesh_prims:
+        try:
+            record = mesh_record(
+                prim,
+                zero_area_epsilon,
+                huge_coord_threshold,
+                extent_tolerance,
+                xform_cache,
+                face_analysis_engine,
+                audit_mode,
+                phase_timer,
+                face_cache,
+                time_code,
+                error_log,
+                prototype_paths,
+            )
+        except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
+            # Last resort: each check phase inside mesh_record() already records
+            # its own failures and keeps the rest of the record. Anything that
+            # still escapes must not abort a multi-minute audit of every other
+            # mesh. Such a mesh is counted in unaudited_mesh_count.
+            error_log.record("mesh_record", prototype_paths.stable(str(prim.GetPath())), error)
+            continue
+        records.append(record)
         category = record["category"]
         category_counts[category] += 1
         for issue, count in record["issues"].items():
@@ -1281,85 +1292,57 @@ def summarize_records(records: list[dict[str, Any]]) -> dict[str, Any]:
                 },
             )
 
-    def ranked(key) -> list[dict[str, Any]]:
-        return [compact_record(record) for record in sorted(records, key=key, reverse=True)[:RANKING_LIMIT]]
+    worst_meshes = sorted(records, key=lambda item: (seriousness_score(item), item["issue_count"]), reverse=True)[:40]
+    largest_by_points = sorted(records, key=lambda item: item["point_count"], reverse=True)[:40]
+    largest_by_faces = sorted(records, key=lambda item: item["face_count"], reverse=True)[:40]
+    largest_by_extent = sorted(records, key=lambda item: item["extent_diagonal"], reverse=True)[:40]
 
-    # category_issue_counts has always carried a "collision_like" entry, empty
-    # when there are none, so consumers can read it without a key check.
-    collision_issue_counts = category_issue_counts["collision_like"]
-    likely_benign = sum(
-        count for issue, count in collision_issue_counts.items() if issue in LIKELY_BENIGN_COLLISION_ISSUES
-    )
-    return {
-        "summary_counts": dict(summary_counts.most_common()),
-        "category_counts": dict(category_counts.most_common()),
-        "category_issue_counts": {
-            category: dict(counter.most_common()) for category, counter in category_issue_counts.items()
-        },
-        "serious_geometry_failures": sum(summary_counts[name] for name in SERIOUS_ISSUE_NAMES),
-        "likely_benign_collision_helper_warnings": likely_benign,
-        "examples": examples,
-        "worst_meshes": ranked(lambda item: (seriousness_score(item), item["issue_count"])),
-        "largest_meshes_by_points": ranked(lambda item: item["point_count"]),
-        "largest_meshes_by_faces": ranked(lambda item: item["face_count"]),
-        "largest_meshes_by_extent": ranked(lambda item: item["extent_diagonal"]),
+    serious_issue_names = {
+        "missing_points",
+        "missing_face_vertex_counts",
+        "missing_face_vertex_indices",
+        "points_wrong_type",
+        "face_vertex_counts_wrong_type",
+        "face_vertex_indices_wrong_type",
+        "face_vertex_count_index_length_mismatch",
+        "negative_face_vertex_indices",
+        "out_of_range_face_vertex_indices",
+        "non_finite_points",
+        "empty_points",
+        "empty_or_negative_faces",
+        "one_or_two_vertex_faces",
+        "primvar_index_out_of_range",
+        "near_zero_transform_determinant",
     }
-
-
-def analyze(
-    stage_path: Path,
-    *,
-    zero_area_epsilon: float = DEFAULT_ZERO_AREA_EPSILON,
-    huge_coord_threshold: float = DEFAULT_HUGE_COORD_THRESHOLD,
-    extent_tolerance: float = DEFAULT_EXTENT_TOLERANCE,
-    geometry_engine: str = "auto",
-    audit_mode: str = "exhaustive",
-    mesh_cache_mode: str = "off",
-    frame: float | None = None,
-) -> dict[str, Any]:
-    """Analyze all meshes in a USD stage and its prototypes.
-
-    Every option is keyword-only: the three thresholds are adjacent floats, so
-    a positional call could swap two of them without any error.
-    """
-    started = time.perf_counter()
-    phase_timer = PhaseTimer()
-    settings = MeshCheckSettings(
-        zero_area_epsilon=zero_area_epsilon,
-        huge_coord_threshold=huge_coord_threshold,
-        extent_tolerance=extent_tolerance,
-        face_analysis_engine=resolve_face_analysis_engine(geometry_engine),
-        audit_mode=audit_mode,
+    serious_geometry_failures = sum(summary_counts[name] for name in serious_issue_names)
+    likely_benign_collision_helper_warnings = sum(
+        count
+        for issue, count in category_issue_counts["collision_like"].items()
+        if issue in {"faces_with_repeated_vertices", "zero_area_triangles", "authored_extent_mismatch"}
     )
-    if mesh_cache_mode not in MESH_CACHE_MODES:
-        raise ValueError(f"Unsupported mesh cache mode: {mesh_cache_mode}")
-    face_cache = FaceAnalysisCache(enabled=mesh_cache_mode == "face-hash")
-    error_log = CheckErrorLog()
-    with phase_timer.phase("stage.open"):
-        stage = Usd.Stage.Open(str(stage_path))
-    if stage is None:
-        raise RuntimeError(f"Could not open stage: {stage_path}")
 
-    time_code = resolve_time_code(frame, stage)
-    with phase_timer.phase("stage.traverse"):
-        prims, prototype_count = prims_with_prototypes(stage)
-        mesh_prims = [prim for prim in prims if prim.IsA(UsdGeom.Mesh)]
+    compact_record_keys = [
+        "path",
+        "normalized_path",
+        "category",
+        "point_count",
+        "face_count",
+        "face_vertex_index_count",
+        "extent_diagonal",
+        "issue_count",
+        "issues",
+        "details",
+    ]
 
-    records = audit_meshes(
-        mesh_prims,
-        settings,
-        time_code=time_code,
-        phase_timer=phase_timer,
-        face_cache=face_cache,
-        error_log=error_log,
-    )
-    summary = summarize_records(records)
+    def compact(record: dict[str, Any]) -> dict[str, Any]:
+        return {key: record[key] for key in compact_record_keys if key in record}
 
-    return {
+    report = {
         "stage": str(stage_path),
         "default_prim": str(stage.GetDefaultPrim().GetPath()) if stage.GetDefaultPrim() else None,
         "prototype_count": prototype_count,
         "mesh_count": len(mesh_prims),
+        "unaudited_mesh_count": len(mesh_prims) - len(records),
         "thresholds": {
             "zero_area_epsilon": zero_area_epsilon,
             "huge_coord_threshold": huge_coord_threshold,
@@ -1367,30 +1350,35 @@ def analyze(
         },
         "audit_mode": audit_mode,
         "geometry_engine": geometry_engine,
-        "face_analysis_engine": settings.face_analysis_engine,
+        "face_analysis_engine": face_analysis_engine,
         "requested_frame": frame,
         "time_code": describe_time_code(time_code),
         "mesh_cache": face_cache.stats(),
-        "summary_counts": summary["summary_counts"],
-        "category_counts": summary["category_counts"],
-        "category_issue_counts": summary["category_issue_counts"],
-        "serious_geometry_failures": summary["serious_geometry_failures"],
-        "likely_benign_collision_helper_warnings": summary["likely_benign_collision_helper_warnings"],
+        "summary_counts": dict(summary_counts.most_common()),
+        "category_counts": dict(category_counts.most_common()),
+        "category_issue_counts": {
+            category: dict(counter.most_common()) for category, counter in category_issue_counts.items()
+        },
+        "serious_geometry_failures": serious_geometry_failures,
+        "likely_benign_collision_helper_warnings": likely_benign_collision_helper_warnings,
         "check_errors": error_log.as_report(),
-        "examples": summary["examples"],
-        "worst_meshes": summary["worst_meshes"],
-        "largest_meshes_by_points": summary["largest_meshes_by_points"],
-        "largest_meshes_by_faces": summary["largest_meshes_by_faces"],
-        "largest_meshes_by_extent": summary["largest_meshes_by_extent"],
+        "examples": examples,
+        "worst_meshes": [compact(record) for record in worst_meshes],
+        "largest_meshes_by_points": [compact(record) for record in largest_by_points],
+        "largest_meshes_by_faces": [compact(record) for record in largest_by_faces],
+        "largest_meshes_by_extent": [compact(record) for record in largest_by_extent],
         "phase_timings": phase_timer.rounded(),
         "elapsed_seconds": round(time.perf_counter() - started, 3),
     }
+    return report
 
 
 def print_summary(report: dict[str, Any]) -> None:
     """Print a compact console summary."""
     print(f"Stage: {report['stage']}")
     print(f"Meshes scanned: {report['mesh_count']} (prototypes: {report['prototype_count']})")
+    if report["unaudited_mesh_count"]:
+        print(f"Meshes with no record: {report['unaudited_mesh_count']} (see check_errors in the JSON report)")
     print(f"Audit mode: {report['audit_mode']}")
     print(f"Evaluated at time code: {report['time_code']}")
     print(f"Face analysis engine: {report['face_analysis_engine']}")
@@ -1413,9 +1401,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("stage", type=Path)
     parser.add_argument("--json-out", type=Path)
-    parser.add_argument("--zero-area-epsilon", type=float, default=DEFAULT_ZERO_AREA_EPSILON)
-    parser.add_argument("--huge-coord-threshold", type=float, default=DEFAULT_HUGE_COORD_THRESHOLD)
-    parser.add_argument("--extent-tolerance", type=float, default=DEFAULT_EXTENT_TOLERANCE)
+    parser.add_argument("--zero-area-epsilon", type=float, default=1e-12)
+    parser.add_argument("--huge-coord-threshold", type=float, default=1e6)
+    parser.add_argument("--extent-tolerance", type=float, default=1e-4)
     parser.add_argument(
         "--audit-mode",
         choices=AUDIT_MODES,
@@ -1451,13 +1439,13 @@ def main() -> None:
 
     report = analyze(
         args.stage,
-        zero_area_epsilon=args.zero_area_epsilon,
-        huge_coord_threshold=args.huge_coord_threshold,
-        extent_tolerance=args.extent_tolerance,
-        geometry_engine=args.geometry_engine,
-        audit_mode=args.audit_mode,
-        mesh_cache_mode=args.mesh_cache,
-        frame=args.frame,
+        args.zero_area_epsilon,
+        args.huge_coord_threshold,
+        args.extent_tolerance,
+        args.geometry_engine,
+        args.audit_mode,
+        args.mesh_cache,
+        args.frame,
     )
     if args.json_out:
         args.json_out.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
