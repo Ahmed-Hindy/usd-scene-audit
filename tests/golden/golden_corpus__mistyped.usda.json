@@ -1,0 +1,2131 @@
+{
+ "geometry": {
+  "stage": "<fixtures>/golden_corpus/mistyped.usda",
+  "default_prim": null,
+  "prototype_count": 0,
+  "mesh_count": 4,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "exhaustive",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": null,
+  "time_code": "earliest",
+  "mesh_cache": {
+   "mode": "off",
+   "entries": 0,
+   "hits": 0,
+   "misses": 0
+  },
+  "summary_counts": {
+   "out_of_range_face_vertex_indices": 3,
+   "face_vertex_count_index_length_mismatch": 2,
+   "normals_wrong_type": 1,
+   "points_wrong_type": 1,
+   "face_vertex_counts_wrong_type": 1,
+   "face_vertex_indices_wrong_type": 1
+  },
+  "category_counts": {
+   "render_like": 4
+  },
+  "category_issue_counts": {
+   "render_like": {
+    "out_of_range_face_vertex_indices": 3,
+    "face_vertex_count_index_length_mismatch": 2,
+    "normals_wrong_type": 1,
+    "points_wrong_type": 1,
+    "face_vertex_counts_wrong_type": 1,
+    "face_vertex_indices_wrong_type": 1
+   },
+   "collision_like": {}
+  },
+  "serious_geometry_failures": 8,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {
+   "normals_wrong_type": [
+    {
+     "path": "/NormalsFloat",
+     "normalized_path": "/NormalsFloat",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "normals_wrong_type": [
+       {
+        "issue": "normals_wrong_type",
+        "authored_type": "float[]",
+        "expected_type": "normal3f[]",
+        "reason": "shape is not rows of 3 values",
+        "shape": [
+         3
+        ]
+       }
+      ]
+     }
+    }
+   ],
+   "points_wrong_type": [
+    {
+     "path": "/PointsFloat2",
+     "normalized_path": "/PointsFloat2",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "points_wrong_type": [
+       {
+        "authored_type": "float2[]",
+        "expected_type": "point3f[]",
+        "reason": "shape is not rows of 3 values",
+        "shape": [
+         3,
+         2
+        ]
+       }
+      ],
+      "out_of_range_index_examples": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "out_of_range_face_vertex_indices": [
+    {
+     "path": "/PointsFloat2",
+     "normalized_path": "/PointsFloat2",
+     "category": "render_like",
+     "count": 3,
+     "details": {
+      "points_wrong_type": [
+       {
+        "authored_type": "float2[]",
+        "expected_type": "point3f[]",
+        "reason": "shape is not rows of 3 values",
+        "shape": [
+         3,
+         2
+        ]
+       }
+      ],
+      "out_of_range_index_examples": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "face_vertex_counts_wrong_type": [
+    {
+     "path": "/CountsScalar",
+     "normalized_path": "/CountsScalar",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "face_vertex_counts_wrong_type": [
+       {
+        "authored_type": "int",
+        "expected_type": "int[]",
+        "reason": "authored as a scalar, not an array"
+       }
+      ],
+      "expected_index_count": 0
+     }
+    }
+   ],
+   "face_vertex_count_index_length_mismatch": [
+    {
+     "path": "/CountsScalar",
+     "normalized_path": "/CountsScalar",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "face_vertex_counts_wrong_type": [
+       {
+        "authored_type": "int",
+        "expected_type": "int[]",
+        "reason": "authored as a scalar, not an array"
+       }
+      ],
+      "expected_index_count": 0
+     }
+    },
+    {
+     "path": "/IndicesInt2",
+     "normalized_path": "/IndicesInt2",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "face_vertex_indices_wrong_type": [
+       {
+        "authored_type": "int2[]",
+        "expected_type": "int[]",
+        "reason": "shape is not a flat array",
+        "shape": [
+         2,
+         2
+        ]
+       }
+      ],
+      "expected_index_count": 3
+     }
+    }
+   ],
+   "face_vertex_indices_wrong_type": [
+    {
+     "path": "/IndicesInt2",
+     "normalized_path": "/IndicesInt2",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "face_vertex_indices_wrong_type": [
+       {
+        "authored_type": "int2[]",
+        "expected_type": "int[]",
+        "reason": "shape is not a flat array",
+        "shape": [
+         2,
+         2
+        ]
+       }
+      ],
+      "expected_index_count": 3
+     }
+    }
+   ]
+  },
+  "worst_meshes": [
+   {
+    "path": "/PointsFloat2",
+    "normalized_path": "/PointsFloat2",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 4,
+    "issues": {
+     "points_wrong_type": 1,
+     "out_of_range_face_vertex_indices": 3
+    },
+    "details": {
+     "points_wrong_type": [
+      {
+       "authored_type": "float2[]",
+       "expected_type": "point3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3,
+        2
+       ]
+      }
+     ],
+     "out_of_range_index_examples": [
+      0,
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/CountsScalar",
+    "normalized_path": "/CountsScalar",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_counts_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_counts_wrong_type": [
+      {
+       "authored_type": "int",
+       "expected_type": "int[]",
+       "reason": "authored as a scalar, not an array"
+      }
+     ],
+     "expected_index_count": 0
+    }
+   },
+   {
+    "path": "/IndicesInt2",
+    "normalized_path": "/IndicesInt2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_indices_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_indices_wrong_type": [
+      {
+       "authored_type": "int2[]",
+       "expected_type": "int[]",
+       "reason": "shape is not a flat array",
+       "shape": [
+        2,
+        2
+       ]
+      }
+     ],
+     "expected_index_count": 3
+    }
+   },
+   {
+    "path": "/NormalsFloat",
+    "normalized_path": "/NormalsFloat",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "normals_wrong_type": 1
+    },
+    "details": {
+     "normals_wrong_type": [
+      {
+       "issue": "normals_wrong_type",
+       "authored_type": "float[]",
+       "expected_type": "normal3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3
+       ]
+      }
+     ]
+    }
+   }
+  ],
+  "largest_meshes_by_points": [
+   {
+    "path": "/NormalsFloat",
+    "normalized_path": "/NormalsFloat",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "normals_wrong_type": 1
+    },
+    "details": {
+     "normals_wrong_type": [
+      {
+       "issue": "normals_wrong_type",
+       "authored_type": "float[]",
+       "expected_type": "normal3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/CountsScalar",
+    "normalized_path": "/CountsScalar",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_counts_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_counts_wrong_type": [
+      {
+       "authored_type": "int",
+       "expected_type": "int[]",
+       "reason": "authored as a scalar, not an array"
+      }
+     ],
+     "expected_index_count": 0
+    }
+   },
+   {
+    "path": "/IndicesInt2",
+    "normalized_path": "/IndicesInt2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_indices_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_indices_wrong_type": [
+      {
+       "authored_type": "int2[]",
+       "expected_type": "int[]",
+       "reason": "shape is not a flat array",
+       "shape": [
+        2,
+        2
+       ]
+      }
+     ],
+     "expected_index_count": 3
+    }
+   },
+   {
+    "path": "/PointsFloat2",
+    "normalized_path": "/PointsFloat2",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 4,
+    "issues": {
+     "points_wrong_type": 1,
+     "out_of_range_face_vertex_indices": 3
+    },
+    "details": {
+     "points_wrong_type": [
+      {
+       "authored_type": "float2[]",
+       "expected_type": "point3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3,
+        2
+       ]
+      }
+     ],
+     "out_of_range_index_examples": [
+      0,
+      1,
+      2
+     ]
+    }
+   }
+  ],
+  "largest_meshes_by_faces": [
+   {
+    "path": "/NormalsFloat",
+    "normalized_path": "/NormalsFloat",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "normals_wrong_type": 1
+    },
+    "details": {
+     "normals_wrong_type": [
+      {
+       "issue": "normals_wrong_type",
+       "authored_type": "float[]",
+       "expected_type": "normal3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/PointsFloat2",
+    "normalized_path": "/PointsFloat2",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 4,
+    "issues": {
+     "points_wrong_type": 1,
+     "out_of_range_face_vertex_indices": 3
+    },
+    "details": {
+     "points_wrong_type": [
+      {
+       "authored_type": "float2[]",
+       "expected_type": "point3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3,
+        2
+       ]
+      }
+     ],
+     "out_of_range_index_examples": [
+      0,
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/IndicesInt2",
+    "normalized_path": "/IndicesInt2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_indices_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_indices_wrong_type": [
+      {
+       "authored_type": "int2[]",
+       "expected_type": "int[]",
+       "reason": "shape is not a flat array",
+       "shape": [
+        2,
+        2
+       ]
+      }
+     ],
+     "expected_index_count": 3
+    }
+   },
+   {
+    "path": "/CountsScalar",
+    "normalized_path": "/CountsScalar",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_counts_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_counts_wrong_type": [
+      {
+       "authored_type": "int",
+       "expected_type": "int[]",
+       "reason": "authored as a scalar, not an array"
+      }
+     ],
+     "expected_index_count": 0
+    }
+   }
+  ],
+  "largest_meshes_by_extent": [
+   {
+    "path": "/NormalsFloat",
+    "normalized_path": "/NormalsFloat",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "normals_wrong_type": 1
+    },
+    "details": {
+     "normals_wrong_type": [
+      {
+       "issue": "normals_wrong_type",
+       "authored_type": "float[]",
+       "expected_type": "normal3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/CountsScalar",
+    "normalized_path": "/CountsScalar",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_counts_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_counts_wrong_type": [
+      {
+       "authored_type": "int",
+       "expected_type": "int[]",
+       "reason": "authored as a scalar, not an array"
+      }
+     ],
+     "expected_index_count": 0
+    }
+   },
+   {
+    "path": "/IndicesInt2",
+    "normalized_path": "/IndicesInt2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_indices_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_indices_wrong_type": [
+      {
+       "authored_type": "int2[]",
+       "expected_type": "int[]",
+       "reason": "shape is not a flat array",
+       "shape": [
+        2,
+        2
+       ]
+      }
+     ],
+     "expected_index_count": 3
+    }
+   },
+   {
+    "path": "/PointsFloat2",
+    "normalized_path": "/PointsFloat2",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 4,
+    "issues": {
+     "points_wrong_type": 1,
+     "out_of_range_face_vertex_indices": 3
+    },
+    "details": {
+     "points_wrong_type": [
+      {
+       "authored_type": "float2[]",
+       "expected_type": "point3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3,
+        2
+       ]
+      }
+     ],
+     "out_of_range_index_examples": [
+      0,
+      1,
+      2
+     ]
+    }
+   }
+  ]
+ },
+ "geometry_fast_cached": {
+  "stage": "<fixtures>/golden_corpus/mistyped.usda",
+  "default_prim": null,
+  "prototype_count": 0,
+  "mesh_count": 4,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "fast",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": null,
+  "time_code": "earliest",
+  "mesh_cache": {
+   "mode": "face-hash",
+   "entries": 1,
+   "hits": 0,
+   "misses": 2
+  },
+  "summary_counts": {
+   "out_of_range_face_vertex_indices": 3,
+   "face_vertex_count_index_length_mismatch": 2,
+   "points_wrong_type": 1,
+   "face_vertex_counts_wrong_type": 1,
+   "face_vertex_indices_wrong_type": 1
+  },
+  "category_counts": {
+   "render_like": 4
+  },
+  "category_issue_counts": {
+   "render_like": {
+    "out_of_range_face_vertex_indices": 3,
+    "face_vertex_count_index_length_mismatch": 2,
+    "points_wrong_type": 1,
+    "face_vertex_counts_wrong_type": 1,
+    "face_vertex_indices_wrong_type": 1
+   },
+   "collision_like": {}
+  },
+  "serious_geometry_failures": 8,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {
+   "points_wrong_type": [
+    {
+     "path": "/PointsFloat2",
+     "normalized_path": "/PointsFloat2",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "points_wrong_type": [
+       {
+        "authored_type": "float2[]",
+        "expected_type": "point3f[]",
+        "reason": "shape is not rows of 3 values",
+        "shape": [
+         3,
+         2
+        ]
+       }
+      ],
+      "out_of_range_index_examples": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "out_of_range_face_vertex_indices": [
+    {
+     "path": "/PointsFloat2",
+     "normalized_path": "/PointsFloat2",
+     "category": "render_like",
+     "count": 3,
+     "details": {
+      "points_wrong_type": [
+       {
+        "authored_type": "float2[]",
+        "expected_type": "point3f[]",
+        "reason": "shape is not rows of 3 values",
+        "shape": [
+         3,
+         2
+        ]
+       }
+      ],
+      "out_of_range_index_examples": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "face_vertex_counts_wrong_type": [
+    {
+     "path": "/CountsScalar",
+     "normalized_path": "/CountsScalar",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "face_vertex_counts_wrong_type": [
+       {
+        "authored_type": "int",
+        "expected_type": "int[]",
+        "reason": "authored as a scalar, not an array"
+       }
+      ],
+      "expected_index_count": 0
+     }
+    }
+   ],
+   "face_vertex_count_index_length_mismatch": [
+    {
+     "path": "/CountsScalar",
+     "normalized_path": "/CountsScalar",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "face_vertex_counts_wrong_type": [
+       {
+        "authored_type": "int",
+        "expected_type": "int[]",
+        "reason": "authored as a scalar, not an array"
+       }
+      ],
+      "expected_index_count": 0
+     }
+    },
+    {
+     "path": "/IndicesInt2",
+     "normalized_path": "/IndicesInt2",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "face_vertex_indices_wrong_type": [
+       {
+        "authored_type": "int2[]",
+        "expected_type": "int[]",
+        "reason": "shape is not a flat array",
+        "shape": [
+         2,
+         2
+        ]
+       }
+      ],
+      "expected_index_count": 3
+     }
+    }
+   ],
+   "face_vertex_indices_wrong_type": [
+    {
+     "path": "/IndicesInt2",
+     "normalized_path": "/IndicesInt2",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "face_vertex_indices_wrong_type": [
+       {
+        "authored_type": "int2[]",
+        "expected_type": "int[]",
+        "reason": "shape is not a flat array",
+        "shape": [
+         2,
+         2
+        ]
+       }
+      ],
+      "expected_index_count": 3
+     }
+    }
+   ]
+  },
+  "worst_meshes": [
+   {
+    "path": "/PointsFloat2",
+    "normalized_path": "/PointsFloat2",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 4,
+    "issues": {
+     "points_wrong_type": 1,
+     "out_of_range_face_vertex_indices": 3
+    },
+    "details": {
+     "points_wrong_type": [
+      {
+       "authored_type": "float2[]",
+       "expected_type": "point3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3,
+        2
+       ]
+      }
+     ],
+     "out_of_range_index_examples": [
+      0,
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/CountsScalar",
+    "normalized_path": "/CountsScalar",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_counts_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_counts_wrong_type": [
+      {
+       "authored_type": "int",
+       "expected_type": "int[]",
+       "reason": "authored as a scalar, not an array"
+      }
+     ],
+     "expected_index_count": 0
+    }
+   },
+   {
+    "path": "/IndicesInt2",
+    "normalized_path": "/IndicesInt2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_indices_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_indices_wrong_type": [
+      {
+       "authored_type": "int2[]",
+       "expected_type": "int[]",
+       "reason": "shape is not a flat array",
+       "shape": [
+        2,
+        2
+       ]
+      }
+     ],
+     "expected_index_count": 3
+    }
+   },
+   {
+    "path": "/NormalsFloat",
+    "normalized_path": "/NormalsFloat",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_points": [
+   {
+    "path": "/NormalsFloat",
+    "normalized_path": "/NormalsFloat",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/CountsScalar",
+    "normalized_path": "/CountsScalar",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_counts_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_counts_wrong_type": [
+      {
+       "authored_type": "int",
+       "expected_type": "int[]",
+       "reason": "authored as a scalar, not an array"
+      }
+     ],
+     "expected_index_count": 0
+    }
+   },
+   {
+    "path": "/IndicesInt2",
+    "normalized_path": "/IndicesInt2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_indices_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_indices_wrong_type": [
+      {
+       "authored_type": "int2[]",
+       "expected_type": "int[]",
+       "reason": "shape is not a flat array",
+       "shape": [
+        2,
+        2
+       ]
+      }
+     ],
+     "expected_index_count": 3
+    }
+   },
+   {
+    "path": "/PointsFloat2",
+    "normalized_path": "/PointsFloat2",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 4,
+    "issues": {
+     "points_wrong_type": 1,
+     "out_of_range_face_vertex_indices": 3
+    },
+    "details": {
+     "points_wrong_type": [
+      {
+       "authored_type": "float2[]",
+       "expected_type": "point3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3,
+        2
+       ]
+      }
+     ],
+     "out_of_range_index_examples": [
+      0,
+      1,
+      2
+     ]
+    }
+   }
+  ],
+  "largest_meshes_by_faces": [
+   {
+    "path": "/NormalsFloat",
+    "normalized_path": "/NormalsFloat",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/PointsFloat2",
+    "normalized_path": "/PointsFloat2",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 4,
+    "issues": {
+     "points_wrong_type": 1,
+     "out_of_range_face_vertex_indices": 3
+    },
+    "details": {
+     "points_wrong_type": [
+      {
+       "authored_type": "float2[]",
+       "expected_type": "point3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3,
+        2
+       ]
+      }
+     ],
+     "out_of_range_index_examples": [
+      0,
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/IndicesInt2",
+    "normalized_path": "/IndicesInt2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_indices_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_indices_wrong_type": [
+      {
+       "authored_type": "int2[]",
+       "expected_type": "int[]",
+       "reason": "shape is not a flat array",
+       "shape": [
+        2,
+        2
+       ]
+      }
+     ],
+     "expected_index_count": 3
+    }
+   },
+   {
+    "path": "/CountsScalar",
+    "normalized_path": "/CountsScalar",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_counts_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_counts_wrong_type": [
+      {
+       "authored_type": "int",
+       "expected_type": "int[]",
+       "reason": "authored as a scalar, not an array"
+      }
+     ],
+     "expected_index_count": 0
+    }
+   }
+  ],
+  "largest_meshes_by_extent": [
+   {
+    "path": "/NormalsFloat",
+    "normalized_path": "/NormalsFloat",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/CountsScalar",
+    "normalized_path": "/CountsScalar",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_counts_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_counts_wrong_type": [
+      {
+       "authored_type": "int",
+       "expected_type": "int[]",
+       "reason": "authored as a scalar, not an array"
+      }
+     ],
+     "expected_index_count": 0
+    }
+   },
+   {
+    "path": "/IndicesInt2",
+    "normalized_path": "/IndicesInt2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_indices_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_indices_wrong_type": [
+      {
+       "authored_type": "int2[]",
+       "expected_type": "int[]",
+       "reason": "shape is not a flat array",
+       "shape": [
+        2,
+        2
+       ]
+      }
+     ],
+     "expected_index_count": 3
+    }
+   },
+   {
+    "path": "/PointsFloat2",
+    "normalized_path": "/PointsFloat2",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 4,
+    "issues": {
+     "points_wrong_type": 1,
+     "out_of_range_face_vertex_indices": 3
+    },
+    "details": {
+     "points_wrong_type": [
+      {
+       "authored_type": "float2[]",
+       "expected_type": "point3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3,
+        2
+       ]
+      }
+     ],
+     "out_of_range_index_examples": [
+      0,
+      1,
+      2
+     ]
+    }
+   }
+  ]
+ },
+ "geometry_standard_frame1": {
+  "stage": "<fixtures>/golden_corpus/mistyped.usda",
+  "default_prim": null,
+  "prototype_count": 0,
+  "mesh_count": 4,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "standard",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": 1.0,
+  "time_code": 1.0,
+  "mesh_cache": {
+   "mode": "off",
+   "entries": 0,
+   "hits": 0,
+   "misses": 0
+  },
+  "summary_counts": {
+   "out_of_range_face_vertex_indices": 3,
+   "face_vertex_count_index_length_mismatch": 2,
+   "normals_wrong_type": 1,
+   "points_wrong_type": 1,
+   "face_vertex_counts_wrong_type": 1,
+   "face_vertex_indices_wrong_type": 1
+  },
+  "category_counts": {
+   "render_like": 4
+  },
+  "category_issue_counts": {
+   "render_like": {
+    "out_of_range_face_vertex_indices": 3,
+    "face_vertex_count_index_length_mismatch": 2,
+    "normals_wrong_type": 1,
+    "points_wrong_type": 1,
+    "face_vertex_counts_wrong_type": 1,
+    "face_vertex_indices_wrong_type": 1
+   },
+   "collision_like": {}
+  },
+  "serious_geometry_failures": 8,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {
+   "normals_wrong_type": [
+    {
+     "path": "/NormalsFloat",
+     "normalized_path": "/NormalsFloat",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "normals_wrong_type": [
+       {
+        "issue": "normals_wrong_type",
+        "authored_type": "float[]",
+        "expected_type": "normal3f[]",
+        "reason": "shape is not rows of 3 values",
+        "shape": [
+         3
+        ]
+       }
+      ]
+     }
+    }
+   ],
+   "points_wrong_type": [
+    {
+     "path": "/PointsFloat2",
+     "normalized_path": "/PointsFloat2",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "points_wrong_type": [
+       {
+        "authored_type": "float2[]",
+        "expected_type": "point3f[]",
+        "reason": "shape is not rows of 3 values",
+        "shape": [
+         3,
+         2
+        ]
+       }
+      ],
+      "out_of_range_index_examples": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "out_of_range_face_vertex_indices": [
+    {
+     "path": "/PointsFloat2",
+     "normalized_path": "/PointsFloat2",
+     "category": "render_like",
+     "count": 3,
+     "details": {
+      "points_wrong_type": [
+       {
+        "authored_type": "float2[]",
+        "expected_type": "point3f[]",
+        "reason": "shape is not rows of 3 values",
+        "shape": [
+         3,
+         2
+        ]
+       }
+      ],
+      "out_of_range_index_examples": [
+       0,
+       1,
+       2
+      ]
+     }
+    }
+   ],
+   "face_vertex_counts_wrong_type": [
+    {
+     "path": "/CountsScalar",
+     "normalized_path": "/CountsScalar",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "face_vertex_counts_wrong_type": [
+       {
+        "authored_type": "int",
+        "expected_type": "int[]",
+        "reason": "authored as a scalar, not an array"
+       }
+      ],
+      "expected_index_count": 0
+     }
+    }
+   ],
+   "face_vertex_count_index_length_mismatch": [
+    {
+     "path": "/CountsScalar",
+     "normalized_path": "/CountsScalar",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "face_vertex_counts_wrong_type": [
+       {
+        "authored_type": "int",
+        "expected_type": "int[]",
+        "reason": "authored as a scalar, not an array"
+       }
+      ],
+      "expected_index_count": 0
+     }
+    },
+    {
+     "path": "/IndicesInt2",
+     "normalized_path": "/IndicesInt2",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "face_vertex_indices_wrong_type": [
+       {
+        "authored_type": "int2[]",
+        "expected_type": "int[]",
+        "reason": "shape is not a flat array",
+        "shape": [
+         2,
+         2
+        ]
+       }
+      ],
+      "expected_index_count": 3
+     }
+    }
+   ],
+   "face_vertex_indices_wrong_type": [
+    {
+     "path": "/IndicesInt2",
+     "normalized_path": "/IndicesInt2",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "face_vertex_indices_wrong_type": [
+       {
+        "authored_type": "int2[]",
+        "expected_type": "int[]",
+        "reason": "shape is not a flat array",
+        "shape": [
+         2,
+         2
+        ]
+       }
+      ],
+      "expected_index_count": 3
+     }
+    }
+   ]
+  },
+  "worst_meshes": [
+   {
+    "path": "/PointsFloat2",
+    "normalized_path": "/PointsFloat2",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 4,
+    "issues": {
+     "points_wrong_type": 1,
+     "out_of_range_face_vertex_indices": 3
+    },
+    "details": {
+     "points_wrong_type": [
+      {
+       "authored_type": "float2[]",
+       "expected_type": "point3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3,
+        2
+       ]
+      }
+     ],
+     "out_of_range_index_examples": [
+      0,
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/CountsScalar",
+    "normalized_path": "/CountsScalar",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_counts_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_counts_wrong_type": [
+      {
+       "authored_type": "int",
+       "expected_type": "int[]",
+       "reason": "authored as a scalar, not an array"
+      }
+     ],
+     "expected_index_count": 0
+    }
+   },
+   {
+    "path": "/IndicesInt2",
+    "normalized_path": "/IndicesInt2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_indices_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_indices_wrong_type": [
+      {
+       "authored_type": "int2[]",
+       "expected_type": "int[]",
+       "reason": "shape is not a flat array",
+       "shape": [
+        2,
+        2
+       ]
+      }
+     ],
+     "expected_index_count": 3
+    }
+   },
+   {
+    "path": "/NormalsFloat",
+    "normalized_path": "/NormalsFloat",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "normals_wrong_type": 1
+    },
+    "details": {
+     "normals_wrong_type": [
+      {
+       "issue": "normals_wrong_type",
+       "authored_type": "float[]",
+       "expected_type": "normal3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3
+       ]
+      }
+     ]
+    }
+   }
+  ],
+  "largest_meshes_by_points": [
+   {
+    "path": "/NormalsFloat",
+    "normalized_path": "/NormalsFloat",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "normals_wrong_type": 1
+    },
+    "details": {
+     "normals_wrong_type": [
+      {
+       "issue": "normals_wrong_type",
+       "authored_type": "float[]",
+       "expected_type": "normal3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/CountsScalar",
+    "normalized_path": "/CountsScalar",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_counts_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_counts_wrong_type": [
+      {
+       "authored_type": "int",
+       "expected_type": "int[]",
+       "reason": "authored as a scalar, not an array"
+      }
+     ],
+     "expected_index_count": 0
+    }
+   },
+   {
+    "path": "/IndicesInt2",
+    "normalized_path": "/IndicesInt2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_indices_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_indices_wrong_type": [
+      {
+       "authored_type": "int2[]",
+       "expected_type": "int[]",
+       "reason": "shape is not a flat array",
+       "shape": [
+        2,
+        2
+       ]
+      }
+     ],
+     "expected_index_count": 3
+    }
+   },
+   {
+    "path": "/PointsFloat2",
+    "normalized_path": "/PointsFloat2",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 4,
+    "issues": {
+     "points_wrong_type": 1,
+     "out_of_range_face_vertex_indices": 3
+    },
+    "details": {
+     "points_wrong_type": [
+      {
+       "authored_type": "float2[]",
+       "expected_type": "point3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3,
+        2
+       ]
+      }
+     ],
+     "out_of_range_index_examples": [
+      0,
+      1,
+      2
+     ]
+    }
+   }
+  ],
+  "largest_meshes_by_faces": [
+   {
+    "path": "/NormalsFloat",
+    "normalized_path": "/NormalsFloat",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "normals_wrong_type": 1
+    },
+    "details": {
+     "normals_wrong_type": [
+      {
+       "issue": "normals_wrong_type",
+       "authored_type": "float[]",
+       "expected_type": "normal3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/PointsFloat2",
+    "normalized_path": "/PointsFloat2",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 4,
+    "issues": {
+     "points_wrong_type": 1,
+     "out_of_range_face_vertex_indices": 3
+    },
+    "details": {
+     "points_wrong_type": [
+      {
+       "authored_type": "float2[]",
+       "expected_type": "point3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3,
+        2
+       ]
+      }
+     ],
+     "out_of_range_index_examples": [
+      0,
+      1,
+      2
+     ]
+    }
+   },
+   {
+    "path": "/IndicesInt2",
+    "normalized_path": "/IndicesInt2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_indices_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_indices_wrong_type": [
+      {
+       "authored_type": "int2[]",
+       "expected_type": "int[]",
+       "reason": "shape is not a flat array",
+       "shape": [
+        2,
+        2
+       ]
+      }
+     ],
+     "expected_index_count": 3
+    }
+   },
+   {
+    "path": "/CountsScalar",
+    "normalized_path": "/CountsScalar",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_counts_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_counts_wrong_type": [
+      {
+       "authored_type": "int",
+       "expected_type": "int[]",
+       "reason": "authored as a scalar, not an array"
+      }
+     ],
+     "expected_index_count": 0
+    }
+   }
+  ],
+  "largest_meshes_by_extent": [
+   {
+    "path": "/NormalsFloat",
+    "normalized_path": "/NormalsFloat",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "normals_wrong_type": 1
+    },
+    "details": {
+     "normals_wrong_type": [
+      {
+       "issue": "normals_wrong_type",
+       "authored_type": "float[]",
+       "expected_type": "normal3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "path": "/CountsScalar",
+    "normalized_path": "/CountsScalar",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 0,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_counts_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_counts_wrong_type": [
+      {
+       "authored_type": "int",
+       "expected_type": "int[]",
+       "reason": "authored as a scalar, not an array"
+      }
+     ],
+     "expected_index_count": 0
+    }
+   },
+   {
+    "path": "/IndicesInt2",
+    "normalized_path": "/IndicesInt2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 0,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 2,
+    "issues": {
+     "face_vertex_indices_wrong_type": 1,
+     "face_vertex_count_index_length_mismatch": 1
+    },
+    "details": {
+     "face_vertex_indices_wrong_type": [
+      {
+       "authored_type": "int2[]",
+       "expected_type": "int[]",
+       "reason": "shape is not a flat array",
+       "shape": [
+        2,
+        2
+       ]
+      }
+     ],
+     "expected_index_count": 3
+    }
+   },
+   {
+    "path": "/PointsFloat2",
+    "normalized_path": "/PointsFloat2",
+    "category": "render_like",
+    "point_count": 0,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 0.0,
+    "issue_count": 4,
+    "issues": {
+     "points_wrong_type": 1,
+     "out_of_range_face_vertex_indices": 3
+    },
+    "details": {
+     "points_wrong_type": [
+      {
+       "authored_type": "float2[]",
+       "expected_type": "point3f[]",
+       "reason": "shape is not rows of 3 values",
+       "shape": [
+        3,
+        2
+       ]
+      }
+     ],
+     "out_of_range_index_examples": [
+      0,
+      1,
+      2
+     ]
+    }
+   }
+  ]
+ },
+ "names": {
+  "stage": "<fixtures>/golden_corpus/mistyped.usda",
+  "default_prim": null,
+  "prototype_count": 0,
+  "total_prims_including_prototypes": 4,
+  "type_counts": {
+   "Mesh": 4
+  },
+  "name_oddities": {
+   "duplicate_sibling_names": [],
+   "case_collision_names": []
+  },
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": false,
+    "pattern": null
+   }
+  },
+  "name_counts": {},
+  "hierarchy": {
+   "max_depth": 1,
+   "max_depth_examples": [
+    "/NormalsFloat",
+    "/PointsFloat2",
+    "/CountsScalar",
+    "/IndicesInt2"
+   ],
+   "single_child_chain_count": 0,
+   "single_child_chain_examples": [],
+   "leaf_scope_count": 0,
+   "leaf_scope_examples": [],
+   "empty_scope_count": 0,
+   "empty_scope_examples": [],
+   "same_name_parent_child_count": 0,
+   "same_name_parent_child_examples": [],
+   "xform_mesh_same_name_count": 0,
+   "xform_mesh_same_name_examples": [],
+   "mesh_with_mesh_child_count": 0,
+   "mesh_with_mesh_child_examples": [],
+   "mesh_parent_type_counts": {
+    "<untyped>": 4
+   },
+   "deep_collision_like_mesh_count": 0,
+   "deep_collision_like_mesh_examples": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "name_oddity_counts": {}
+ },
+ "names_prefix": {
+  "stage": "<fixtures>/golden_corpus/mistyped.usda",
+  "default_prim": null,
+  "prototype_count": 0,
+  "total_prims_including_prototypes": 4,
+  "type_counts": {
+   "Mesh": 4
+  },
+  "name_oddities": {
+   "duplicate_sibling_names": [],
+   "case_collision_names": []
+  },
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": true,
+    "pattern": "[A-Z][A-Za-z0-9]*"
+   }
+  },
+  "name_counts": {},
+  "hierarchy": {
+   "max_depth": 1,
+   "max_depth_examples": [
+    "/NormalsFloat",
+    "/PointsFloat2",
+    "/CountsScalar",
+    "/IndicesInt2"
+   ],
+   "single_child_chain_count": 0,
+   "single_child_chain_examples": [],
+   "leaf_scope_count": 0,
+   "leaf_scope_examples": [],
+   "empty_scope_count": 0,
+   "empty_scope_examples": [],
+   "same_name_parent_child_count": 0,
+   "same_name_parent_child_examples": [],
+   "xform_mesh_same_name_count": 0,
+   "xform_mesh_same_name_examples": [],
+   "mesh_with_mesh_child_count": 0,
+   "mesh_with_mesh_child_examples": [],
+   "mesh_parent_type_counts": {
+    "<untyped>": 4
+   },
+   "deep_collision_like_mesh_count": 0,
+   "deep_collision_like_mesh_examples": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "name_oddity_counts": {}
+ },
+ "scene": {
+  "stage": "<fixtures>/golden_corpus/mistyped.usda",
+  "root_layer": "<fixtures>/golden_corpus/mistyped.usda",
+  "default_prim": null,
+  "meters_per_unit": 0.01,
+  "up_axis": "Y",
+  "layer_count": 2,
+  "prims": {
+   "total": 4,
+   "by_type": {
+    "Mesh": 4
+   }
+  },
+  "prototype_count": 0,
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": false,
+    "pattern": null
+   }
+  },
+  "naming": {
+   "suspicious_count": 0,
+   "non_prefix_style_count": 0,
+   "duplicate_sibling_count": 0,
+   "duplicate_sibling_names": [],
+   "case_collision_count": 0,
+   "case_collision_names": [],
+   "examples": {}
+  },
+  "materials": {
+   "material_prim_count": 0,
+   "shader_prim_count": 0,
+   "mesh_count": 4,
+   "geom_subset_count": 0,
+   "mesh_with_computed_material": 0,
+   "mesh_without_computed_material": 4,
+   "geom_subset_with_computed_material": 0,
+   "geom_subset_without_computed_material": 0,
+   "mesh_without_mesh_or_subset_material": 4,
+   "bound_materials_used_by_mesh_count": 0,
+   "unbound_material_prim_count": 0,
+   "direct_binding_relation_count": 0,
+   "direct_binding_targets_missing_count": 0,
+   "direct_binding_targets_missing": [],
+   "direct_binding_targets_not_material_count": 0,
+   "direct_binding_targets_not_material": [],
+   "mesh_without_material_examples": [
+    "/NormalsFloat",
+    "/PointsFloat2",
+    "/CountsScalar",
+    "/IndicesInt2"
+   ],
+   "mesh_without_mesh_or_subset_material_examples": [
+    "/NormalsFloat",
+    "/PointsFloat2",
+    "/CountsScalar",
+    "/IndicesInt2"
+   ],
+   "geom_subset_without_material_examples": [],
+   "materials_without_surface_output": [],
+   "materials_without_surface_output_count": 0
+  },
+  "assets": {
+   "authored_asset_count": 0,
+   "resolved_asset_count": 0,
+   "missing_authored_asset_count": 0,
+   "missing_authored_assets": [],
+   "unverifiable_asset_count": 0,
+   "unverifiable_assets": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  }
+ },
+ "scene_prefix": {
+  "stage": "<fixtures>/golden_corpus/mistyped.usda",
+  "root_layer": "<fixtures>/golden_corpus/mistyped.usda",
+  "default_prim": null,
+  "meters_per_unit": 0.01,
+  "up_axis": "Y",
+  "layer_count": 2,
+  "prims": {
+   "total": 4,
+   "by_type": {
+    "Mesh": 4
+   }
+  },
+  "prototype_count": 0,
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": true,
+    "pattern": "[A-Z][A-Za-z0-9]*"
+   }
+  },
+  "naming": {
+   "suspicious_count": 0,
+   "non_prefix_style_count": 0,
+   "duplicate_sibling_count": 0,
+   "duplicate_sibling_names": [],
+   "case_collision_count": 0,
+   "case_collision_names": [],
+   "examples": {}
+  },
+  "materials": {
+   "material_prim_count": 0,
+   "shader_prim_count": 0,
+   "mesh_count": 4,
+   "geom_subset_count": 0,
+   "mesh_with_computed_material": 0,
+   "mesh_without_computed_material": 4,
+   "geom_subset_with_computed_material": 0,
+   "geom_subset_without_computed_material": 0,
+   "mesh_without_mesh_or_subset_material": 4,
+   "bound_materials_used_by_mesh_count": 0,
+   "unbound_material_prim_count": 0,
+   "direct_binding_relation_count": 0,
+   "direct_binding_targets_missing_count": 0,
+   "direct_binding_targets_missing": [],
+   "direct_binding_targets_not_material_count": 0,
+   "direct_binding_targets_not_material": [],
+   "mesh_without_material_examples": [
+    "/NormalsFloat",
+    "/PointsFloat2",
+    "/CountsScalar",
+    "/IndicesInt2"
+   ],
+   "mesh_without_mesh_or_subset_material_examples": [
+    "/NormalsFloat",
+    "/PointsFloat2",
+    "/CountsScalar",
+    "/IndicesInt2"
+   ],
+   "geom_subset_without_material_examples": [],
+   "materials_without_surface_output": [],
+   "materials_without_surface_output_count": 0
+  },
+  "assets": {
+   "authored_asset_count": 0,
+   "resolved_asset_count": 0,
+   "missing_authored_asset_count": 0,
+   "missing_authored_assets": [],
+   "unverifiable_asset_count": 0,
+   "unverifiable_assets": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  }
+ }
+}

@@ -1,0 +1,495 @@
+#usda 1.0
+
+def Xform "World"
+{
+    def Xform "Inst_0" (
+        instanceable = true
+        prepend references = </Library/Asset>
+    )
+    {
+    }
+
+    def Xform "Inst_1" (
+        instanceable = true
+        prepend references = </Library/Asset>
+    )
+    {
+    }
+
+    def Xform "Inst_2" (
+        instanceable = true
+        prepend references = </Library/Asset>
+    )
+    {
+    }
+
+    def "mtl"
+    {
+        def Material "Good"
+        {
+            token outputs:surface.connect = </World/mtl/Good/Surface.outputs:surface>
+
+            def Shader "Surface"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                token outputs:surface
+            }
+        }
+
+        def Material "NoSurfaceB"
+        {
+        }
+
+        def Material "NoSurfaceA"
+        {
+        }
+
+        def Material "Unused"
+        {
+        }
+    }
+
+    def "geo"
+    {
+        def Mesh "Bound" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            rel material:binding = </World/mtl/Good>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "PurposeBound" (
+            prepend apiSchemas = ["MaterialBindingAPI"]
+        )
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            rel material:binding:preview = </World/mtl/NoSurfaceA>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "SubsetOnly"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+
+            def GeomSubset "face0" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </World/mtl/NoSurfaceB>
+            }
+
+            def GeomSubset "face1"
+            {
+            }
+        }
+
+        def "Orphan"
+        {
+            def GeomSubset "subset"
+            {
+            }
+        }
+    }
+
+    def "broken"
+    {
+        def Mesh "Missing_0"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_0>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_1"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_1>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_2"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_2>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_3"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_3>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_4"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_4>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_5"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_5>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_6"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_6>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_7"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_7>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_8"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_8>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_9"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_9>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_10"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_10>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_11"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_11>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_12"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_12>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_13"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_13>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_14"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_14>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_15"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_15>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_16"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_16>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_17"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_17>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_18"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_18>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_19"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_19>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_20"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_20>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_21"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_21>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_22"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_22>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_23"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_23>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_24"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_24>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_25"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_25>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_26"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_26>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_27"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_27>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_28"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_28>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_29"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_29>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_30"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_30>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_31"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_31>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_32"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_32>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_33"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_33>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_34"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_34>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_35"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_35>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_36"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_36>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_37"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_37>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_38"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_38>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_39"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_39>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_40"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_40>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_41"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_41>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_42"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_42>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_43"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_43>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Missing_44"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding = </World/mtl/Nope_44>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+
+        def Mesh "Wrong"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            custom rel material:binding:preview = </World/geo>
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+    }
+}
+
+def "Library"
+{
+    def Xform "Asset"
+    {
+        def Mesh "Body"
+        {
+            int[] faceVertexCounts = [3]
+            int[] faceVertexIndices = [0, 1, 2]
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (2, 0, 0)]
+
+            def GeomSubset "sub0"
+            {
+            }
+        }
+
+        def Mesh "Body_COL"
+        {
+            int[] faceVertexCounts = [3, 2]
+            int[] faceVertexIndices = [0, 1, 2, 0, 1]
+            point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+        }
+    }
+}
+

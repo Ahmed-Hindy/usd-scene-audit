@@ -144,7 +144,7 @@ def test_prototype_contents_are_reported_under_their_first_instance(tmp_path: Pa
     assert report["naming"]["case_collision_names"][0] == "/World/A00_0: Part, part"
     assert "__Prototype_" not in json.dumps(report)
 
-    worst = geometry.analyze(tmp_path / "instanced.usda", 1e-12, 1e6, 1e-4)["worst_meshes"]
+    worst = geometry.analyze(tmp_path / "instanced.usda")["worst_meshes"]
     assert worst[0]["path"] == "/World/A00_0/Body_"
     assert worst[0]["normalized_path"] == "/<prototype>/Body_"
 

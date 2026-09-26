@@ -1,0 +1,6874 @@
+{
+ "geometry": {
+  "stage": "<fixtures>/golden_corpus/instancing_materials.usda",
+  "default_prim": null,
+  "prototype_count": 1,
+  "mesh_count": 53,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "exhaustive",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": null,
+  "time_code": "earliest",
+  "mesh_cache": {
+   "mode": "off",
+   "entries": 0,
+   "hits": 0,
+   "misses": 0
+  },
+  "summary_counts": {
+   "zero_area_triangles": 2,
+   "one_or_two_vertex_faces": 2
+  },
+  "category_counts": {
+   "render_like": 51,
+   "collision_like": 2
+  },
+  "category_issue_counts": {
+   "render_like": {
+    "zero_area_triangles": 2
+   },
+   "collision_like": {
+    "one_or_two_vertex_faces": 2
+   }
+  },
+  "serious_geometry_failures": 2,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {
+   "zero_area_triangles": [
+    {
+     "path": "/Library/Asset/Body",
+     "normalized_path": "/Library/Asset/Body",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         2
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    },
+    {
+     "path": "/World/Inst_0/Body",
+     "normalized_path": "/<prototype>/Body",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         2
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    }
+   ],
+   "one_or_two_vertex_faces": [
+    {
+     "path": "/Library/Asset/Body_COL",
+     "normalized_path": "/Library/Asset/Body_COL",
+     "category": "collision_like",
+     "count": 1,
+     "details": {
+      "one_or_two_vertex_face_examples": [
+       1
+      ]
+     }
+    },
+    {
+     "path": "/World/Inst_0/Body_COL",
+     "normalized_path": "/<prototype>/Body_COL",
+     "category": "collision_like",
+     "count": 1,
+     "details": {
+      "one_or_two_vertex_face_examples": [
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "worst_meshes": [
+   {
+    "path": "/Library/Asset/Body_COL",
+    "normalized_path": "/Library/Asset/Body_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 5,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "one_or_two_vertex_faces": 1
+    },
+    "details": {
+     "one_or_two_vertex_face_examples": [
+      1
+     ]
+    }
+   },
+   {
+    "path": "/World/Inst_0/Body_COL",
+    "normalized_path": "/<prototype>/Body_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 5,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "one_or_two_vertex_faces": 1
+    },
+    "details": {
+     "one_or_two_vertex_face_examples": [
+      1
+     ]
+    }
+   },
+   {
+    "path": "/Library/Asset/Body",
+    "normalized_path": "/Library/Asset/Body",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Inst_0/Body",
+    "normalized_path": "/<prototype>/Body",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/geo/Bound",
+    "normalized_path": "/World/geo/Bound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/PurposeBound",
+    "normalized_path": "/World/geo/PurposeBound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/SubsetOnly",
+    "normalized_path": "/World/geo/SubsetOnly",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_0",
+    "normalized_path": "/World/broken/Missing_0",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_1",
+    "normalized_path": "/World/broken/Missing_1",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_2",
+    "normalized_path": "/World/broken/Missing_2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_3",
+    "normalized_path": "/World/broken/Missing_3",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_4",
+    "normalized_path": "/World/broken/Missing_4",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_5",
+    "normalized_path": "/World/broken/Missing_5",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_6",
+    "normalized_path": "/World/broken/Missing_6",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_7",
+    "normalized_path": "/World/broken/Missing_7",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_8",
+    "normalized_path": "/World/broken/Missing_8",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_9",
+    "normalized_path": "/World/broken/Missing_9",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_10",
+    "normalized_path": "/World/broken/Missing_10",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_11",
+    "normalized_path": "/World/broken/Missing_11",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_12",
+    "normalized_path": "/World/broken/Missing_12",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_13",
+    "normalized_path": "/World/broken/Missing_13",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_14",
+    "normalized_path": "/World/broken/Missing_14",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_15",
+    "normalized_path": "/World/broken/Missing_15",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_16",
+    "normalized_path": "/World/broken/Missing_16",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_17",
+    "normalized_path": "/World/broken/Missing_17",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_18",
+    "normalized_path": "/World/broken/Missing_18",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_19",
+    "normalized_path": "/World/broken/Missing_19",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_20",
+    "normalized_path": "/World/broken/Missing_20",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_21",
+    "normalized_path": "/World/broken/Missing_21",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_22",
+    "normalized_path": "/World/broken/Missing_22",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_23",
+    "normalized_path": "/World/broken/Missing_23",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_24",
+    "normalized_path": "/World/broken/Missing_24",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_25",
+    "normalized_path": "/World/broken/Missing_25",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_26",
+    "normalized_path": "/World/broken/Missing_26",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_27",
+    "normalized_path": "/World/broken/Missing_27",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_28",
+    "normalized_path": "/World/broken/Missing_28",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_29",
+    "normalized_path": "/World/broken/Missing_29",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_30",
+    "normalized_path": "/World/broken/Missing_30",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_31",
+    "normalized_path": "/World/broken/Missing_31",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_32",
+    "normalized_path": "/World/broken/Missing_32",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_points": [
+   {
+    "path": "/World/geo/Bound",
+    "normalized_path": "/World/geo/Bound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/PurposeBound",
+    "normalized_path": "/World/geo/PurposeBound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/SubsetOnly",
+    "normalized_path": "/World/geo/SubsetOnly",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_0",
+    "normalized_path": "/World/broken/Missing_0",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_1",
+    "normalized_path": "/World/broken/Missing_1",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_2",
+    "normalized_path": "/World/broken/Missing_2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_3",
+    "normalized_path": "/World/broken/Missing_3",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_4",
+    "normalized_path": "/World/broken/Missing_4",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_5",
+    "normalized_path": "/World/broken/Missing_5",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_6",
+    "normalized_path": "/World/broken/Missing_6",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_7",
+    "normalized_path": "/World/broken/Missing_7",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_8",
+    "normalized_path": "/World/broken/Missing_8",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_9",
+    "normalized_path": "/World/broken/Missing_9",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_10",
+    "normalized_path": "/World/broken/Missing_10",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_11",
+    "normalized_path": "/World/broken/Missing_11",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_12",
+    "normalized_path": "/World/broken/Missing_12",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_13",
+    "normalized_path": "/World/broken/Missing_13",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_14",
+    "normalized_path": "/World/broken/Missing_14",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_15",
+    "normalized_path": "/World/broken/Missing_15",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_16",
+    "normalized_path": "/World/broken/Missing_16",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_17",
+    "normalized_path": "/World/broken/Missing_17",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_18",
+    "normalized_path": "/World/broken/Missing_18",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_19",
+    "normalized_path": "/World/broken/Missing_19",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_20",
+    "normalized_path": "/World/broken/Missing_20",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_21",
+    "normalized_path": "/World/broken/Missing_21",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_22",
+    "normalized_path": "/World/broken/Missing_22",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_23",
+    "normalized_path": "/World/broken/Missing_23",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_24",
+    "normalized_path": "/World/broken/Missing_24",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_25",
+    "normalized_path": "/World/broken/Missing_25",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_26",
+    "normalized_path": "/World/broken/Missing_26",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_27",
+    "normalized_path": "/World/broken/Missing_27",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_28",
+    "normalized_path": "/World/broken/Missing_28",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_29",
+    "normalized_path": "/World/broken/Missing_29",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_30",
+    "normalized_path": "/World/broken/Missing_30",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_31",
+    "normalized_path": "/World/broken/Missing_31",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_32",
+    "normalized_path": "/World/broken/Missing_32",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_33",
+    "normalized_path": "/World/broken/Missing_33",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_34",
+    "normalized_path": "/World/broken/Missing_34",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_35",
+    "normalized_path": "/World/broken/Missing_35",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_36",
+    "normalized_path": "/World/broken/Missing_36",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_faces": [
+   {
+    "path": "/Library/Asset/Body_COL",
+    "normalized_path": "/Library/Asset/Body_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 5,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "one_or_two_vertex_faces": 1
+    },
+    "details": {
+     "one_or_two_vertex_face_examples": [
+      1
+     ]
+    }
+   },
+   {
+    "path": "/World/Inst_0/Body_COL",
+    "normalized_path": "/<prototype>/Body_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 5,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "one_or_two_vertex_faces": 1
+    },
+    "details": {
+     "one_or_two_vertex_face_examples": [
+      1
+     ]
+    }
+   },
+   {
+    "path": "/World/geo/Bound",
+    "normalized_path": "/World/geo/Bound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/PurposeBound",
+    "normalized_path": "/World/geo/PurposeBound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/SubsetOnly",
+    "normalized_path": "/World/geo/SubsetOnly",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_0",
+    "normalized_path": "/World/broken/Missing_0",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_1",
+    "normalized_path": "/World/broken/Missing_1",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_2",
+    "normalized_path": "/World/broken/Missing_2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_3",
+    "normalized_path": "/World/broken/Missing_3",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_4",
+    "normalized_path": "/World/broken/Missing_4",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_5",
+    "normalized_path": "/World/broken/Missing_5",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_6",
+    "normalized_path": "/World/broken/Missing_6",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_7",
+    "normalized_path": "/World/broken/Missing_7",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_8",
+    "normalized_path": "/World/broken/Missing_8",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_9",
+    "normalized_path": "/World/broken/Missing_9",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_10",
+    "normalized_path": "/World/broken/Missing_10",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_11",
+    "normalized_path": "/World/broken/Missing_11",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_12",
+    "normalized_path": "/World/broken/Missing_12",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_13",
+    "normalized_path": "/World/broken/Missing_13",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_14",
+    "normalized_path": "/World/broken/Missing_14",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_15",
+    "normalized_path": "/World/broken/Missing_15",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_16",
+    "normalized_path": "/World/broken/Missing_16",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_17",
+    "normalized_path": "/World/broken/Missing_17",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_18",
+    "normalized_path": "/World/broken/Missing_18",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_19",
+    "normalized_path": "/World/broken/Missing_19",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_20",
+    "normalized_path": "/World/broken/Missing_20",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_21",
+    "normalized_path": "/World/broken/Missing_21",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_22",
+    "normalized_path": "/World/broken/Missing_22",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_23",
+    "normalized_path": "/World/broken/Missing_23",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_24",
+    "normalized_path": "/World/broken/Missing_24",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_25",
+    "normalized_path": "/World/broken/Missing_25",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_26",
+    "normalized_path": "/World/broken/Missing_26",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_27",
+    "normalized_path": "/World/broken/Missing_27",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_28",
+    "normalized_path": "/World/broken/Missing_28",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_29",
+    "normalized_path": "/World/broken/Missing_29",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_30",
+    "normalized_path": "/World/broken/Missing_30",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_31",
+    "normalized_path": "/World/broken/Missing_31",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_32",
+    "normalized_path": "/World/broken/Missing_32",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_33",
+    "normalized_path": "/World/broken/Missing_33",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_34",
+    "normalized_path": "/World/broken/Missing_34",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_extent": [
+   {
+    "path": "/Library/Asset/Body",
+    "normalized_path": "/Library/Asset/Body",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Inst_0/Body",
+    "normalized_path": "/<prototype>/Body",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/geo/Bound",
+    "normalized_path": "/World/geo/Bound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/PurposeBound",
+    "normalized_path": "/World/geo/PurposeBound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/SubsetOnly",
+    "normalized_path": "/World/geo/SubsetOnly",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_0",
+    "normalized_path": "/World/broken/Missing_0",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_1",
+    "normalized_path": "/World/broken/Missing_1",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_2",
+    "normalized_path": "/World/broken/Missing_2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_3",
+    "normalized_path": "/World/broken/Missing_3",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_4",
+    "normalized_path": "/World/broken/Missing_4",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_5",
+    "normalized_path": "/World/broken/Missing_5",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_6",
+    "normalized_path": "/World/broken/Missing_6",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_7",
+    "normalized_path": "/World/broken/Missing_7",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_8",
+    "normalized_path": "/World/broken/Missing_8",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_9",
+    "normalized_path": "/World/broken/Missing_9",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_10",
+    "normalized_path": "/World/broken/Missing_10",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_11",
+    "normalized_path": "/World/broken/Missing_11",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_12",
+    "normalized_path": "/World/broken/Missing_12",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_13",
+    "normalized_path": "/World/broken/Missing_13",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_14",
+    "normalized_path": "/World/broken/Missing_14",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_15",
+    "normalized_path": "/World/broken/Missing_15",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_16",
+    "normalized_path": "/World/broken/Missing_16",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_17",
+    "normalized_path": "/World/broken/Missing_17",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_18",
+    "normalized_path": "/World/broken/Missing_18",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_19",
+    "normalized_path": "/World/broken/Missing_19",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_20",
+    "normalized_path": "/World/broken/Missing_20",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_21",
+    "normalized_path": "/World/broken/Missing_21",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_22",
+    "normalized_path": "/World/broken/Missing_22",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_23",
+    "normalized_path": "/World/broken/Missing_23",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_24",
+    "normalized_path": "/World/broken/Missing_24",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_25",
+    "normalized_path": "/World/broken/Missing_25",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_26",
+    "normalized_path": "/World/broken/Missing_26",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_27",
+    "normalized_path": "/World/broken/Missing_27",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_28",
+    "normalized_path": "/World/broken/Missing_28",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_29",
+    "normalized_path": "/World/broken/Missing_29",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_30",
+    "normalized_path": "/World/broken/Missing_30",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_31",
+    "normalized_path": "/World/broken/Missing_31",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_32",
+    "normalized_path": "/World/broken/Missing_32",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_33",
+    "normalized_path": "/World/broken/Missing_33",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_34",
+    "normalized_path": "/World/broken/Missing_34",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ]
+ },
+ "geometry_fast_cached": {
+  "stage": "<fixtures>/golden_corpus/instancing_materials.usda",
+  "default_prim": null,
+  "prototype_count": 1,
+  "mesh_count": 53,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "fast",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": null,
+  "time_code": "earliest",
+  "mesh_cache": {
+   "mode": "face-hash",
+   "entries": 2,
+   "hits": 51,
+   "misses": 2
+  },
+  "summary_counts": {
+   "one_or_two_vertex_faces": 2
+  },
+  "category_counts": {
+   "render_like": 51,
+   "collision_like": 2
+  },
+  "category_issue_counts": {
+   "collision_like": {
+    "one_or_two_vertex_faces": 2
+   }
+  },
+  "serious_geometry_failures": 2,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {
+   "one_or_two_vertex_faces": [
+    {
+     "path": "/Library/Asset/Body_COL",
+     "normalized_path": "/Library/Asset/Body_COL",
+     "category": "collision_like",
+     "count": 1,
+     "details": {
+      "one_or_two_vertex_face_examples": [
+       1
+      ]
+     }
+    },
+    {
+     "path": "/World/Inst_0/Body_COL",
+     "normalized_path": "/<prototype>/Body_COL",
+     "category": "collision_like",
+     "count": 1,
+     "details": {
+      "one_or_two_vertex_face_examples": [
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "worst_meshes": [
+   {
+    "path": "/Library/Asset/Body_COL",
+    "normalized_path": "/Library/Asset/Body_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 5,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "one_or_two_vertex_faces": 1
+    },
+    "details": {
+     "one_or_two_vertex_face_examples": [
+      1
+     ]
+    }
+   },
+   {
+    "path": "/World/Inst_0/Body_COL",
+    "normalized_path": "/<prototype>/Body_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 5,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "one_or_two_vertex_faces": 1
+    },
+    "details": {
+     "one_or_two_vertex_face_examples": [
+      1
+     ]
+    }
+   },
+   {
+    "path": "/World/geo/Bound",
+    "normalized_path": "/World/geo/Bound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/PurposeBound",
+    "normalized_path": "/World/geo/PurposeBound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/SubsetOnly",
+    "normalized_path": "/World/geo/SubsetOnly",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_0",
+    "normalized_path": "/World/broken/Missing_0",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_1",
+    "normalized_path": "/World/broken/Missing_1",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_2",
+    "normalized_path": "/World/broken/Missing_2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_3",
+    "normalized_path": "/World/broken/Missing_3",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_4",
+    "normalized_path": "/World/broken/Missing_4",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_5",
+    "normalized_path": "/World/broken/Missing_5",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_6",
+    "normalized_path": "/World/broken/Missing_6",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_7",
+    "normalized_path": "/World/broken/Missing_7",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_8",
+    "normalized_path": "/World/broken/Missing_8",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_9",
+    "normalized_path": "/World/broken/Missing_9",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_10",
+    "normalized_path": "/World/broken/Missing_10",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_11",
+    "normalized_path": "/World/broken/Missing_11",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_12",
+    "normalized_path": "/World/broken/Missing_12",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_13",
+    "normalized_path": "/World/broken/Missing_13",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_14",
+    "normalized_path": "/World/broken/Missing_14",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_15",
+    "normalized_path": "/World/broken/Missing_15",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_16",
+    "normalized_path": "/World/broken/Missing_16",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_17",
+    "normalized_path": "/World/broken/Missing_17",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_18",
+    "normalized_path": "/World/broken/Missing_18",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_19",
+    "normalized_path": "/World/broken/Missing_19",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_20",
+    "normalized_path": "/World/broken/Missing_20",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_21",
+    "normalized_path": "/World/broken/Missing_21",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_22",
+    "normalized_path": "/World/broken/Missing_22",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_23",
+    "normalized_path": "/World/broken/Missing_23",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_24",
+    "normalized_path": "/World/broken/Missing_24",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_25",
+    "normalized_path": "/World/broken/Missing_25",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_26",
+    "normalized_path": "/World/broken/Missing_26",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_27",
+    "normalized_path": "/World/broken/Missing_27",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_28",
+    "normalized_path": "/World/broken/Missing_28",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_29",
+    "normalized_path": "/World/broken/Missing_29",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_30",
+    "normalized_path": "/World/broken/Missing_30",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_31",
+    "normalized_path": "/World/broken/Missing_31",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_32",
+    "normalized_path": "/World/broken/Missing_32",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_33",
+    "normalized_path": "/World/broken/Missing_33",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_34",
+    "normalized_path": "/World/broken/Missing_34",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_points": [
+   {
+    "path": "/World/geo/Bound",
+    "normalized_path": "/World/geo/Bound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/PurposeBound",
+    "normalized_path": "/World/geo/PurposeBound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/SubsetOnly",
+    "normalized_path": "/World/geo/SubsetOnly",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_0",
+    "normalized_path": "/World/broken/Missing_0",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_1",
+    "normalized_path": "/World/broken/Missing_1",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_2",
+    "normalized_path": "/World/broken/Missing_2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_3",
+    "normalized_path": "/World/broken/Missing_3",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_4",
+    "normalized_path": "/World/broken/Missing_4",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_5",
+    "normalized_path": "/World/broken/Missing_5",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_6",
+    "normalized_path": "/World/broken/Missing_6",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_7",
+    "normalized_path": "/World/broken/Missing_7",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_8",
+    "normalized_path": "/World/broken/Missing_8",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_9",
+    "normalized_path": "/World/broken/Missing_9",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_10",
+    "normalized_path": "/World/broken/Missing_10",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_11",
+    "normalized_path": "/World/broken/Missing_11",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_12",
+    "normalized_path": "/World/broken/Missing_12",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_13",
+    "normalized_path": "/World/broken/Missing_13",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_14",
+    "normalized_path": "/World/broken/Missing_14",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_15",
+    "normalized_path": "/World/broken/Missing_15",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_16",
+    "normalized_path": "/World/broken/Missing_16",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_17",
+    "normalized_path": "/World/broken/Missing_17",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_18",
+    "normalized_path": "/World/broken/Missing_18",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_19",
+    "normalized_path": "/World/broken/Missing_19",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_20",
+    "normalized_path": "/World/broken/Missing_20",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_21",
+    "normalized_path": "/World/broken/Missing_21",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_22",
+    "normalized_path": "/World/broken/Missing_22",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_23",
+    "normalized_path": "/World/broken/Missing_23",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_24",
+    "normalized_path": "/World/broken/Missing_24",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_25",
+    "normalized_path": "/World/broken/Missing_25",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_26",
+    "normalized_path": "/World/broken/Missing_26",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_27",
+    "normalized_path": "/World/broken/Missing_27",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_28",
+    "normalized_path": "/World/broken/Missing_28",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_29",
+    "normalized_path": "/World/broken/Missing_29",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_30",
+    "normalized_path": "/World/broken/Missing_30",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_31",
+    "normalized_path": "/World/broken/Missing_31",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_32",
+    "normalized_path": "/World/broken/Missing_32",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_33",
+    "normalized_path": "/World/broken/Missing_33",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_34",
+    "normalized_path": "/World/broken/Missing_34",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_35",
+    "normalized_path": "/World/broken/Missing_35",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_36",
+    "normalized_path": "/World/broken/Missing_36",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_faces": [
+   {
+    "path": "/Library/Asset/Body_COL",
+    "normalized_path": "/Library/Asset/Body_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 5,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "one_or_two_vertex_faces": 1
+    },
+    "details": {
+     "one_or_two_vertex_face_examples": [
+      1
+     ]
+    }
+   },
+   {
+    "path": "/World/Inst_0/Body_COL",
+    "normalized_path": "/<prototype>/Body_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 5,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "one_or_two_vertex_faces": 1
+    },
+    "details": {
+     "one_or_two_vertex_face_examples": [
+      1
+     ]
+    }
+   },
+   {
+    "path": "/World/geo/Bound",
+    "normalized_path": "/World/geo/Bound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/PurposeBound",
+    "normalized_path": "/World/geo/PurposeBound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/SubsetOnly",
+    "normalized_path": "/World/geo/SubsetOnly",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_0",
+    "normalized_path": "/World/broken/Missing_0",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_1",
+    "normalized_path": "/World/broken/Missing_1",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_2",
+    "normalized_path": "/World/broken/Missing_2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_3",
+    "normalized_path": "/World/broken/Missing_3",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_4",
+    "normalized_path": "/World/broken/Missing_4",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_5",
+    "normalized_path": "/World/broken/Missing_5",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_6",
+    "normalized_path": "/World/broken/Missing_6",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_7",
+    "normalized_path": "/World/broken/Missing_7",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_8",
+    "normalized_path": "/World/broken/Missing_8",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_9",
+    "normalized_path": "/World/broken/Missing_9",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_10",
+    "normalized_path": "/World/broken/Missing_10",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_11",
+    "normalized_path": "/World/broken/Missing_11",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_12",
+    "normalized_path": "/World/broken/Missing_12",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_13",
+    "normalized_path": "/World/broken/Missing_13",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_14",
+    "normalized_path": "/World/broken/Missing_14",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_15",
+    "normalized_path": "/World/broken/Missing_15",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_16",
+    "normalized_path": "/World/broken/Missing_16",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_17",
+    "normalized_path": "/World/broken/Missing_17",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_18",
+    "normalized_path": "/World/broken/Missing_18",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_19",
+    "normalized_path": "/World/broken/Missing_19",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_20",
+    "normalized_path": "/World/broken/Missing_20",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_21",
+    "normalized_path": "/World/broken/Missing_21",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_22",
+    "normalized_path": "/World/broken/Missing_22",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_23",
+    "normalized_path": "/World/broken/Missing_23",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_24",
+    "normalized_path": "/World/broken/Missing_24",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_25",
+    "normalized_path": "/World/broken/Missing_25",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_26",
+    "normalized_path": "/World/broken/Missing_26",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_27",
+    "normalized_path": "/World/broken/Missing_27",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_28",
+    "normalized_path": "/World/broken/Missing_28",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_29",
+    "normalized_path": "/World/broken/Missing_29",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_30",
+    "normalized_path": "/World/broken/Missing_30",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_31",
+    "normalized_path": "/World/broken/Missing_31",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_32",
+    "normalized_path": "/World/broken/Missing_32",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_33",
+    "normalized_path": "/World/broken/Missing_33",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_34",
+    "normalized_path": "/World/broken/Missing_34",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_extent": [
+   {
+    "path": "/Library/Asset/Body",
+    "normalized_path": "/Library/Asset/Body",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/Inst_0/Body",
+    "normalized_path": "/<prototype>/Body",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/Bound",
+    "normalized_path": "/World/geo/Bound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/PurposeBound",
+    "normalized_path": "/World/geo/PurposeBound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/SubsetOnly",
+    "normalized_path": "/World/geo/SubsetOnly",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_0",
+    "normalized_path": "/World/broken/Missing_0",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_1",
+    "normalized_path": "/World/broken/Missing_1",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_2",
+    "normalized_path": "/World/broken/Missing_2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_3",
+    "normalized_path": "/World/broken/Missing_3",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_4",
+    "normalized_path": "/World/broken/Missing_4",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_5",
+    "normalized_path": "/World/broken/Missing_5",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_6",
+    "normalized_path": "/World/broken/Missing_6",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_7",
+    "normalized_path": "/World/broken/Missing_7",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_8",
+    "normalized_path": "/World/broken/Missing_8",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_9",
+    "normalized_path": "/World/broken/Missing_9",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_10",
+    "normalized_path": "/World/broken/Missing_10",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_11",
+    "normalized_path": "/World/broken/Missing_11",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_12",
+    "normalized_path": "/World/broken/Missing_12",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_13",
+    "normalized_path": "/World/broken/Missing_13",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_14",
+    "normalized_path": "/World/broken/Missing_14",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_15",
+    "normalized_path": "/World/broken/Missing_15",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_16",
+    "normalized_path": "/World/broken/Missing_16",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_17",
+    "normalized_path": "/World/broken/Missing_17",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_18",
+    "normalized_path": "/World/broken/Missing_18",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_19",
+    "normalized_path": "/World/broken/Missing_19",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_20",
+    "normalized_path": "/World/broken/Missing_20",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_21",
+    "normalized_path": "/World/broken/Missing_21",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_22",
+    "normalized_path": "/World/broken/Missing_22",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_23",
+    "normalized_path": "/World/broken/Missing_23",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_24",
+    "normalized_path": "/World/broken/Missing_24",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_25",
+    "normalized_path": "/World/broken/Missing_25",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_26",
+    "normalized_path": "/World/broken/Missing_26",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_27",
+    "normalized_path": "/World/broken/Missing_27",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_28",
+    "normalized_path": "/World/broken/Missing_28",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_29",
+    "normalized_path": "/World/broken/Missing_29",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_30",
+    "normalized_path": "/World/broken/Missing_30",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_31",
+    "normalized_path": "/World/broken/Missing_31",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_32",
+    "normalized_path": "/World/broken/Missing_32",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_33",
+    "normalized_path": "/World/broken/Missing_33",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_34",
+    "normalized_path": "/World/broken/Missing_34",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ]
+ },
+ "geometry_standard_frame1": {
+  "stage": "<fixtures>/golden_corpus/instancing_materials.usda",
+  "default_prim": null,
+  "prototype_count": 1,
+  "mesh_count": 53,
+  "unaudited_mesh_count": 0,
+  "thresholds": {
+   "zero_area_epsilon": 1e-12,
+   "huge_coord_threshold": 1000000.0,
+   "extent_tolerance": 0.0001
+  },
+  "audit_mode": "standard",
+  "geometry_engine": "numpy",
+  "face_analysis_engine": "numpy",
+  "requested_frame": 1.0,
+  "time_code": 1.0,
+  "mesh_cache": {
+   "mode": "off",
+   "entries": 0,
+   "hits": 0,
+   "misses": 0
+  },
+  "summary_counts": {
+   "zero_area_triangles": 2,
+   "one_or_two_vertex_faces": 2
+  },
+  "category_counts": {
+   "render_like": 51,
+   "collision_like": 2
+  },
+  "category_issue_counts": {
+   "render_like": {
+    "zero_area_triangles": 2
+   },
+   "collision_like": {
+    "one_or_two_vertex_faces": 2
+   }
+  },
+  "serious_geometry_failures": 2,
+  "likely_benign_collision_helper_warnings": 0,
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "examples": {
+   "zero_area_triangles": [
+    {
+     "path": "/Library/Asset/Body",
+     "normalized_path": "/Library/Asset/Body",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         2
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    },
+    {
+     "path": "/World/Inst_0/Body",
+     "normalized_path": "/<prototype>/Body",
+     "category": "render_like",
+     "count": 1,
+     "details": {
+      "zero_area_triangle_examples": [
+       {
+        "triangle_indices": [
+         0,
+         1,
+         2
+        ],
+        "area": 0.0
+       }
+      ]
+     }
+    }
+   ],
+   "one_or_two_vertex_faces": [
+    {
+     "path": "/Library/Asset/Body_COL",
+     "normalized_path": "/Library/Asset/Body_COL",
+     "category": "collision_like",
+     "count": 1,
+     "details": {
+      "one_or_two_vertex_face_examples": [
+       1
+      ]
+     }
+    },
+    {
+     "path": "/World/Inst_0/Body_COL",
+     "normalized_path": "/<prototype>/Body_COL",
+     "category": "collision_like",
+     "count": 1,
+     "details": {
+      "one_or_two_vertex_face_examples": [
+       1
+      ]
+     }
+    }
+   ]
+  },
+  "worst_meshes": [
+   {
+    "path": "/Library/Asset/Body_COL",
+    "normalized_path": "/Library/Asset/Body_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 5,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "one_or_two_vertex_faces": 1
+    },
+    "details": {
+     "one_or_two_vertex_face_examples": [
+      1
+     ]
+    }
+   },
+   {
+    "path": "/World/Inst_0/Body_COL",
+    "normalized_path": "/<prototype>/Body_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 5,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "one_or_two_vertex_faces": 1
+    },
+    "details": {
+     "one_or_two_vertex_face_examples": [
+      1
+     ]
+    }
+   },
+   {
+    "path": "/Library/Asset/Body",
+    "normalized_path": "/Library/Asset/Body",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Inst_0/Body",
+    "normalized_path": "/<prototype>/Body",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/geo/Bound",
+    "normalized_path": "/World/geo/Bound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/PurposeBound",
+    "normalized_path": "/World/geo/PurposeBound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/SubsetOnly",
+    "normalized_path": "/World/geo/SubsetOnly",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_0",
+    "normalized_path": "/World/broken/Missing_0",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_1",
+    "normalized_path": "/World/broken/Missing_1",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_2",
+    "normalized_path": "/World/broken/Missing_2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_3",
+    "normalized_path": "/World/broken/Missing_3",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_4",
+    "normalized_path": "/World/broken/Missing_4",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_5",
+    "normalized_path": "/World/broken/Missing_5",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_6",
+    "normalized_path": "/World/broken/Missing_6",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_7",
+    "normalized_path": "/World/broken/Missing_7",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_8",
+    "normalized_path": "/World/broken/Missing_8",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_9",
+    "normalized_path": "/World/broken/Missing_9",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_10",
+    "normalized_path": "/World/broken/Missing_10",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_11",
+    "normalized_path": "/World/broken/Missing_11",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_12",
+    "normalized_path": "/World/broken/Missing_12",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_13",
+    "normalized_path": "/World/broken/Missing_13",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_14",
+    "normalized_path": "/World/broken/Missing_14",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_15",
+    "normalized_path": "/World/broken/Missing_15",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_16",
+    "normalized_path": "/World/broken/Missing_16",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_17",
+    "normalized_path": "/World/broken/Missing_17",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_18",
+    "normalized_path": "/World/broken/Missing_18",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_19",
+    "normalized_path": "/World/broken/Missing_19",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_20",
+    "normalized_path": "/World/broken/Missing_20",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_21",
+    "normalized_path": "/World/broken/Missing_21",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_22",
+    "normalized_path": "/World/broken/Missing_22",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_23",
+    "normalized_path": "/World/broken/Missing_23",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_24",
+    "normalized_path": "/World/broken/Missing_24",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_25",
+    "normalized_path": "/World/broken/Missing_25",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_26",
+    "normalized_path": "/World/broken/Missing_26",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_27",
+    "normalized_path": "/World/broken/Missing_27",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_28",
+    "normalized_path": "/World/broken/Missing_28",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_29",
+    "normalized_path": "/World/broken/Missing_29",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_30",
+    "normalized_path": "/World/broken/Missing_30",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_31",
+    "normalized_path": "/World/broken/Missing_31",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_32",
+    "normalized_path": "/World/broken/Missing_32",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_points": [
+   {
+    "path": "/World/geo/Bound",
+    "normalized_path": "/World/geo/Bound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/PurposeBound",
+    "normalized_path": "/World/geo/PurposeBound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/SubsetOnly",
+    "normalized_path": "/World/geo/SubsetOnly",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_0",
+    "normalized_path": "/World/broken/Missing_0",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_1",
+    "normalized_path": "/World/broken/Missing_1",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_2",
+    "normalized_path": "/World/broken/Missing_2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_3",
+    "normalized_path": "/World/broken/Missing_3",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_4",
+    "normalized_path": "/World/broken/Missing_4",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_5",
+    "normalized_path": "/World/broken/Missing_5",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_6",
+    "normalized_path": "/World/broken/Missing_6",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_7",
+    "normalized_path": "/World/broken/Missing_7",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_8",
+    "normalized_path": "/World/broken/Missing_8",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_9",
+    "normalized_path": "/World/broken/Missing_9",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_10",
+    "normalized_path": "/World/broken/Missing_10",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_11",
+    "normalized_path": "/World/broken/Missing_11",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_12",
+    "normalized_path": "/World/broken/Missing_12",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_13",
+    "normalized_path": "/World/broken/Missing_13",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_14",
+    "normalized_path": "/World/broken/Missing_14",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_15",
+    "normalized_path": "/World/broken/Missing_15",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_16",
+    "normalized_path": "/World/broken/Missing_16",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_17",
+    "normalized_path": "/World/broken/Missing_17",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_18",
+    "normalized_path": "/World/broken/Missing_18",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_19",
+    "normalized_path": "/World/broken/Missing_19",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_20",
+    "normalized_path": "/World/broken/Missing_20",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_21",
+    "normalized_path": "/World/broken/Missing_21",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_22",
+    "normalized_path": "/World/broken/Missing_22",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_23",
+    "normalized_path": "/World/broken/Missing_23",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_24",
+    "normalized_path": "/World/broken/Missing_24",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_25",
+    "normalized_path": "/World/broken/Missing_25",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_26",
+    "normalized_path": "/World/broken/Missing_26",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_27",
+    "normalized_path": "/World/broken/Missing_27",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_28",
+    "normalized_path": "/World/broken/Missing_28",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_29",
+    "normalized_path": "/World/broken/Missing_29",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_30",
+    "normalized_path": "/World/broken/Missing_30",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_31",
+    "normalized_path": "/World/broken/Missing_31",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_32",
+    "normalized_path": "/World/broken/Missing_32",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_33",
+    "normalized_path": "/World/broken/Missing_33",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_34",
+    "normalized_path": "/World/broken/Missing_34",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_35",
+    "normalized_path": "/World/broken/Missing_35",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_36",
+    "normalized_path": "/World/broken/Missing_36",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_faces": [
+   {
+    "path": "/Library/Asset/Body_COL",
+    "normalized_path": "/Library/Asset/Body_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 5,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "one_or_two_vertex_faces": 1
+    },
+    "details": {
+     "one_or_two_vertex_face_examples": [
+      1
+     ]
+    }
+   },
+   {
+    "path": "/World/Inst_0/Body_COL",
+    "normalized_path": "/<prototype>/Body_COL",
+    "category": "collision_like",
+    "point_count": 3,
+    "face_count": 2,
+    "face_vertex_index_count": 5,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 1,
+    "issues": {
+     "one_or_two_vertex_faces": 1
+    },
+    "details": {
+     "one_or_two_vertex_face_examples": [
+      1
+     ]
+    }
+   },
+   {
+    "path": "/World/geo/Bound",
+    "normalized_path": "/World/geo/Bound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/PurposeBound",
+    "normalized_path": "/World/geo/PurposeBound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/SubsetOnly",
+    "normalized_path": "/World/geo/SubsetOnly",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_0",
+    "normalized_path": "/World/broken/Missing_0",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_1",
+    "normalized_path": "/World/broken/Missing_1",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_2",
+    "normalized_path": "/World/broken/Missing_2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_3",
+    "normalized_path": "/World/broken/Missing_3",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_4",
+    "normalized_path": "/World/broken/Missing_4",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_5",
+    "normalized_path": "/World/broken/Missing_5",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_6",
+    "normalized_path": "/World/broken/Missing_6",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_7",
+    "normalized_path": "/World/broken/Missing_7",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_8",
+    "normalized_path": "/World/broken/Missing_8",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_9",
+    "normalized_path": "/World/broken/Missing_9",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_10",
+    "normalized_path": "/World/broken/Missing_10",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_11",
+    "normalized_path": "/World/broken/Missing_11",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_12",
+    "normalized_path": "/World/broken/Missing_12",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_13",
+    "normalized_path": "/World/broken/Missing_13",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_14",
+    "normalized_path": "/World/broken/Missing_14",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_15",
+    "normalized_path": "/World/broken/Missing_15",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_16",
+    "normalized_path": "/World/broken/Missing_16",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_17",
+    "normalized_path": "/World/broken/Missing_17",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_18",
+    "normalized_path": "/World/broken/Missing_18",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_19",
+    "normalized_path": "/World/broken/Missing_19",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_20",
+    "normalized_path": "/World/broken/Missing_20",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_21",
+    "normalized_path": "/World/broken/Missing_21",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_22",
+    "normalized_path": "/World/broken/Missing_22",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_23",
+    "normalized_path": "/World/broken/Missing_23",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_24",
+    "normalized_path": "/World/broken/Missing_24",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_25",
+    "normalized_path": "/World/broken/Missing_25",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_26",
+    "normalized_path": "/World/broken/Missing_26",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_27",
+    "normalized_path": "/World/broken/Missing_27",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_28",
+    "normalized_path": "/World/broken/Missing_28",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_29",
+    "normalized_path": "/World/broken/Missing_29",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_30",
+    "normalized_path": "/World/broken/Missing_30",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_31",
+    "normalized_path": "/World/broken/Missing_31",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_32",
+    "normalized_path": "/World/broken/Missing_32",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_33",
+    "normalized_path": "/World/broken/Missing_33",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_34",
+    "normalized_path": "/World/broken/Missing_34",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ],
+  "largest_meshes_by_extent": [
+   {
+    "path": "/Library/Asset/Body",
+    "normalized_path": "/Library/Asset/Body",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/Inst_0/Body",
+    "normalized_path": "/<prototype>/Body",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 2.0,
+    "issue_count": 1,
+    "issues": {
+     "zero_area_triangles": 1
+    },
+    "details": {
+     "zero_area_triangle_examples": [
+      {
+       "triangle_indices": [
+        0,
+        1,
+        2
+       ],
+       "area": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "path": "/World/geo/Bound",
+    "normalized_path": "/World/geo/Bound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/PurposeBound",
+    "normalized_path": "/World/geo/PurposeBound",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/geo/SubsetOnly",
+    "normalized_path": "/World/geo/SubsetOnly",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_0",
+    "normalized_path": "/World/broken/Missing_0",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_1",
+    "normalized_path": "/World/broken/Missing_1",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_2",
+    "normalized_path": "/World/broken/Missing_2",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_3",
+    "normalized_path": "/World/broken/Missing_3",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_4",
+    "normalized_path": "/World/broken/Missing_4",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_5",
+    "normalized_path": "/World/broken/Missing_5",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_6",
+    "normalized_path": "/World/broken/Missing_6",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_7",
+    "normalized_path": "/World/broken/Missing_7",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_8",
+    "normalized_path": "/World/broken/Missing_8",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_9",
+    "normalized_path": "/World/broken/Missing_9",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_10",
+    "normalized_path": "/World/broken/Missing_10",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_11",
+    "normalized_path": "/World/broken/Missing_11",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_12",
+    "normalized_path": "/World/broken/Missing_12",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_13",
+    "normalized_path": "/World/broken/Missing_13",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_14",
+    "normalized_path": "/World/broken/Missing_14",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_15",
+    "normalized_path": "/World/broken/Missing_15",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_16",
+    "normalized_path": "/World/broken/Missing_16",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_17",
+    "normalized_path": "/World/broken/Missing_17",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_18",
+    "normalized_path": "/World/broken/Missing_18",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_19",
+    "normalized_path": "/World/broken/Missing_19",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_20",
+    "normalized_path": "/World/broken/Missing_20",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_21",
+    "normalized_path": "/World/broken/Missing_21",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_22",
+    "normalized_path": "/World/broken/Missing_22",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_23",
+    "normalized_path": "/World/broken/Missing_23",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_24",
+    "normalized_path": "/World/broken/Missing_24",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_25",
+    "normalized_path": "/World/broken/Missing_25",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_26",
+    "normalized_path": "/World/broken/Missing_26",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_27",
+    "normalized_path": "/World/broken/Missing_27",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_28",
+    "normalized_path": "/World/broken/Missing_28",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_29",
+    "normalized_path": "/World/broken/Missing_29",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_30",
+    "normalized_path": "/World/broken/Missing_30",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_31",
+    "normalized_path": "/World/broken/Missing_31",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_32",
+    "normalized_path": "/World/broken/Missing_32",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_33",
+    "normalized_path": "/World/broken/Missing_33",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   },
+   {
+    "path": "/World/broken/Missing_34",
+    "normalized_path": "/World/broken/Missing_34",
+    "category": "render_like",
+    "point_count": 3,
+    "face_count": 1,
+    "face_vertex_index_count": 3,
+    "extent_diagonal": 1.4142135623730951,
+    "issue_count": 0,
+    "issues": {},
+    "details": {}
+   }
+  ]
+ },
+ "names": {
+  "stage": "<fixtures>/golden_corpus/instancing_materials.usda",
+  "default_prim": null,
+  "prototype_count": 1,
+  "total_prims_including_prototypes": 74,
+  "type_counts": {
+   "Mesh": 53,
+   "<untyped>": 6,
+   "Xform": 5,
+   "GeomSubset": 5,
+   "Material": 4,
+   "Shader": 1
+  },
+  "name_oddities": {
+   "duplicate_sibling_names": [],
+   "case_collision_names": []
+  },
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": false,
+    "pattern": null
+   }
+  },
+  "name_counts": {},
+  "hierarchy": {
+   "max_depth": 4,
+   "max_depth_examples": [
+    "/World/mtl/Good/Surface",
+    "/World/geo/SubsetOnly/face0",
+    "/World/geo/SubsetOnly/face1",
+    "/World/geo/Orphan/subset",
+    "/Library/Asset/Body/sub0"
+   ],
+   "single_child_chain_count": 0,
+   "single_child_chain_examples": [],
+   "leaf_scope_count": 0,
+   "leaf_scope_examples": [],
+   "empty_scope_count": 0,
+   "empty_scope_examples": [],
+   "same_name_parent_child_count": 0,
+   "same_name_parent_child_examples": [],
+   "xform_mesh_same_name_count": 0,
+   "xform_mesh_same_name_examples": [],
+   "mesh_with_mesh_child_count": 0,
+   "mesh_with_mesh_child_examples": [],
+   "mesh_parent_type_counts": {
+    "<untyped>": 51,
+    "Xform": 2
+   },
+   "deep_collision_like_mesh_count": 0,
+   "deep_collision_like_mesh_examples": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "name_oddity_counts": {}
+ },
+ "names_prefix": {
+  "stage": "<fixtures>/golden_corpus/instancing_materials.usda",
+  "default_prim": null,
+  "prototype_count": 1,
+  "total_prims_including_prototypes": 74,
+  "type_counts": {
+   "Mesh": 53,
+   "<untyped>": 6,
+   "Xform": 5,
+   "GeomSubset": 5,
+   "Material": 4,
+   "Shader": 1
+  },
+  "name_oddities": {
+   "non_prefix_style": [
+    "/World/Inst_0",
+    "/World/Inst_1",
+    "/World/Inst_2",
+    "/World/geo/SubsetOnly/face0",
+    "/World/geo/SubsetOnly/face1",
+    "/World/geo/Orphan/subset",
+    "/World/broken",
+    "/World/broken/Missing_0",
+    "/World/broken/Missing_1",
+    "/World/broken/Missing_2",
+    "/World/broken/Missing_3",
+    "/World/broken/Missing_4",
+    "/World/broken/Missing_5",
+    "/World/broken/Missing_6",
+    "/World/broken/Missing_7",
+    "/World/broken/Missing_8",
+    "/World/broken/Missing_9",
+    "/World/broken/Missing_10",
+    "/World/broken/Missing_11",
+    "/World/broken/Missing_12",
+    "/World/broken/Missing_13",
+    "/World/broken/Missing_14",
+    "/World/broken/Missing_15",
+    "/World/broken/Missing_16",
+    "/World/broken/Missing_17",
+    "/World/broken/Missing_18",
+    "/World/broken/Missing_19",
+    "/World/broken/Missing_20",
+    "/World/broken/Missing_21",
+    "/World/broken/Missing_22",
+    "/World/broken/Missing_23",
+    "/World/broken/Missing_24",
+    "/World/broken/Missing_25",
+    "/World/broken/Missing_26",
+    "/World/broken/Missing_27",
+    "/World/broken/Missing_28",
+    "/World/broken/Missing_29",
+    "/World/broken/Missing_30",
+    "/World/broken/Missing_31",
+    "/World/broken/Missing_32",
+    "/World/broken/Missing_33",
+    "/World/broken/Missing_34",
+    "/World/broken/Missing_35",
+    "/World/broken/Missing_36",
+    "/World/broken/Missing_37",
+    "/World/broken/Missing_38",
+    "/World/broken/Missing_39",
+    "/World/broken/Missing_40",
+    "/World/broken/Missing_41",
+    "/World/broken/Missing_42",
+    "/World/broken/Missing_43",
+    "/World/broken/Missing_44",
+    "/Library/Asset/Body/sub0",
+    "/Library/Asset/Body_COL",
+    "/<prototype>/Body/sub0",
+    "/<prototype>/Body_COL"
+   ],
+   "duplicate_sibling_names": [],
+   "case_collision_names": []
+  },
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": true,
+    "pattern": "[A-Z][A-Za-z0-9]*"
+   }
+  },
+  "name_counts": {},
+  "hierarchy": {
+   "max_depth": 4,
+   "max_depth_examples": [
+    "/World/mtl/Good/Surface",
+    "/World/geo/SubsetOnly/face0",
+    "/World/geo/SubsetOnly/face1",
+    "/World/geo/Orphan/subset",
+    "/Library/Asset/Body/sub0"
+   ],
+   "single_child_chain_count": 0,
+   "single_child_chain_examples": [],
+   "leaf_scope_count": 0,
+   "leaf_scope_examples": [],
+   "empty_scope_count": 0,
+   "empty_scope_examples": [],
+   "same_name_parent_child_count": 0,
+   "same_name_parent_child_examples": [],
+   "xform_mesh_same_name_count": 0,
+   "xform_mesh_same_name_examples": [],
+   "mesh_with_mesh_child_count": 0,
+   "mesh_with_mesh_child_examples": [],
+   "mesh_parent_type_counts": {
+    "<untyped>": 51,
+    "Xform": 2
+   },
+   "deep_collision_like_mesh_count": 0,
+   "deep_collision_like_mesh_examples": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  },
+  "name_oddity_counts": {
+   "non_prefix_style": 56
+  }
+ },
+ "scene": {
+  "stage": "<fixtures>/golden_corpus/instancing_materials.usda",
+  "root_layer": "<fixtures>/golden_corpus/instancing_materials.usda",
+  "default_prim": null,
+  "meters_per_unit": 0.01,
+  "up_axis": "Y",
+  "layer_count": 2,
+  "prims": {
+   "total": 74,
+   "by_type": {
+    "Mesh": 53,
+    "<untyped>": 6,
+    "Xform": 5,
+    "GeomSubset": 5,
+    "Material": 4,
+    "Shader": 1
+   }
+  },
+  "prototype_count": 1,
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": false,
+    "pattern": null
+   }
+  },
+  "naming": {
+   "suspicious_count": 0,
+   "non_prefix_style_count": 0,
+   "duplicate_sibling_count": 0,
+   "duplicate_sibling_names": [],
+   "case_collision_count": 0,
+   "case_collision_names": [],
+   "examples": {}
+  },
+  "materials": {
+   "material_prim_count": 4,
+   "shader_prim_count": 1,
+   "mesh_count": 53,
+   "geom_subset_count": 5,
+   "mesh_with_computed_material": 1,
+   "mesh_without_computed_material": 52,
+   "geom_subset_with_computed_material": 1,
+   "geom_subset_without_computed_material": 4,
+   "mesh_without_mesh_or_subset_material": 51,
+   "bound_materials_used_by_mesh_count": 2,
+   "unbound_material_prim_count": 2,
+   "direct_binding_relation_count": 49,
+   "direct_binding_targets_missing_count": 45,
+   "direct_binding_targets_missing": [
+    "/World/broken/Missing_0 -> /World/mtl/Nope_0",
+    "/World/broken/Missing_1 -> /World/mtl/Nope_1",
+    "/World/broken/Missing_2 -> /World/mtl/Nope_2",
+    "/World/broken/Missing_3 -> /World/mtl/Nope_3",
+    "/World/broken/Missing_4 -> /World/mtl/Nope_4",
+    "/World/broken/Missing_5 -> /World/mtl/Nope_5",
+    "/World/broken/Missing_6 -> /World/mtl/Nope_6",
+    "/World/broken/Missing_7 -> /World/mtl/Nope_7",
+    "/World/broken/Missing_8 -> /World/mtl/Nope_8",
+    "/World/broken/Missing_9 -> /World/mtl/Nope_9",
+    "/World/broken/Missing_10 -> /World/mtl/Nope_10",
+    "/World/broken/Missing_11 -> /World/mtl/Nope_11",
+    "/World/broken/Missing_12 -> /World/mtl/Nope_12",
+    "/World/broken/Missing_13 -> /World/mtl/Nope_13",
+    "/World/broken/Missing_14 -> /World/mtl/Nope_14",
+    "/World/broken/Missing_15 -> /World/mtl/Nope_15",
+    "/World/broken/Missing_16 -> /World/mtl/Nope_16",
+    "/World/broken/Missing_17 -> /World/mtl/Nope_17",
+    "/World/broken/Missing_18 -> /World/mtl/Nope_18",
+    "/World/broken/Missing_19 -> /World/mtl/Nope_19",
+    "/World/broken/Missing_20 -> /World/mtl/Nope_20",
+    "/World/broken/Missing_21 -> /World/mtl/Nope_21",
+    "/World/broken/Missing_22 -> /World/mtl/Nope_22",
+    "/World/broken/Missing_23 -> /World/mtl/Nope_23",
+    "/World/broken/Missing_24 -> /World/mtl/Nope_24",
+    "/World/broken/Missing_25 -> /World/mtl/Nope_25",
+    "/World/broken/Missing_26 -> /World/mtl/Nope_26",
+    "/World/broken/Missing_27 -> /World/mtl/Nope_27",
+    "/World/broken/Missing_28 -> /World/mtl/Nope_28",
+    "/World/broken/Missing_29 -> /World/mtl/Nope_29",
+    "/World/broken/Missing_30 -> /World/mtl/Nope_30",
+    "/World/broken/Missing_31 -> /World/mtl/Nope_31",
+    "/World/broken/Missing_32 -> /World/mtl/Nope_32",
+    "/World/broken/Missing_33 -> /World/mtl/Nope_33",
+    "/World/broken/Missing_34 -> /World/mtl/Nope_34",
+    "/World/broken/Missing_35 -> /World/mtl/Nope_35",
+    "/World/broken/Missing_36 -> /World/mtl/Nope_36",
+    "/World/broken/Missing_37 -> /World/mtl/Nope_37",
+    "/World/broken/Missing_38 -> /World/mtl/Nope_38",
+    "/World/broken/Missing_39 -> /World/mtl/Nope_39"
+   ],
+   "direct_binding_targets_not_material_count": 1,
+   "direct_binding_targets_not_material": [
+    "/World/broken/Wrong -> /World/geo (<untyped>)"
+   ],
+   "mesh_without_material_examples": [
+    "/World/geo/PurposeBound",
+    "/World/geo/SubsetOnly",
+    "/World/broken/Missing_0",
+    "/World/broken/Missing_1",
+    "/World/broken/Missing_2",
+    "/World/broken/Missing_3",
+    "/World/broken/Missing_4",
+    "/World/broken/Missing_5",
+    "/World/broken/Missing_6",
+    "/World/broken/Missing_7",
+    "/World/broken/Missing_8",
+    "/World/broken/Missing_9",
+    "/World/broken/Missing_10",
+    "/World/broken/Missing_11",
+    "/World/broken/Missing_12",
+    "/World/broken/Missing_13",
+    "/World/broken/Missing_14",
+    "/World/broken/Missing_15",
+    "/World/broken/Missing_16",
+    "/World/broken/Missing_17",
+    "/World/broken/Missing_18",
+    "/World/broken/Missing_19",
+    "/World/broken/Missing_20",
+    "/World/broken/Missing_21",
+    "/World/broken/Missing_22",
+    "/World/broken/Missing_23",
+    "/World/broken/Missing_24",
+    "/World/broken/Missing_25",
+    "/World/broken/Missing_26",
+    "/World/broken/Missing_27",
+    "/World/broken/Missing_28",
+    "/World/broken/Missing_29",
+    "/World/broken/Missing_30",
+    "/World/broken/Missing_31",
+    "/World/broken/Missing_32",
+    "/World/broken/Missing_33",
+    "/World/broken/Missing_34",
+    "/World/broken/Missing_35",
+    "/World/broken/Missing_36",
+    "/World/broken/Missing_37"
+   ],
+   "mesh_without_mesh_or_subset_material_examples": [
+    "/World/geo/PurposeBound",
+    "/World/broken/Missing_0",
+    "/World/broken/Missing_1",
+    "/World/broken/Missing_2",
+    "/World/broken/Missing_3",
+    "/World/broken/Missing_4",
+    "/World/broken/Missing_5",
+    "/World/broken/Missing_6",
+    "/World/broken/Missing_7",
+    "/World/broken/Missing_8",
+    "/World/broken/Missing_9",
+    "/World/broken/Missing_10",
+    "/World/broken/Missing_11",
+    "/World/broken/Missing_12",
+    "/World/broken/Missing_13",
+    "/World/broken/Missing_14",
+    "/World/broken/Missing_15",
+    "/World/broken/Missing_16",
+    "/World/broken/Missing_17",
+    "/World/broken/Missing_18",
+    "/World/broken/Missing_19",
+    "/World/broken/Missing_20",
+    "/World/broken/Missing_21",
+    "/World/broken/Missing_22",
+    "/World/broken/Missing_23",
+    "/World/broken/Missing_24",
+    "/World/broken/Missing_25",
+    "/World/broken/Missing_26",
+    "/World/broken/Missing_27",
+    "/World/broken/Missing_28",
+    "/World/broken/Missing_29",
+    "/World/broken/Missing_30",
+    "/World/broken/Missing_31",
+    "/World/broken/Missing_32",
+    "/World/broken/Missing_33",
+    "/World/broken/Missing_34",
+    "/World/broken/Missing_35",
+    "/World/broken/Missing_36",
+    "/World/broken/Missing_37",
+    "/World/broken/Missing_38"
+   ],
+   "geom_subset_without_material_examples": [
+    "/World/geo/SubsetOnly/face1",
+    "/World/geo/Orphan/subset",
+    "/Library/Asset/Body/sub0",
+    "/World/Inst_0/Body/sub0"
+   ],
+   "materials_without_surface_output": [
+    "/World/mtl/NoSurfaceB",
+    "/World/mtl/NoSurfaceA",
+    "/World/mtl/Unused"
+   ],
+   "materials_without_surface_output_count": 3
+  },
+  "assets": {
+   "authored_asset_count": 0,
+   "resolved_asset_count": 0,
+   "missing_authored_asset_count": 0,
+   "missing_authored_assets": [],
+   "unverifiable_asset_count": 0,
+   "unverifiable_assets": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  }
+ },
+ "scene_prefix": {
+  "stage": "<fixtures>/golden_corpus/instancing_materials.usda",
+  "root_layer": "<fixtures>/golden_corpus/instancing_materials.usda",
+  "default_prim": null,
+  "meters_per_unit": 0.01,
+  "up_axis": "Y",
+  "layer_count": 2,
+  "prims": {
+   "total": 74,
+   "by_type": {
+    "Mesh": 53,
+    "<untyped>": 6,
+    "Xform": 5,
+    "GeomSubset": 5,
+    "Material": 4,
+    "Shader": 1
+   }
+  },
+  "prototype_count": 1,
+  "naming_policy": {
+   "prefix_style": {
+    "enabled": true,
+    "pattern": "[A-Z][A-Za-z0-9]*"
+   }
+  },
+  "naming": {
+   "suspicious_count": 0,
+   "non_prefix_style_count": 56,
+   "duplicate_sibling_count": 0,
+   "duplicate_sibling_names": [],
+   "case_collision_count": 0,
+   "case_collision_names": [],
+   "examples": {
+    "non_prefix_style": [
+     "/World/Inst_0",
+     "/World/Inst_1",
+     "/World/Inst_2",
+     "/World/geo/SubsetOnly/face0",
+     "/World/geo/SubsetOnly/face1",
+     "/World/geo/Orphan/subset",
+     "/World/broken",
+     "/World/broken/Missing_0",
+     "/World/broken/Missing_1",
+     "/World/broken/Missing_2",
+     "/World/broken/Missing_3",
+     "/World/broken/Missing_4",
+     "/World/broken/Missing_5",
+     "/World/broken/Missing_6",
+     "/World/broken/Missing_7",
+     "/World/broken/Missing_8",
+     "/World/broken/Missing_9",
+     "/World/broken/Missing_10",
+     "/World/broken/Missing_11",
+     "/World/broken/Missing_12",
+     "/World/broken/Missing_13",
+     "/World/broken/Missing_14",
+     "/World/broken/Missing_15",
+     "/World/broken/Missing_16",
+     "/World/broken/Missing_17",
+     "/World/broken/Missing_18",
+     "/World/broken/Missing_19",
+     "/World/broken/Missing_20",
+     "/World/broken/Missing_21",
+     "/World/broken/Missing_22",
+     "/World/broken/Missing_23",
+     "/World/broken/Missing_24",
+     "/World/broken/Missing_25",
+     "/World/broken/Missing_26",
+     "/World/broken/Missing_27",
+     "/World/broken/Missing_28",
+     "/World/broken/Missing_29",
+     "/World/broken/Missing_30",
+     "/World/broken/Missing_31",
+     "/World/broken/Missing_32"
+    ]
+   }
+  },
+  "materials": {
+   "material_prim_count": 4,
+   "shader_prim_count": 1,
+   "mesh_count": 53,
+   "geom_subset_count": 5,
+   "mesh_with_computed_material": 1,
+   "mesh_without_computed_material": 52,
+   "geom_subset_with_computed_material": 1,
+   "geom_subset_without_computed_material": 4,
+   "mesh_without_mesh_or_subset_material": 51,
+   "bound_materials_used_by_mesh_count": 2,
+   "unbound_material_prim_count": 2,
+   "direct_binding_relation_count": 49,
+   "direct_binding_targets_missing_count": 45,
+   "direct_binding_targets_missing": [
+    "/World/broken/Missing_0 -> /World/mtl/Nope_0",
+    "/World/broken/Missing_1 -> /World/mtl/Nope_1",
+    "/World/broken/Missing_2 -> /World/mtl/Nope_2",
+    "/World/broken/Missing_3 -> /World/mtl/Nope_3",
+    "/World/broken/Missing_4 -> /World/mtl/Nope_4",
+    "/World/broken/Missing_5 -> /World/mtl/Nope_5",
+    "/World/broken/Missing_6 -> /World/mtl/Nope_6",
+    "/World/broken/Missing_7 -> /World/mtl/Nope_7",
+    "/World/broken/Missing_8 -> /World/mtl/Nope_8",
+    "/World/broken/Missing_9 -> /World/mtl/Nope_9",
+    "/World/broken/Missing_10 -> /World/mtl/Nope_10",
+    "/World/broken/Missing_11 -> /World/mtl/Nope_11",
+    "/World/broken/Missing_12 -> /World/mtl/Nope_12",
+    "/World/broken/Missing_13 -> /World/mtl/Nope_13",
+    "/World/broken/Missing_14 -> /World/mtl/Nope_14",
+    "/World/broken/Missing_15 -> /World/mtl/Nope_15",
+    "/World/broken/Missing_16 -> /World/mtl/Nope_16",
+    "/World/broken/Missing_17 -> /World/mtl/Nope_17",
+    "/World/broken/Missing_18 -> /World/mtl/Nope_18",
+    "/World/broken/Missing_19 -> /World/mtl/Nope_19",
+    "/World/broken/Missing_20 -> /World/mtl/Nope_20",
+    "/World/broken/Missing_21 -> /World/mtl/Nope_21",
+    "/World/broken/Missing_22 -> /World/mtl/Nope_22",
+    "/World/broken/Missing_23 -> /World/mtl/Nope_23",
+    "/World/broken/Missing_24 -> /World/mtl/Nope_24",
+    "/World/broken/Missing_25 -> /World/mtl/Nope_25",
+    "/World/broken/Missing_26 -> /World/mtl/Nope_26",
+    "/World/broken/Missing_27 -> /World/mtl/Nope_27",
+    "/World/broken/Missing_28 -> /World/mtl/Nope_28",
+    "/World/broken/Missing_29 -> /World/mtl/Nope_29",
+    "/World/broken/Missing_30 -> /World/mtl/Nope_30",
+    "/World/broken/Missing_31 -> /World/mtl/Nope_31",
+    "/World/broken/Missing_32 -> /World/mtl/Nope_32",
+    "/World/broken/Missing_33 -> /World/mtl/Nope_33",
+    "/World/broken/Missing_34 -> /World/mtl/Nope_34",
+    "/World/broken/Missing_35 -> /World/mtl/Nope_35",
+    "/World/broken/Missing_36 -> /World/mtl/Nope_36",
+    "/World/broken/Missing_37 -> /World/mtl/Nope_37",
+    "/World/broken/Missing_38 -> /World/mtl/Nope_38",
+    "/World/broken/Missing_39 -> /World/mtl/Nope_39"
+   ],
+   "direct_binding_targets_not_material_count": 1,
+   "direct_binding_targets_not_material": [
+    "/World/broken/Wrong -> /World/geo (<untyped>)"
+   ],
+   "mesh_without_material_examples": [
+    "/World/geo/PurposeBound",
+    "/World/geo/SubsetOnly",
+    "/World/broken/Missing_0",
+    "/World/broken/Missing_1",
+    "/World/broken/Missing_2",
+    "/World/broken/Missing_3",
+    "/World/broken/Missing_4",
+    "/World/broken/Missing_5",
+    "/World/broken/Missing_6",
+    "/World/broken/Missing_7",
+    "/World/broken/Missing_8",
+    "/World/broken/Missing_9",
+    "/World/broken/Missing_10",
+    "/World/broken/Missing_11",
+    "/World/broken/Missing_12",
+    "/World/broken/Missing_13",
+    "/World/broken/Missing_14",
+    "/World/broken/Missing_15",
+    "/World/broken/Missing_16",
+    "/World/broken/Missing_17",
+    "/World/broken/Missing_18",
+    "/World/broken/Missing_19",
+    "/World/broken/Missing_20",
+    "/World/broken/Missing_21",
+    "/World/broken/Missing_22",
+    "/World/broken/Missing_23",
+    "/World/broken/Missing_24",
+    "/World/broken/Missing_25",
+    "/World/broken/Missing_26",
+    "/World/broken/Missing_27",
+    "/World/broken/Missing_28",
+    "/World/broken/Missing_29",
+    "/World/broken/Missing_30",
+    "/World/broken/Missing_31",
+    "/World/broken/Missing_32",
+    "/World/broken/Missing_33",
+    "/World/broken/Missing_34",
+    "/World/broken/Missing_35",
+    "/World/broken/Missing_36",
+    "/World/broken/Missing_37"
+   ],
+   "mesh_without_mesh_or_subset_material_examples": [
+    "/World/geo/PurposeBound",
+    "/World/broken/Missing_0",
+    "/World/broken/Missing_1",
+    "/World/broken/Missing_2",
+    "/World/broken/Missing_3",
+    "/World/broken/Missing_4",
+    "/World/broken/Missing_5",
+    "/World/broken/Missing_6",
+    "/World/broken/Missing_7",
+    "/World/broken/Missing_8",
+    "/World/broken/Missing_9",
+    "/World/broken/Missing_10",
+    "/World/broken/Missing_11",
+    "/World/broken/Missing_12",
+    "/World/broken/Missing_13",
+    "/World/broken/Missing_14",
+    "/World/broken/Missing_15",
+    "/World/broken/Missing_16",
+    "/World/broken/Missing_17",
+    "/World/broken/Missing_18",
+    "/World/broken/Missing_19",
+    "/World/broken/Missing_20",
+    "/World/broken/Missing_21",
+    "/World/broken/Missing_22",
+    "/World/broken/Missing_23",
+    "/World/broken/Missing_24",
+    "/World/broken/Missing_25",
+    "/World/broken/Missing_26",
+    "/World/broken/Missing_27",
+    "/World/broken/Missing_28",
+    "/World/broken/Missing_29",
+    "/World/broken/Missing_30",
+    "/World/broken/Missing_31",
+    "/World/broken/Missing_32",
+    "/World/broken/Missing_33",
+    "/World/broken/Missing_34",
+    "/World/broken/Missing_35",
+    "/World/broken/Missing_36",
+    "/World/broken/Missing_37",
+    "/World/broken/Missing_38"
+   ],
+   "geom_subset_without_material_examples": [
+    "/World/geo/SubsetOnly/face1",
+    "/World/geo/Orphan/subset",
+    "/Library/Asset/Body/sub0",
+    "/World/Inst_0/Body/sub0"
+   ],
+   "materials_without_surface_output": [
+    "/World/mtl/NoSurfaceB",
+    "/World/mtl/NoSurfaceA",
+    "/World/mtl/Unused"
+   ],
+   "materials_without_surface_output_count": 3
+  },
+  "assets": {
+   "authored_asset_count": 0,
+   "resolved_asset_count": 0,
+   "missing_authored_asset_count": 0,
+   "missing_authored_assets": [],
+   "unverifiable_asset_count": 0,
+   "unverifiable_assets": []
+  },
+  "check_errors": {
+   "count": 0,
+   "examples": []
+  }
+ }
+}

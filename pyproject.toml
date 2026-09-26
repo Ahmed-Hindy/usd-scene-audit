@@ -34,6 +34,11 @@ dev = [
 
 
 [tool.pytest.ini_options]
+# The suite itself must use the keyword API; tests of the deprecated positional
+# form assert the warning with pytest.warns, which overrides this filter.
+filterwarnings = [
+    "error:passing .* is deprecated:DeprecationWarning",
+]
 markers = [
     "expects_check_errors: the test deliberately makes a check fail and record to CheckErrorLog",
 ]
