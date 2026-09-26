@@ -69,3 +69,20 @@ def test_names_hierarchy_prefix_policy_can_be_enabled(tmp_path: Path) -> None:
     }
     assert report["name_oddity_counts"]["non_prefix_style"] == 2
     assert report["name_oddities"]["non_prefix_style"] == ["/World", "/World/PlainName"]
+
+
+
+def test_names_hierarchy_counts_every_case_collision_beyond_example_limit(tmp_path: Path) -> None:
+    """Oddity counts must not be clipped to the example-list size."""
+    stage_path = tmp_path / "scene.usda"
+    collision_count = names_hierarchy.MAX_EXAMPLES + 20
+    stage = Usd.Stage.CreateNew(str(stage_path))
+    for i in range(collision_count):
+        UsdGeom.Xform.Define(stage, f"/Group_{i}/part")
+        UsdGeom.Xform.Define(stage, f"/Group_{i}/Part")
+    stage.GetRootLayer().Save()
+
+    report = names_hierarchy.analyze(stage_path)
+
+    assert report["name_oddity_counts"]["case_collision_names"] == collision_count
+    assert len(report["name_oddities"]["case_collision_names"]) == names_hierarchy.MAX_EXAMPLES
