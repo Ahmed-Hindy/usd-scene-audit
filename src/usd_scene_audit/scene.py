@@ -230,7 +230,9 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
         raise RuntimeError(f"Could not open stage: {stage_path}")
 
     root_layer = stage.GetRootLayer()
-    used_layers = stage.GetUsedLayers()
+    # GetUsedLayers() has no stable order between runs. Sorting keeps the order
+    # of recorded check_errors, which is capped, identical across runs.
+    used_layers = sorted(stage.GetUsedLayers(), key=lambda layer: layer.identifier)
     naming_policy = {
         "prefix_style": {
             "enabled": prefix_style_re is not None,
@@ -290,7 +292,9 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
 
     type_counts: Counter[str] = Counter()
     child_names_by_parent: dict[str, list[str]] = defaultdict(list)
-    material_paths: set[str] = set()
+    # A list, not a set: materials_without_surface_output is reported in this
+    # order, and set order changes with the per-process string hash seed.
+    material_paths: list[str] = []
     mesh_paths: list[str] = []
     geom_subset_paths: list[str] = []
     subsets_by_parent_mesh: dict[str, list[str]] = defaultdict(list)
@@ -326,7 +330,7 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
                 add_example(report["naming"]["examples"]["non_prefix_style"], path)
 
         if prim.IsA(UsdShade.Material):
-            material_paths.add(path)
+            material_paths.append(path)
         if prim.IsA(UsdShade.Shader):
             report["materials"]["shader_prim_count"] += 1
         if prim.IsA(UsdGeom.Mesh):
@@ -435,7 +439,7 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     report["materials"]["mesh_count"] = len(mesh_paths)
     report["materials"]["geom_subset_count"] = len(geom_subset_paths)
     report["materials"]["bound_materials_used_by_mesh_count"] = len(computed_materials)
-    report["materials"]["unbound_material_prim_count"] = len(material_paths - set(computed_materials))
+    report["materials"]["unbound_material_prim_count"] = len(set(material_paths) - set(computed_materials))
     report["assets"]["missing_authored_asset_count"] = len(missing_assets)
     report["assets"]["unverifiable_asset_count"] = len(unverifiable_assets)
     report["check_errors"] = error_log.as_report()
