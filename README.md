@@ -132,6 +132,11 @@ Two notes on the counters:
 - A *bare* relative path such as `tex/color.exr` is a USD search path. USD resolves it against the resolver's search path rather than against the authoring layer, so where it resolves from can depend on the process working directory. Explicitly relative paths such as `./tex/color.exr` always anchor to the layer.
 - `authored_asset_count` counts authored references per layer, while `missing_authored_asset_count` and `unverifiable_asset_count` count unique resolved identifiers. The three buckets therefore do not sum to `authored_asset_count` when one asset is referenced from several layers.
 
+Example lists in the report are capped at 40 entries, so read the matching count for the true total rather than the list length:
+
+- `naming.case_collision_count` and `naming.duplicate_sibling_count` count colliding sibling groups, not prims, matching `usd-names-hierarchy-audit`.
+- `materials.direct_binding_targets_missing_count` and `materials.direct_binding_targets_not_material_count` count binding targets.
+
 Example:
 
 ```powershell
