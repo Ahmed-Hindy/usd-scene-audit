@@ -916,7 +916,9 @@ def validate_normals(
                 "actual": normal_count,
             }
         )
-    non_finite = np.flatnonzero(~np.isfinite(normals_np).all(axis=1))[:10].astype(int).tolist() if normals_np.size else []
+    non_finite = (
+        np.flatnonzero(~np.isfinite(normals_np).all(axis=1))[:10].astype(int).tolist() if normals_np.size else []
+    )
     if non_finite:
         issues.append({"issue": "normals_non_finite", "index_examples": non_finite})
     return issues
