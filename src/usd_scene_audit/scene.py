@@ -13,7 +13,7 @@ from pxr import Ar, Sdf, Usd, UsdGeom, UsdShade
 
 # TODO(#22): CheckErrorLog belongs in a shared module once one exists; it is not
 # geometry-specific.
-from usd_scene_audit.geometry import CheckErrorLog, PrototypePaths
+from usd_scene_audit.geometry import CheckErrorLog, PrototypePaths, prims_with_prototypes
 
 
 MAX_EXAMPLES = 40
@@ -258,7 +258,9 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
         "naming": {
             "suspicious_count": 0,
             "non_prefix_style_count": 0,
+            "duplicate_sibling_count": 0,
             "duplicate_sibling_names": [],
+            "case_collision_count": 0,
             "case_collision_names": [],
             "examples": defaultdict(list),
         },
@@ -275,7 +277,9 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
             "bound_materials_used_by_mesh_count": 0,
             "unbound_material_prim_count": 0,
             "direct_binding_relation_count": 0,
+            "direct_binding_targets_missing_count": 0,
             "direct_binding_targets_missing": [],
+            "direct_binding_targets_not_material_count": 0,
             "direct_binding_targets_not_material": [],
             "mesh_without_material_examples": [],
             "mesh_without_mesh_or_subset_material_examples": [],
@@ -307,13 +311,8 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
 
     # Prototypes are walked in a stable order and reported under stable names;
     # lookups keep using the real prim paths. See PrototypePaths.
-    prototype_paths = PrototypePaths(stage)
-    shown = prototype_paths.stable
-    prims_to_scan = list(stage.Traverse())
-    prototypes = prototype_paths.ordered()
-    for prototype in prototypes:
-        prims_to_scan.extend(Usd.PrimRange(prototype))
-    report["prototype_count"] = len(prototypes)
+    shown = PrototypePaths(stage).stable
+    prims_to_scan, report["prototype_count"] = prims_with_prototypes(stage)
 
     for prim in prims_to_scan:
         path = str(prim.GetPath())
@@ -356,27 +355,44 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
         if targets:
             report["materials"]["direct_binding_relation_count"] += len(targets)
             for target in targets:
+                target_path = Sdf.Path(target)
+                if target_path.IsPropertyPath():
+                    # material:binding:collection:* names a collection first and
+                    # the material second. A collection target is not a material,
+                    # so it is only a finding when the collection does not exist.
+                    if not Usd.CollectionAPI.GetCollection(stage, target_path):
+                        report["materials"]["direct_binding_targets_missing_count"] += 1
+                        add_example(
+                            report["materials"]["direct_binding_targets_missing"],
+                            f"{shown(path)} -> {shown(target)} (collection)",
+                        )
+                    continue
                 target_prim = stage.GetPrimAtPath(target)
                 if not target_prim:
+                    report["materials"]["direct_binding_targets_missing_count"] += 1
                     add_example(
                         report["materials"]["direct_binding_targets_missing"], f"{shown(path)} -> {shown(target)}"
                     )
                 elif not target_prim.IsA(UsdShade.Material):
+                    report["materials"]["direct_binding_targets_not_material_count"] += 1
                     add_example(
                         report["materials"]["direct_binding_targets_not_material"],
                         f"{shown(path)} -> {shown(target)} ({target_prim.GetTypeName() or '<untyped>'})",
                     )
 
+    # Sibling counts are one per colliding group, matching usd-names-hierarchy-audit.
     for parent, names in child_names_by_parent.items():
         counts = Counter(names)
         for name, count in counts.items():
             if count > 1:
+                report["naming"]["duplicate_sibling_count"] += 1
                 add_example(report["naming"]["duplicate_sibling_names"], f"{shown(parent)}/{name} x{count}")
         by_lower: dict[str, set[str]] = defaultdict(set)
         for name in names:
             by_lower[name.lower()].add(name)
         for originals in by_lower.values():
             if len(originals) > 1:
+                report["naming"]["case_collision_count"] += 1
                 add_example(
                     report["naming"]["case_collision_names"],
                     f"{shown(parent)}: {', '.join(sorted(originals))}",
