@@ -206,15 +206,20 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
         by_lower: dict[str, set[str]] = defaultdict(set)
         for child_name in child_names:
             by_lower[child_name.lower()].add(child_name)
+        # These two counts are one per colliding sibling group, not one per prim
+        # (unlike note_oddity()), so each count pairs with one example string.
+        # Counts are exact; only the example lists are capped.
         for variants in by_lower.values():
-            if len(variants) > 1 and len(case_collision_examples) < MAX_EXAMPLES:
+            if len(variants) > 1:
                 oddity_counts["case_collision_names"] += 1
-                case_collision_examples.append(f"{normalized_path(parent_path)}: {', '.join(sorted(variants))}")
+                if len(case_collision_examples) < MAX_EXAMPLES:
+                    case_collision_examples.append(f"{normalized_path(parent_path)}: {', '.join(sorted(variants))}")
         # Sdf/Usd disallows true duplicate siblings, but keep the check for completeness.
         for child_name, count in Counter(child_names).items():
-            if count > 1 and len(duplicate_sibling_examples) < MAX_EXAMPLES:
+            if count > 1:
                 oddity_counts["duplicate_sibling_names"] += 1
-                duplicate_sibling_examples.append(f"{normalized_path(parent_path)}/{child_name} x{count}")
+                if len(duplicate_sibling_examples) < MAX_EXAMPLES:
+                    duplicate_sibling_examples.append(f"{normalized_path(parent_path)}/{child_name} x{count}")
 
     report["name_oddities"]["duplicate_sibling_names"] = duplicate_sibling_examples
     report["name_oddities"]["case_collision_names"] = case_collision_examples

@@ -69,3 +69,49 @@ def test_names_hierarchy_prefix_policy_can_be_enabled(tmp_path: Path) -> None:
     }
     assert report["name_oddity_counts"]["non_prefix_style"] == 2
     assert report["name_oddities"]["non_prefix_style"] == ["/World", "/World/PlainName"]
+
+
+def _write_case_collision_stage(path: Path, group_count: int) -> None:
+    """Write ``group_count`` parents, each holding a two-spelling case collision.
+
+    One extra parent holds three spellings of the same name, which must still
+    count as a single colliding group.
+    """
+    stage = Usd.Stage.CreateNew(str(path))
+    for i in range(group_count - 1):
+        UsdGeom.Xform.Define(stage, f"/Group_{i}/part")
+        UsdGeom.Xform.Define(stage, f"/Group_{i}/Part")
+    for spelling in ("part", "Part", "PART"):
+        UsdGeom.Xform.Define(stage, f"/Triple/{spelling}")
+    stage.GetRootLayer().Save()
+
+
+def test_names_hierarchy_counts_every_case_collision_beyond_example_limit(tmp_path: Path) -> None:
+    """Oddity counts must not be clipped to the example-list size, and count one per sibling group."""
+    stage_path = tmp_path / "scene.usda"
+    group_count = names_hierarchy.MAX_EXAMPLES + 20
+    _write_case_collision_stage(stage_path, group_count)
+
+    report = names_hierarchy.analyze(stage_path)
+
+    assert report["name_oddity_counts"]["case_collision_names"] == group_count
+    assert len(report["name_oddities"]["case_collision_names"]) == names_hierarchy.MAX_EXAMPLES
+
+
+def test_names_hierarchy_counts_every_duplicate_sibling_beyond_example_limit(tmp_path: Path, monkeypatch) -> None:
+    """USD cannot author duplicate siblings, so feed each prim twice to reach the branch."""
+    stage_path = tmp_path / "scene.usda"
+    parent_count = names_hierarchy.MAX_EXAMPLES + 20
+    stage = Usd.Stage.CreateNew(str(stage_path))
+    for i in range(parent_count):
+        UsdGeom.Xform.Define(stage, f"/Group_{i}/child")
+    stage.GetRootLayer().Save()
+    real_traversal = names_hierarchy.prims_with_prototypes
+    monkeypatch.setattr(names_hierarchy, "prims_with_prototypes", lambda stage: real_traversal(stage) * 2)
+
+    report = names_hierarchy.analyze(stage_path)
+
+    # Each doubled /Group_i is one duplicate group under "/", and each doubled
+    # child is one more under its parent.
+    assert report["name_oddity_counts"]["duplicate_sibling_names"] == 2 * parent_count
+    assert len(report["name_oddities"]["duplicate_sibling_names"]) == names_hierarchy.MAX_EXAMPLES
