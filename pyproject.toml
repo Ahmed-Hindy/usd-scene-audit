@@ -31,3 +31,9 @@ target-version = "py310"
 dev = [
     "pytest>=9.0.3",
 ]
+
+
+[tool.pytest.ini_options]
+markers = [
+    "expects_check_errors: the test deliberately makes a check fail and record to CheckErrorLog",
+]
