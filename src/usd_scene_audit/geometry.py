@@ -171,10 +171,14 @@ def resolve_time_code(frame: float | None, stage: Usd.Stage | None = None) -> Us
 def default_time_code(prim: Usd.Prim) -> Usd.TimeCode:
     """Return the time code a helper uses when the caller does not pass one.
 
-    Matches what ``analyze()`` evaluates with no ``--frame``, so calling a
-    per-mesh helper directly gives the same answer as the full audit. Falling
-    back to ``EarliestTime()`` here instead would reintroduce the pre-roll
-    false positives that ``resolve_time_code`` exists to prevent.
+    Matches the time code ``analyze()`` evaluates with no ``--frame``, so a
+    helper called directly reads attributes at the same moment the full audit
+    does. Falling back to ``EarliestTime()`` here instead would reintroduce the
+    pre-roll false positives that ``resolve_time_code`` exists to prevent.
+
+    This only covers attribute reads. ``mesh_record`` also takes an
+    ``XformCache``, which evaluates transforms at whatever time it was built
+    with; see its docstring.
     """
     return resolve_time_code(None, prim.GetStage())
 
@@ -262,7 +266,10 @@ def triangle_area(a, b, c) -> float:
 
 
 def authored_extent_bounds(mesh: UsdGeom.Mesh, time_code: Usd.TimeCode | None = None):
-    """Return authored extent as a bounds tuple, or None."""
+    """Return authored extent as a bounds tuple, or None.
+
+    ``time_code`` defaults to ``default_time_code(mesh.GetPrim())``.
+    """
     if time_code is None:
         time_code = default_time_code(mesh.GetPrim())
     extent = mesh.GetExtentAttr().Get(time_code)
@@ -743,7 +750,10 @@ def validate_primvars(
     face_vertex_count: int,
     time_code: Usd.TimeCode | None = None,
 ) -> list[dict[str, Any]]:
-    """Validate authored primvar lengths, with special attention to UV-like primvars."""
+    """Validate authored primvar lengths, with special attention to UV-like primvars.
+
+    ``time_code`` defaults to ``default_time_code(prim)``.
+    """
     if time_code is None:
         time_code = default_time_code(prim)
     issues: list[dict[str, Any]] = []
@@ -829,7 +839,10 @@ def validate_normals(
     face_vertex_count: int,
     time_code: Usd.TimeCode | None = None,
 ) -> list[dict[str, Any]]:
-    """Validate authored normals length and finite values."""
+    """Validate authored normals length and finite values.
+
+    ``time_code`` defaults to ``default_time_code(mesh.GetPrim())``.
+    """
     if time_code is None:
         time_code = default_time_code(mesh.GetPrim())
     issues: list[dict[str, Any]] = []
@@ -896,7 +909,14 @@ def mesh_record(
     time_code: Usd.TimeCode | None = None,
     error_log: CheckErrorLog | None = None,
 ) -> dict[str, Any]:
-    """Analyze a single mesh prim and return a report record."""
+    """Analyze a single mesh prim and return a report record.
+
+    ``time_code`` defaults to ``default_time_code(prim)``, the time code
+    ``analyze()`` would use. Transforms are read from ``xform_cache`` at the
+    time it was built with, so build it at the same time code, e.g.
+    ``UsdGeom.XformCache(default_time_code(prim))``. A default-constructed
+    ``XformCache()`` evaluates at ``Default`` and would miss animated transforms.
+    """
     if time_code is None:
         time_code = default_time_code(prim)
     path = str(prim.GetPath())

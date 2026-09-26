@@ -14,7 +14,7 @@ import subprocess
 import sys
 
 import pytest
-from pxr import Usd, UsdGeom
+from pxr import Gf, Sdf, Usd, UsdGeom, Vt
 
 from usd_scene_audit.geometry import (
     FaceAnalysisCache,
@@ -25,6 +25,8 @@ from usd_scene_audit.geometry import (
     describe_time_code,
     mesh_record,
     resolve_time_code,
+    validate_normals,
+    validate_primvars,
 )
 
 CLEAN_FIXTURES = [
@@ -229,10 +231,67 @@ def test_cli_accepts_and_records_frame(stage_path, tmp_path) -> None:
     assert report["summary_counts"] == {}
 
 
+def _write_preroll_stage(path) -> None:
+    """Write a mesh that is valid at startTimeCode (2) but wrong in its frame-1 pre-roll.
 
-def test_mesh_record_default_time_code_matches_analyze(stage_path) -> None:
-    """Calling mesh_record() without a time code must not reintroduce the pre-roll false positive."""
-    path = stage_path("animated_preroll_extent.usda")
+    Normals, the ``st`` primvar, and the extent each carry a bad frame-1 sample,
+    so a helper that falls back to ``EarliestTime()`` reports findings while one
+    that uses the stage start does not.
+    """
+    stage = Usd.Stage.CreateNew(str(path))
+    stage.SetStartTimeCode(2)
+    stage.SetEndTimeCode(2)
+    mesh = UsdGeom.Mesh.Define(stage, "/World/Mesh")
+    triangle = Vt.Vec3fArray([Gf.Vec3f(0, 0, 0), Gf.Vec3f(1, 0, 0), Gf.Vec3f(0, 1, 0)])
+    for frame in (1, 2):
+        mesh.GetPointsAttr().Set(triangle, frame)
+    mesh.CreateFaceVertexCountsAttr(Vt.IntArray([3]))
+    mesh.CreateFaceVertexIndicesAttr(Vt.IntArray([0, 1, 2]))
+
+    normals = mesh.CreateNormalsAttr()
+    mesh.SetNormalsInterpolation(UsdGeom.Tokens.vertex)
+    normals.Set(Vt.Vec3fArray([Gf.Vec3f(0, 0, 1)]), 1)
+    normals.Set(Vt.Vec3fArray([Gf.Vec3f(0, 0, 1)] * 3), 2)
+
+    st = UsdGeom.PrimvarsAPI(mesh).CreatePrimvar("st", Sdf.ValueTypeNames.TexCoord2fArray, UsdGeom.Tokens.vertex)
+    st.Set(Vt.Vec2fArray([Gf.Vec2f(0, 0)]), 1)
+    st.Set(Vt.Vec2fArray([Gf.Vec2f(0, 0), Gf.Vec2f(1, 0), Gf.Vec2f(0, 1)]), 2)
+
+    mesh.GetExtentAttr().Set(Vt.Vec3fArray([Gf.Vec3f(5, 5, 5), Gf.Vec3f(6, 6, 6)]), 1)
+    mesh.GetExtentAttr().Set(Vt.Vec3fArray([Gf.Vec3f(0, 0, 0), Gf.Vec3f(1, 1, 0)]), 2)
+    stage.GetRootLayer().Save()
+
+
+def test_helper_defaults_use_stage_start_not_preroll(tmp_path) -> None:
+    """Each per-mesh helper, called without a time code, reads at startTimeCode like analyze()."""
+    path = tmp_path / "preroll.usda"
+    _write_preroll_stage(path)
+    stage = Usd.Stage.Open(str(path))
+    prim = stage.GetPrimAtPath("/World/Mesh")
+    mesh = UsdGeom.Mesh(prim)
+    preroll = Usd.TimeCode(1.0)
+
+    assert default_time_code(prim) == Usd.TimeCode(2.0)
+
+    # The frame-1 samples really are bad, so the default-time assertions below are meaningful.
+    assert [i["issue"] for i in validate_normals(mesh, 3, 1, 3, preroll)] == ["normals_length_mismatch"]
+    assert "primvar_length_mismatch" in [i["issue"] for i in validate_primvars(prim, 3, 1, 3, preroll)]
+    assert authored_extent_bounds(mesh, preroll) == ((5.0, 5.0, 5.0), (6.0, 6.0, 6.0))
+
+    assert validate_normals(mesh, 3, 1, 3) == []
+    assert validate_primvars(prim, 3, 1, 3) == []
+    assert authored_extent_bounds(mesh) == ((0.0, 0.0, 0.0), (1.0, 1.0, 0.0))
+    assert audit(path)["summary_counts"] == {}
+
+
+@pytest.mark.parametrize("fixture_name", ["animated_preroll_extent.usda", None], ids=["fixture", "preroll-stage"])
+def test_mesh_record_default_time_code_matches_analyze(stage_path, tmp_path, fixture_name) -> None:
+    """Calling mesh_record() without a time code must not reintroduce pre-roll false positives."""
+    if fixture_name is None:
+        path = tmp_path / "preroll.usda"
+        _write_preroll_stage(path)
+    else:
+        path = stage_path(fixture_name)
     stage = Usd.Stage.Open(str(path))
     prim = next(p for p in stage.Traverse() if p.IsA(UsdGeom.Mesh))
 
@@ -241,7 +300,7 @@ def test_mesh_record_default_time_code_matches_analyze(stage_path) -> None:
         1e-12,
         1e6,
         1e-4,
-        UsdGeom.XformCache(),
+        UsdGeom.XformCache(default_time_code(prim)),
         "numpy",
         "exhaustive",
         PhaseTimer(),
@@ -249,18 +308,6 @@ def test_mesh_record_default_time_code_matches_analyze(stage_path) -> None:
     )
 
     assert record["issues"] == audit(path)["summary_counts"] == {}
-
-
-def test_helper_default_time_code_uses_stage_start(stage_path) -> None:
-    """Per-mesh helpers default to the same time code analyze() evaluates."""
-    stage = Usd.Stage.Open(str(stage_path("animated_preroll_extent.usda")))
-    prim = next(p for p in stage.Traverse() if p.IsA(UsdGeom.Mesh))
-
-    assert default_time_code(prim) == resolve_time_code(None, stage)
-    assert describe_time_code(default_time_code(prim)) == stage.GetStartTimeCode()
-    assert authored_extent_bounds(UsdGeom.Mesh(prim)) == authored_extent_bounds(
-        UsdGeom.Mesh(prim), resolve_time_code(None, stage)
-    )
 
 
 def test_cli_frame_help_describes_start_time_code_default() -> None:
