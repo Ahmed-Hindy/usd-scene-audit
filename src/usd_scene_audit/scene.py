@@ -73,6 +73,19 @@ def direct_material_targets(prim: Usd.Prim) -> list[str]:
     return targets
 
 
+def computed_material_bindings(stage: Usd.Stage, prim_paths: list[str]) -> dict[str, str | None]:
+    """Map each prim path to its computed bound material path, or None when unbound.
+
+    Keys keep the order of ``prim_paths``.
+    """
+    bindings: dict[str, str | None] = {}
+    for prim_path in prim_paths:
+        binding_api = UsdShade.MaterialBindingAPI(stage.GetPrimAtPath(prim_path))
+        material, _relationship = binding_api.ComputeBoundMaterial()
+        bindings[prim_path] = str(material.GetPath()) if material and material.GetPrim() else None
+    return bindings
+
+
 def authored_asset_paths(layer: Sdf.Layer, error_log: CheckErrorLog | None = None) -> set[str]:
     """Collect authored asset paths from a layer by walking Sdf fields."""
     assets: set[str] = set()
@@ -282,7 +295,6 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     geom_subset_paths: list[str] = []
     subsets_by_parent_mesh: dict[str, list[str]] = defaultdict(list)
     computed_materials: Counter[str] = Counter()
-    binding_api_cache: dict[str, UsdShade.MaterialBindingAPI] = {}
 
     prims_to_scan = list(stage.Traverse())
     prototypes = list(stage.GetPrototypes())
@@ -299,9 +311,10 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
 
         internal_generated = name == "__class__" or name.startswith("__Prototype_")
         if not internal_generated:
-            if re.search(r"\s", name):
-                report["naming"]["suspicious_count"] += 1
-                add_example(report["naming"]["examples"]["contains_whitespace"], path)
+            # No separate whitespace check: SdfPath rejects prim names containing
+            # whitespace on authoring and on read (.usda and .usdc), so a composed
+            # stage cannot hold one -- and the identifier-char check below would
+            # flag it regardless. tests/test_scene_audit.py pins that assumption.
             if re.search(r"[^A-Za-z0-9_]", name):
                 report["naming"]["suspicious_count"] += 1
                 add_example(report["naming"]["examples"]["non_ascii_identifier_chars"], path)
@@ -318,7 +331,7 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
             report["materials"]["shader_prim_count"] += 1
         if prim.IsA(UsdGeom.Mesh):
             mesh_paths.append(path)
-        if prim.GetTypeName() == "GeomSubset":
+        if prim.IsA(UsdGeom.Subset):
             geom_subset_paths.append(path)
             parent = prim.GetParent()
             while parent and parent.IsValid() and not parent.IsA(UsdGeom.Mesh):
@@ -347,39 +360,31 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
         by_lower: dict[str, set[str]] = defaultdict(set)
         for name in names:
             by_lower[name.lower()].add(name)
-        for lower_name, originals in by_lower.items():
+        for originals in by_lower.values():
             if len(originals) > 1:
                 add_example(
                     report["naming"]["case_collision_names"],
                     f"{parent}: {', '.join(sorted(originals))}",
                 )
 
-    mesh_has_material: set[str] = set()
-    subset_has_material: set[str] = set()
-    for mesh_path in mesh_paths:
-        prim = stage.GetPrimAtPath(mesh_path)
-        binding_api = binding_api_cache.setdefault(mesh_path, UsdShade.MaterialBindingAPI(prim))
-        material, _relationship = binding_api.ComputeBoundMaterial()
-        if material and material.GetPrim():
-            report["materials"]["mesh_with_computed_material"] += 1
-            mesh_has_material.add(mesh_path)
-            computed_materials[str(material.GetPath())] += 1
-        else:
-            report["materials"]["mesh_without_computed_material"] += 1
+    mesh_bindings = computed_material_bindings(stage, mesh_paths)
+    subset_bindings = computed_material_bindings(stage, geom_subset_paths)
+    computed_materials.update(m for m in mesh_bindings.values() if m)
+    computed_materials.update(m for m in subset_bindings.values() if m)
+    mesh_has_material = {path for path, m in mesh_bindings.items() if m}
+    subset_has_material = {path for path, m in subset_bindings.items() if m}
+
+    report["materials"]["mesh_with_computed_material"] = len(mesh_has_material)
+    report["materials"]["mesh_without_computed_material"] = len(mesh_paths) - len(mesh_has_material)
+    for mesh_path, material_path in mesh_bindings.items():
+        if material_path is None:
             add_example(report["materials"]["mesh_without_material_examples"], mesh_path)
 
-    for subset_path in geom_subset_paths:
-        prim = stage.GetPrimAtPath(subset_path)
-        binding_api = binding_api_cache.setdefault(subset_path, UsdShade.MaterialBindingAPI(prim))
-        material, _relationship = binding_api.ComputeBoundMaterial()
-        if material and material.GetPrim():
-            report["materials"]["geom_subset_with_computed_material"] += 1
-            subset_has_material.add(subset_path)
-            computed_materials[str(material.GetPath())] += 1
-        else:
-            report["materials"]["geom_subset_without_computed_material"] += 1
+    report["materials"]["geom_subset_with_computed_material"] = len(subset_has_material)
+    report["materials"]["geom_subset_without_computed_material"] = len(geom_subset_paths) - len(subset_has_material)
+    for subset_path, material_path in subset_bindings.items():
+        if material_path is None:
             add_example(report["materials"]["geom_subset_without_material_examples"], subset_path)
-
     for mesh_path in mesh_paths:
         if mesh_path in mesh_has_material:
             continue
