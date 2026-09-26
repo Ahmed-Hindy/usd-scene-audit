@@ -213,11 +213,6 @@ def classify_mesh(path: str, name: str) -> str:
     return "render_like"
 
 
-def is_finite_vec3(value) -> bool:
-    """Return true when a vec-like value contains finite xyz values."""
-    return all(math.isfinite(float(value[i])) for i in range(3))
-
-
 def vec3_tuple(value) -> tuple[float, float, float]:
     """Convert a Gf vec-like object to a Python tuple."""
     return (float(value[0]), float(value[1]), float(value[2]))
@@ -318,6 +313,45 @@ def vector_array(value, dtype=None):
     if value is None:
         return None
     return np.asarray(value, dtype=dtype)
+
+
+def attribute_types(attr: Usd.Attribute) -> dict[str, str]:
+    """Return the type the schema expects and the type the strongest layer authored.
+
+    ``GetTypeName()`` reports the schema type, so a ``float[] normals`` opinion
+    still reads as ``normal3f[]`` there. The authored type comes from the
+    strongest property spec.
+    """
+    stack = attr.GetPropertyStack()
+    authored = str(stack[0].typeName) if stack else str(attr.GetTypeName())
+    return {"authored_type": authored, "expected_type": str(attr.GetTypeName())}
+
+
+def shaped_array(value, row_width: int | None, dtype=None) -> tuple[Any, dict[str, Any] | None]:
+    """Convert an authored value to NumPy, rejecting shapes the checks cannot use.
+
+    ``row_width=None`` expects a flat array (face-vertex counts and indices); an
+    integer expects ``N x row_width`` rows (points, normals). An attribute
+    authored with the wrong value type -- ``float[] normals``, a scalar
+    ``int faceVertexCounts`` -- resolves to a differently shaped value, and
+    feeding that to the vectorized checks raised instead of reporting it.
+
+    Returns ``(array, None)`` for a usable value, ``(None, problem)`` for an
+    unusable one, and ``(None, None)`` when the value is absent. Empty arrays
+    are always usable; they are reported as empty elsewhere.
+    """
+    if value is None:
+        return None, None
+    try:
+        array = np.asarray(value, dtype=dtype)
+    except (TypeError, ValueError) as error:
+        return None, {"error": f"{type(error).__name__}: {error}"}
+    if array.size == 0:
+        return array, None
+    expected_ndim = 1 if row_width is None else 2
+    if array.ndim != expected_ndim or (row_width is not None and array.shape[1] != row_width):
+        return None, {"shape": [int(v) for v in array.shape]}
+    return array, None
 
 
 def array_digest(array) -> tuple[str, tuple[int, ...], str] | None:
@@ -834,8 +868,11 @@ def validate_normals(
     normals = mesh.GetNormalsAttr().Get(time_code)
     if normals is None:
         return issues
+    normals_np, shape_problem = shaped_array(normals, 3)
+    if shape_problem is not None:
+        return [{"issue": "normals_bad_shape", **attribute_types(mesh.GetNormalsAttr()), **shape_problem}]
     interpolation = mesh.GetNormalsInterpolation() or ""
-    normal_count = len(normals)
+    normal_count = len(normals_np)
     expected = expected_primvar_length(interpolation, point_count, face_count, face_vertex_count)
     if expected is not None and normal_count != expected:
         issues.append(
@@ -846,14 +883,7 @@ def validate_normals(
                 "actual": normal_count,
             }
         )
-    normals_np = np.asarray(normals)
-    if normals_np.size == 0:
-        non_finite = []
-    elif normals_np.ndim == 2:
-        finite_mask = np.isfinite(normals_np).all(axis=1)
-        non_finite = np.flatnonzero(~finite_mask)[:10].astype(int).tolist()
-    else:
-        non_finite = [i for i, normal in enumerate(normals) if not is_finite_vec3(normal)][:10]
+    non_finite = np.flatnonzero(~np.isfinite(normals_np).all(axis=1))[:10].astype(int).tolist() if normals_np.size else []
     if non_finite:
         issues.append({"issue": "normals_non_finite", "index_examples": non_finite})
     return issues
@@ -908,21 +938,35 @@ def mesh_record(
     issues: Counter[str] = Counter()
     details: dict[str, Any] = {}
 
+    points_attr = mesh.GetPointsAttr()
+    counts_attr = mesh.GetFaceVertexCountsAttr()
+    indices_attr = mesh.GetFaceVertexIndicesAttr()
     with phase_timer.phase("mesh.read_attributes"):
-        points = mesh.GetPointsAttr().Get(time_code)
-        counts = mesh.GetFaceVertexCountsAttr().Get(time_code)
-        indices = mesh.GetFaceVertexIndicesAttr().Get(time_code)
+        points = points_attr.Get(time_code)
+        counts = counts_attr.Get(time_code)
+        indices = indices_attr.Get(time_code)
 
-    point_count = len(points) if points is not None else 0
-    face_count = len(counts) if counts is not None else 0
-    index_count = len(indices) if indices is not None else 0
-    points_np = vector_array(points)
-    counts_np = vector_array(counts, dtype="int64")
-    indices_np = vector_array(indices, dtype="int64")
+    # A wrongly typed attribute is reported as *_bad_shape and then treated as
+    # unusable, which cascades the same way a missing attribute does.
+    points_np, points_problem = shaped_array(points, 3)
+    counts_np, counts_problem = shaped_array(counts, None, dtype="int64")
+    indices_np, indices_problem = shaped_array(indices, None, dtype="int64")
+    for issue, attr, problem in (
+        ("points_bad_shape", points_attr, points_problem),
+        ("face_vertex_counts_bad_shape", counts_attr, counts_problem),
+        ("face_vertex_indices_bad_shape", indices_attr, indices_problem),
+    ):
+        if problem is not None:
+            issues[issue] += 1
+            details[issue] = {**attribute_types(attr), **problem}
+
+    point_count = len(points_np) if points_np is not None else 0
+    face_count = len(counts_np) if counts_np is not None else 0
+    index_count = len(indices_np) if indices_np is not None else 0
 
     if points is None:
         issues["missing_points"] += 1
-    elif point_count == 0:
+    elif points_np is not None and point_count == 0:
         issues["empty_points"] += 1
 
     if counts is None:
@@ -975,7 +1019,7 @@ def mesh_record(
     details.update(face_details)
 
     with phase_timer.phase("mesh.bounds_extent"):
-        bounds = bbox_from_points(points if points is not None else [])
+        bounds = bbox_from_points(points_np if points_np is not None else [])
         extent_delta = bounds_mismatch(authored_extent_bounds(mesh, time_code), bounds, extent_tolerance)
         if extent_delta is not None:
             issues["authored_extent_mismatch"] += 1
@@ -1023,6 +1067,9 @@ def seriousness_score(record: dict[str, Any]) -> int:
         "missing_points": 1000,
         "missing_face_vertex_counts": 1000,
         "missing_face_vertex_indices": 1000,
+        "points_bad_shape": 1000,
+        "face_vertex_counts_bad_shape": 1000,
+        "face_vertex_indices_bad_shape": 1000,
         "face_vertex_count_index_length_mismatch": 800,
         "negative_face_vertex_indices": 500,
         "out_of_range_face_vertex_indices": 500,
@@ -1036,6 +1083,7 @@ def seriousness_score(record: dict[str, Any]) -> int:
         "primvar_element_size_mismatch": 100,
         "primvar_index_out_of_range": 100,
         "normals_length_mismatch": 50,
+        "normals_bad_shape": 100,
         "authored_extent_mismatch": 10,
         "negative_transform_determinant": 5,
         "near_zero_transform_determinant": 100,
@@ -1082,19 +1130,26 @@ def analyze(
     xform_cache = UsdGeom.XformCache(time_code)
 
     for prim in mesh_prims:
-        record = mesh_record(
-            prim,
-            zero_area_epsilon,
-            huge_coord_threshold,
-            extent_tolerance,
-            xform_cache,
-            face_analysis_engine,
-            audit_mode,
-            phase_timer,
-            face_cache,
-            time_code,
-            error_log,
-        )
+        try:
+            record = mesh_record(
+                prim,
+                zero_area_epsilon,
+                huge_coord_threshold,
+                extent_tolerance,
+                xform_cache,
+                face_analysis_engine,
+                audit_mode,
+                phase_timer,
+                face_cache,
+                time_code,
+                error_log,
+            )
+        except Exception as error:  # noqa: BLE001 - recorded below; see CheckErrorLog
+            # Authored data the checks do not anticipate must not abort a
+            # multi-minute audit of every other mesh. The mesh is still counted
+            # in mesh_count; it has no record, and the failure is reported.
+            error_log.record("mesh_record", str(prim.GetPath()), error)
+            continue
         records.append(record)
         category = record["category"]
         category_counts[category] += 1
@@ -1122,6 +1177,9 @@ def analyze(
         "missing_points",
         "missing_face_vertex_counts",
         "missing_face_vertex_indices",
+        "points_bad_shape",
+        "face_vertex_counts_bad_shape",
+        "face_vertex_indices_bad_shape",
         "face_vertex_count_index_length_mismatch",
         "negative_face_vertex_indices",
         "out_of_range_face_vertex_indices",
