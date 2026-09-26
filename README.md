@@ -61,6 +61,14 @@ Example:
 uv run usd-geometry-audit "F:\path\to\OpenChessSet\chess_set.usda" --json-out usd_geometry_audit.json
 ```
 
+Mesh attributes are read at one time code per audit: an explicit `--frame`, else the stage's authored `startTimeCode`, else the earliest authored time sample. Deforming geometry such as simulation caches, cloth, and crowd agents is therefore audited against real point data rather than looking like it has no points at all.
+
+```powershell
+uv run usd-geometry-audit "F:\path\to\OpenChessSet\chess_set.usda" --frame 1001
+```
+
+Every report records both `requested_frame` and the `time_code` that was actually evaluated. See [docs/geometry-audit.md](docs/geometry-audit.md#time-samples) for why a single concrete time code is used rather than resolving each attribute at its own earliest sample.
+
 Choose a performance/coverage mode:
 
 ```powershell

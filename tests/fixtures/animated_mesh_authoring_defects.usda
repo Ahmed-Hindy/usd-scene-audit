@@ -1,0 +1,45 @@
+#usda 1.0
+(
+    """A deforming mesh with two genuine authoring defects in time-sampled data:
+
+      - `normals` holds 4 values for a 3-point mesh at vertex interpolation.
+      - `extent` disagrees with the points it is supposed to bound.
+
+    This is the positive counterpart to the other animated fixtures. Those
+    assert an absence of findings, which a broken normals or extent read
+    satisfies for the wrong reason: at default time both attributes resolve to
+    None and their checks exit quietly without reporting anything.
+
+    Here the defects can only be seen if those reads resolve real data, so the
+    fixture fails if either read regresses to default time.
+    """
+    defaultPrim = "World"
+    endTimeCode = 2
+    metersPerUnit = 1
+    startTimeCode = 1
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def Mesh "BadAuthoring"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points.timeSamples = {
+            1: [(0, 0, 0), (1, 0, 0), (0, 1, 0)],
+            2: [(0, 0, 1), (1, 0, 1), (0, 1, 1)],
+        }
+        normal3f[] normals (
+            interpolation = "vertex"
+        )
+        normal3f[] normals.timeSamples = {
+            1: [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1)],
+            2: [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1)],
+        }
+        float3[] extent.timeSamples = {
+            1: [(0, 0, 0), (99, 99, 99)],
+            2: [(0, 0, 1), (99, 99, 99)],
+        }
+    }
+}

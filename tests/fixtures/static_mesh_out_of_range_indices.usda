@@ -1,0 +1,23 @@
+#usda 1.0
+(
+    """A genuinely corrupt static mesh: faceVertexIndices references point 99 of
+    a 3-point mesh.
+
+    This is the counterpart to the animated fixtures. Fixing the time-code read
+    must not be achieved by suppressing the missing/out-of-range checks, so this
+    stage must still be reported as a serious geometry failure.
+    """
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "World"
+{
+    def Mesh "OutOfRange"
+    {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 99]
+        point3f[] points = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+    }
+}
