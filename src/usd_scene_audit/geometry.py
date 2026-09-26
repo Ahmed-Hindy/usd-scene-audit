@@ -408,9 +408,16 @@ def bounds_mismatch(
 
 
 def expected_primvar_length(
-    interpolation: str, point_count: int, face_count: int, face_vertex_count: int
+    interpolation: str, point_count: int | None, face_count: int | None, face_vertex_count: int | None
 ) -> int | None:
-    """Return expected primvar element count for a USD interpolation."""
+    """Return expected primvar element count for a USD interpolation.
+
+    Returns None when the interpolation is unknown, or when the count it depends
+    on is None -- unknown because the topology attribute it comes from is
+    missing or unusable. That defect is reported once, as ``missing_*`` or
+    ``*_wrong_type``; comparing against a stand-in count of zero would repeat
+    it as a length mismatch on every primvar.
+    """
     if interpolation == "constant":
         return 1
     if interpolation == "uniform":
@@ -802,8 +809,13 @@ def count_face_geometry_numpy(
     return repeated_total, repeated_examples, zero_area_total, zero_area_examples
 
 
-def face_topology_issues(counts_np, indices_np, point_count: int) -> tuple[Counter[str], dict[str, Any]]:
-    """Report cheap per-face and per-index defects: bad face widths and out-of-range indices."""
+def face_topology_issues(counts_np, indices_np, point_count: int | None) -> tuple[Counter[str], dict[str, Any]]:
+    """Report cheap per-face and per-index defects: bad face widths and out-of-range indices.
+
+    ``point_count=None`` means the points are missing or unusable. Negative
+    indices are still reported, but "out of range" has no range to check
+    against, so it is skipped rather than reported for every index.
+    """
     issues: Counter[str] = Counter()
     details: dict[str, Any] = {}
     empty_or_negative = np.flatnonzero(counts_np <= 0)
@@ -817,19 +829,19 @@ def face_topology_issues(counts_np, indices_np, point_count: int) -> tuple[Count
 
     if indices_np.size:
         negative_mask = indices_np < 0
-        out_of_range_mask = indices_np >= point_count
         if np.any(negative_mask):
             bad = indices_np[negative_mask]
             issues["negative_face_vertex_indices"] += int(bad.size)
             details["negative_index_examples"] = bad[:10].astype(int).tolist()
-        if np.any(out_of_range_mask):
+        out_of_range_mask = indices_np >= point_count if point_count is not None else None
+        if out_of_range_mask is not None and np.any(out_of_range_mask):
             bad = indices_np[out_of_range_mask]
             issues["out_of_range_face_vertex_indices"] += int(bad.size)
             details["out_of_range_index_examples"] = bad[:10].astype(int).tolist()
     return issues, details
 
 
-def deep_face_checks_are_safe(counts_np, indices_np, point_count: int) -> bool:
+def deep_face_checks_are_safe(counts_np, indices_np, point_count: int | None) -> bool:
     """Return true when face arrays are consistent enough to walk face by face.
 
     The per-face checks index ``points`` through ``faceVertexIndices`` using
@@ -839,7 +851,7 @@ def deep_face_checks_are_safe(counts_np, indices_np, point_count: int) -> bool:
     """
     if int(counts_np.sum()) != indices_np.size:
         return False
-    if point_count == 0 or indices_np.size == 0 or np.any(counts_np < 0):
+    if not point_count or indices_np.size == 0 or np.any(counts_np < 0):
         return False
     return not (np.any(indices_np < 0) or np.any(indices_np >= point_count))
 
@@ -892,7 +904,7 @@ def analyze_face_geometry(
     counts_np,
     indices_np,
     points_np,
-    point_count: int,
+    point_count: int | None,
     *,
     zero_area_epsilon: float = DEFAULT_ZERO_AREA_EPSILON,
     face_analysis_engine: str = "numpy",
@@ -904,6 +916,8 @@ def analyze_face_geometry(
 
     ``face_analysis_engine`` is a resolved engine, ``"numpy"`` or ``"numba"``;
     resolve ``"auto"`` with ``resolve_face_analysis_engine()`` first.
+    ``point_count=None`` means the points are missing or unusable; see
+    ``face_topology_issues``.
     ``face_cache=None`` disables caching.
     """
     if face_analysis_engine not in ("numpy", "numba"):
@@ -960,9 +974,9 @@ def analyze_face_geometry(
 
 def validate_primvars(
     prim: Usd.Prim,
-    point_count: int,
-    face_count: int,
-    face_vertex_count: int,
+    point_count: int | None,
+    face_count: int | None,
+    face_vertex_count: int | None,
     time_code: Usd.TimeCode | None = None,
 ) -> list[dict[str, Any]]:
     """Validate authored primvar lengths, with special attention to UV-like primvars.
@@ -1046,9 +1060,9 @@ def validate_primvars(
 
 def validate_normals(
     mesh: UsdGeom.Mesh,
-    point_count: int,
-    face_count: int,
-    face_vertex_count: int,
+    point_count: int | None,
+    face_count: int | None,
+    face_vertex_count: int | None,
     time_code: Usd.TimeCode | None = None,
 ) -> list[dict[str, Any]]:
     """Validate authored normals length and finite values.
@@ -1331,8 +1345,16 @@ def mesh_record(
     face_count = len(counts_np) if counts_np is not None else 0
     index_count = len(indices_np) if indices_np is not None else 0
 
-    expected_index_count = int(counts_np.sum()) if counts_np is not None else 0
-    if expected_index_count != index_count:
+    # Counts that later checks compare against. None means unknown: the
+    # attribute is missing or unusable, which read_topology() already reported
+    # once. Checks against an unknown count are skipped rather than run against
+    # zero, which used to repeat that one defect as a finding per index and per
+    # primvar. Empty points count as unknown too: empty_points is the defect.
+    known_point_count = point_count if point_count else None
+    known_face_count = face_count if counts_np is not None else None
+    expected_index_count = int(counts_np.sum()) if counts_np is not None else None
+
+    if counts_np is not None and indices_np is not None and expected_index_count != index_count:
         issues["face_vertex_count_index_length_mismatch"] += 1
         details["expected_index_count"] = expected_index_count
 
@@ -1347,7 +1369,7 @@ def mesh_record(
             counts_np,
             indices_np,
             points_np,
-            point_count,
+            known_point_count,
             zero_area_epsilon=settings.zero_area_epsilon,
             face_analysis_engine=settings.face_analysis_engine,
             check_repeated_vertices=check_repeated_vertices,
@@ -1368,11 +1390,15 @@ def mesh_record(
         # Normals are recorded before primvars runs, so a failing primvar check
         # cannot cost the normals findings.
         with phase_timer.phase("mesh.normals"), recorded_failure("normals", path, error_log):
-            for normal_issue in validate_normals(mesh, point_count, face_count, expected_index_count, time_code):
+            for normal_issue in validate_normals(
+                mesh, known_point_count, known_face_count, expected_index_count, time_code
+            ):
                 issues[normal_issue["issue"]] += 1
                 add_example(details, normal_issue["issue"], normal_issue, 10)
         with phase_timer.phase("mesh.primvars"), recorded_failure("primvars", path, error_log):
-            for primvar_issue in validate_primvars(prim, point_count, face_count, expected_index_count, time_code):
+            for primvar_issue in validate_primvars(
+                prim, known_point_count, known_face_count, expected_index_count, time_code
+            ):
                 issues[primvar_issue["issue"]] += 1
                 add_example(details, primvar_issue["issue"], primvar_issue, 10)
 
