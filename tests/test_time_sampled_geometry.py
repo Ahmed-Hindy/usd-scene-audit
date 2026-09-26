@@ -20,6 +20,8 @@ from usd_scene_audit.geometry import (
     FaceAnalysisCache,
     PhaseTimer,
     analyze,
+    authored_extent_bounds,
+    default_time_code,
     describe_time_code,
     mesh_record,
     resolve_time_code,
@@ -225,3 +227,50 @@ def test_cli_accepts_and_records_frame(stage_path, tmp_path) -> None:
     assert report["requested_frame"] == 2.0
     assert report["time_code"] == 2.0
     assert report["summary_counts"] == {}
+
+
+
+def test_mesh_record_default_time_code_matches_analyze(stage_path) -> None:
+    """Calling mesh_record() without a time code must not reintroduce the pre-roll false positive."""
+    path = stage_path("animated_preroll_extent.usda")
+    stage = Usd.Stage.Open(str(path))
+    prim = next(p for p in stage.Traverse() if p.IsA(UsdGeom.Mesh))
+
+    record = mesh_record(
+        prim,
+        1e-12,
+        1e6,
+        1e-4,
+        UsdGeom.XformCache(),
+        "numpy",
+        "exhaustive",
+        PhaseTimer(),
+        FaceAnalysisCache(False),
+    )
+
+    assert record["issues"] == audit(path)["summary_counts"] == {}
+
+
+def test_helper_default_time_code_uses_stage_start(stage_path) -> None:
+    """Per-mesh helpers default to the same time code analyze() evaluates."""
+    stage = Usd.Stage.Open(str(stage_path("animated_preroll_extent.usda")))
+    prim = next(p for p in stage.Traverse() if p.IsA(UsdGeom.Mesh))
+
+    assert default_time_code(prim) == resolve_time_code(None, stage)
+    assert describe_time_code(default_time_code(prim)) == stage.GetStartTimeCode()
+    assert authored_extent_bounds(UsdGeom.Mesh(prim)) == authored_extent_bounds(
+        UsdGeom.Mesh(prim), resolve_time_code(None, stage)
+    )
+
+
+def test_cli_frame_help_describes_start_time_code_default() -> None:
+    """The --frame help must describe the default that resolve_time_code() implements."""
+    result = subprocess.run(
+        [sys.executable, "-m", "usd_scene_audit.geometry", "--help"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+
+    help_text = " ".join(result.stdout.split())
+    assert "startTimeCode" in help_text

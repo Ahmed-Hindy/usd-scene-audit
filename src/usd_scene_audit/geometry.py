@@ -168,6 +168,17 @@ def resolve_time_code(frame: float | None, stage: Usd.Stage | None = None) -> Us
     return Usd.TimeCode.EarliestTime()
 
 
+def default_time_code(prim: Usd.Prim) -> Usd.TimeCode:
+    """Return the time code a helper uses when the caller does not pass one.
+
+    Matches what ``analyze()`` evaluates with no ``--frame``, so calling a
+    per-mesh helper directly gives the same answer as the full audit. Falling
+    back to ``EarliestTime()`` here instead would reintroduce the pre-roll
+    false positives that ``resolve_time_code`` exists to prevent.
+    """
+    return resolve_time_code(None, prim.GetStage())
+
+
 def describe_time_code(time_code: Usd.TimeCode) -> str | float:
     """Return a JSON-friendly description of an evaluated time code."""
     if time_code.IsEarliestTime():
@@ -253,7 +264,7 @@ def triangle_area(a, b, c) -> float:
 def authored_extent_bounds(mesh: UsdGeom.Mesh, time_code: Usd.TimeCode | None = None):
     """Return authored extent as a bounds tuple, or None."""
     if time_code is None:
-        time_code = Usd.TimeCode.EarliestTime()
+        time_code = default_time_code(mesh.GetPrim())
     extent = mesh.GetExtentAttr().Get(time_code)
     if not extent or len(extent) != 2:
         return None
@@ -734,7 +745,7 @@ def validate_primvars(
 ) -> list[dict[str, Any]]:
     """Validate authored primvar lengths, with special attention to UV-like primvars."""
     if time_code is None:
-        time_code = Usd.TimeCode.EarliestTime()
+        time_code = default_time_code(prim)
     issues: list[dict[str, Any]] = []
     primvars = UsdGeom.PrimvarsAPI(prim).GetPrimvars()
     for primvar in primvars:
@@ -820,7 +831,7 @@ def validate_normals(
 ) -> list[dict[str, Any]]:
     """Validate authored normals length and finite values."""
     if time_code is None:
-        time_code = Usd.TimeCode.EarliestTime()
+        time_code = default_time_code(mesh.GetPrim())
     issues: list[dict[str, Any]] = []
     normals = mesh.GetNormalsAttr().Get(time_code)
     if normals is None:
@@ -887,7 +898,7 @@ def mesh_record(
 ) -> dict[str, Any]:
     """Analyze a single mesh prim and return a report record."""
     if time_code is None:
-        time_code = Usd.TimeCode.EarliestTime()
+        time_code = default_time_code(prim)
     path = str(prim.GetPath())
     name = prim.GetName()
     mesh = UsdGeom.Mesh(prim)
@@ -1235,8 +1246,9 @@ def main() -> None:
         type=float,
         default=None,
         help=(
-            "Time code at which to read mesh attributes. Defaults to the earliest authored "
-            "time sample, falling back to the default value for static geometry."
+            "Time code at which to read mesh attributes. Defaults to the stage's authored "
+            "startTimeCode, else the earliest authored time sample, falling back to the "
+            "default value for static geometry."
         ),
     )
     args = parser.parse_args()
