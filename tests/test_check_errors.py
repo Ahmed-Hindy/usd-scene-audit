@@ -261,6 +261,6 @@ def test_every_report_exposes_check_errors(module_name: str, stage_path) -> None
     """All three audits must expose the same check_errors contract."""
     module = getattr(usd_scene_audit, module_name)
     path = stage_path("static_mesh_clean.usda")
-    report = module.analyze(path) if module_name == "geometry" else module.analyze(path)
+    report = module.analyze(path)
 
     assert report["check_errors"] == {"count": 0, "examples": []}
