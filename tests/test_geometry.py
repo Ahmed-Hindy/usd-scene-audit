@@ -6,6 +6,7 @@ import pytest
 import numpy as np
 from pxr import Gf, Sdf, Usd, UsdGeom, Vt
 
+from usd_scene_audit import geometry
 from usd_scene_audit.geometry import (
     FaceAnalysisCache,
     PhaseTimer,
@@ -176,3 +177,41 @@ def test_face_analysis_cache_reuses_duplicate_array_results() -> None:
 
     assert dict(first) == dict(second)
     assert face_cache.stats()["hits"] == 1
+
+
+@pytest.mark.parametrize(
+    ("cache_state", "expect_hashing"),
+    [("none", False), ("disabled", False), ("enabled", True)],
+)
+def test_face_cache_hashes_arrays_only_when_enabled(monkeypatch, cache_state, expect_hashing) -> None:
+    """With the cache off, building a cache key is pure overhead: a full hash pass per mesh.
+
+    The enabled case is the positive control: it proves the patch really intercepts
+    the call, so the disabled case cannot pass vacuously.
+    """
+    face_cache = {"none": None, "disabled": FaceAnalysisCache(False), "enabled": FaceAnalysisCache(True)}[cache_state]
+    calls = []
+    real_digest = geometry.array_digest
+    monkeypatch.setattr(geometry, "array_digest", lambda array: calls.append(1) or real_digest(array))
+    points = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]], dtype=np.float64)
+    counts = np.array([3], dtype=np.int64)
+    indices = np.array([0, 1, 2], dtype=np.int64)
+
+    issues, _ = analyze_face_geometry(counts, indices, points, 3, 1e-12, "numpy", face_cache=face_cache)
+
+    assert dict(issues) == {}
+    assert bool(calls) is expect_hashing
+
+
+def test_analyze_with_mesh_cache_off_does_not_hash_arrays(monkeypatch, stage_path) -> None:
+    """The default --mesh-cache off must not pay the hashing cost of face-hash."""
+    calls = []
+    real_digest = geometry.array_digest
+    monkeypatch.setattr(geometry, "array_digest", lambda array: calls.append(1) or real_digest(array))
+
+    off = geometry.analyze(stage_path("static_mesh_clean.usda"), 1e-12, 1e6, 1e-4, mesh_cache_mode="off")
+    assert calls == []
+    assert off["mesh_cache"] == {"mode": "off", "entries": 0, "hits": 0, "misses": 0}
+
+    geometry.analyze(stage_path("static_mesh_clean.usda"), 1e-12, 1e6, 1e-4, mesh_cache_mode="face-hash")
+    assert calls, "face-hash mode should still hash arrays to build cache keys"
