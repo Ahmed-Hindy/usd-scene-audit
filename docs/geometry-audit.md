@@ -132,3 +132,5 @@ Measured full-stage timings after optimization:
 - `--audit-mode exhaustive --geometry-engine numpy`: about 68 seconds; exact full audit.
 - `--audit-mode exhaustive --geometry-engine numba`: about 44 seconds; exact full audit with same findings as NumPy.
 - `--audit-mode exhaustive --mesh-cache face-hash`: about 62 seconds; exact full audit, with `641` duplicate face-array cache hits.
+
+These timings were measured before [#36](https://github.com/Ahmed-Hindy/usd-scene-audit/issues/36) was fixed. At that point the default `--mesh-cache off` still hashed every mesh's face arrays, so the `off` rows include hashing work that no longer happens. That makes the `face-hash` row look better than it would now. Re-measure before relying on the cache comparison.

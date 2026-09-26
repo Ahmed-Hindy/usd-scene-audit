@@ -624,9 +624,9 @@ def analyze_face_geometry(
     face_cache: FaceAnalysisCache | None = None,
 ) -> tuple[Counter[str], dict[str, Any]]:
     """Validate face arrays with exact checks."""
-    # Building the key hashes every byte of the face and point arrays, so it
-    # must only happen when the cache can actually use it. analyze() always
-    # passes a cache object, enabled or not.
+    # Building the key hashes every byte of the face arrays (and the points,
+    # when the zero-area check is on), so it must only happen when the cache
+    # can actually use it. analyze() always passes a cache object, enabled or not.
     use_cache = face_cache is not None and face_cache.enabled
     cache_key = (
         face_cache_key(
