@@ -14,13 +14,8 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 from pxr import Gf, Usd, UsdGeom
-
-try:
-    import numpy as np
-except ImportError:  # pragma: no cover - fallback exists for tiny ad hoc runs.
-    np = None
-
 
 MAX_EXAMPLES = 80
 FACE_CHUNK_SIZE = 100_000
@@ -215,24 +210,17 @@ def vec3_tuple(value) -> tuple[float, float, float]:
 
 def bbox_from_points(points) -> tuple[tuple[float, float, float], tuple[float, float, float]] | None:
     """Compute min and max bounds from finite points."""
-    if np is not None:
-        points_np = np.asarray(points)
-        if points_np.size == 0:
-            return None
-        finite_mask = np.isfinite(points_np).all(axis=1)
-        if not np.any(finite_mask):
-            return None
-        finite_points = points_np[finite_mask]
-        return (
-            tuple(float(v) for v in np.min(finite_points, axis=0)),
-            tuple(float(v) for v in np.max(finite_points, axis=0)),
-        )
-    finite_points = [p for p in points if is_finite_vec3(p)]
-    if not finite_points:
+    points_np = np.asarray(points)
+    if points_np.size == 0:
         return None
-    mins = [min(float(p[i]) for p in finite_points) for i in range(3)]
-    maxs = [max(float(p[i]) for p in finite_points) for i in range(3)]
-    return (tuple(mins), tuple(maxs))
+    finite_mask = np.isfinite(points_np).all(axis=1)
+    if not np.any(finite_mask):
+        return None
+    finite_points = points_np[finite_mask]
+    return (
+        tuple(float(v) for v in np.min(finite_points, axis=0)),
+        tuple(float(v) for v in np.max(finite_points, axis=0)),
+    )
 
 
 def bbox_diagonal(bounds: tuple[tuple[float, float, float], tuple[float, float, float]] | None) -> float:
@@ -308,15 +296,15 @@ def issue_details(details: dict[str, Any], key: str, value: Any, limit: int = 10
 
 
 def vector_array(value, dtype=None):
-    """Convert a USD Vt array to a NumPy array when NumPy is available."""
-    if value is None or np is None:
+    """Convert a USD Vt array to a NumPy array, or None for an absent value."""
+    if value is None:
         return None
     return np.asarray(value, dtype=dtype)
 
 
 def array_digest(array) -> tuple[str, tuple[int, ...], str] | None:
     """Return a stable digest for a NumPy array without changing audit results."""
-    if array is None or np is None:
+    if array is None:
         return None
     contiguous = np.ascontiguousarray(array)
     digest = hashlib.blake2b(digest_size=16)
@@ -466,10 +454,6 @@ def resolve_face_analysis_engine(requested_engine: str) -> str:
         raise ValueError(f"Unsupported geometry engine: {requested_engine}")
     if requested_engine == "numpy":
         return "numpy"
-    if np is None:
-        if requested_engine == "numba":
-            raise RuntimeError("Numba acceleration requires NumPy.")
-        return "numpy"
     kernel = get_numba_face_kernel()
     if kernel is not None:
         return "numba"
@@ -480,7 +464,7 @@ def resolve_face_analysis_engine(requested_engine: str) -> str:
 
 def count_repeated_rows(index_rows) -> tuple[int, list[list[int]]]:
     """Count rows that contain repeated vertex indices."""
-    if np is None or index_rows.size == 0:
+    if index_rows.size == 0:
         return 0, []
     repeated = np.zeros(index_rows.shape[0], dtype=bool)
     width = index_rows.shape[1]
@@ -494,7 +478,7 @@ def count_repeated_rows(index_rows) -> tuple[int, list[list[int]]]:
 
 def count_zero_area_fan_triangles(points_np, index_rows, epsilon: float) -> tuple[int, list[dict[str, Any]]]:
     """Count zero-area fan triangles for same-width face index rows."""
-    if np is None or points_np is None or index_rows.size == 0 or index_rows.shape[1] < 3:
+    if points_np is None or index_rows.size == 0 or index_rows.shape[1] < 3:
         return 0, []
     total = 0
     examples: list[dict[str, Any]] = []
@@ -645,7 +629,7 @@ def analyze_face_geometry(
 
     issues: Counter[str] = Counter()
     details: dict[str, Any] = {}
-    if np is None or counts_np is None or indices_np is None:
+    if counts_np is None or indices_np is None:
         return issues, details
 
     if counts_np.size == 0:
@@ -779,12 +763,9 @@ def validate_primvars(
                 )
 
         if is_indexed and value_len:
-            if np is not None:
-                indices_np = np.asarray(indices, dtype=np.int64)
-                bad_positions = np.flatnonzero((indices_np < 0) | (indices_np >= value_element_count))
-                bad_indices = indices_np[bad_positions[:10]].astype(int).tolist()
-            else:
-                bad_indices = [int(i) for i in indices if int(i) < 0 or int(i) >= value_element_count][:10]
+            indices_np = np.asarray(indices, dtype=np.int64)
+            bad_positions = np.flatnonzero((indices_np < 0) | (indices_np >= value_element_count))
+            bad_indices = indices_np[bad_positions[:10]].astype(int).tolist()
             if bad_indices:
                 issues.append(
                     {
@@ -837,15 +818,12 @@ def validate_normals(
                 "actual": normal_count,
             }
         )
-    if np is not None:
-        normals_np = np.asarray(normals)
-        if normals_np.size == 0:
-            non_finite = []
-        elif normals_np.ndim == 2:
-            finite_mask = np.isfinite(normals_np).all(axis=1)
-            non_finite = np.flatnonzero(~finite_mask)[:10].astype(int).tolist()
-        else:
-            non_finite = [i for i, normal in enumerate(normals) if not is_finite_vec3(normal)][:10]
+    normals_np = np.asarray(normals)
+    if normals_np.size == 0:
+        non_finite = []
+    elif normals_np.ndim == 2:
+        finite_mask = np.isfinite(normals_np).all(axis=1)
+        non_finite = np.flatnonzero(~finite_mask)[:10].astype(int).tolist()
     else:
         non_finite = [i for i, normal in enumerate(normals) if not is_finite_vec3(normal)][:10]
     if non_finite:
@@ -914,39 +892,36 @@ def mesh_record(
 
     if counts is None:
         issues["missing_face_vertex_counts"] += 1
-        counts = []
     if indices is None:
         issues["missing_face_vertex_indices"] += 1
-        indices = []
 
-    expected_index_count = int(counts_np.sum()) if counts_np is not None else sum(int(c) for c in counts)
+    expected_index_count = int(counts_np.sum()) if counts_np is not None else 0
     if expected_index_count != index_count:
         issues["face_vertex_count_index_length_mismatch"] += 1
         details["expected_index_count"] = expected_index_count
 
     with phase_timer.phase("mesh.point_checks"):
         if points_np is not None and points_np.size:
-            finite_mask = np.isfinite(points_np).all(axis=1) if np is not None else None
-            if finite_mask is not None:
-                non_finite_indices = np.flatnonzero(~finite_mask)
-                if non_finite_indices.size:
-                    issues["non_finite_points"] += int(non_finite_indices.size)
-                    details["non_finite_point_examples"] = non_finite_indices[:10].astype(int).tolist()
-                finite_points = points_np[finite_mask]
-                if finite_points.size:
-                    max_abs = np.max(np.abs(finite_points), axis=1)
-                    huge_positions = np.flatnonzero(max_abs > huge_coord_threshold)
-                    if huge_positions.size:
-                        original_indices = np.flatnonzero(finite_mask)[huge_positions]
-                        issues["huge_coordinate_points"] += int(huge_positions.size)
-                        details["huge_coordinate_examples"] = [
-                            {
-                                "index": int(original_indices[i]),
-                                "point": finite_points[huge_positions[i]].astype(float).tolist(),
-                                "max_abs": float(max_abs[huge_positions[i]]),
-                            }
-                            for i in range(min(10, huge_positions.size))
-                        ]
+            finite_mask = np.isfinite(points_np).all(axis=1)
+            non_finite_indices = np.flatnonzero(~finite_mask)
+            if non_finite_indices.size:
+                issues["non_finite_points"] += int(non_finite_indices.size)
+                details["non_finite_point_examples"] = non_finite_indices[:10].astype(int).tolist()
+            finite_points = points_np[finite_mask]
+            if finite_points.size:
+                max_abs = np.max(np.abs(finite_points), axis=1)
+                huge_positions = np.flatnonzero(max_abs > huge_coord_threshold)
+                if huge_positions.size:
+                    original_indices = np.flatnonzero(finite_mask)[huge_positions]
+                    issues["huge_coordinate_points"] += int(huge_positions.size)
+                    details["huge_coordinate_examples"] = [
+                        {
+                            "index": int(original_indices[i]),
+                            "point": finite_points[huge_positions[i]].astype(float).tolist(),
+                            "max_abs": float(max_abs[huge_positions[i]]),
+                        }
+                        for i in range(min(10, huge_positions.size))
+                    ]
 
     check_repeated_vertices, check_zero_area = face_checks_for_mode(audit_mode, category)
     with phase_timer.phase("mesh.face_checks"):
