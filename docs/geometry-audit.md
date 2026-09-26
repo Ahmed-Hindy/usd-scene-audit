@@ -71,7 +71,15 @@ The JSON report contains:
 
 Attribute getters return the value type a layer authored, not the schema type. When `points`, `faceVertexCounts`, `faceVertexIndices`, `normals`, or `extent` is authored with a value the checks cannot use, the audit reports `points_wrong_type`, `face_vertex_counts_wrong_type`, `face_vertex_indices_wrong_type`, `normals_wrong_type`, or `extent_wrong_type`. Examples are `float[] normals`, a scalar `int faceVertexCounts`, and `float[]` or `bool[]` face-vertex indices, which would otherwise be truncated into plausible-looking topology. Each detail records `authored_type`, `expected_type`, and a `reason`.
 
-An unusable topology attribute is then treated like a missing one, and the three topology codes count toward `serious_geometry_failures`. Numeric arrays of the right shape, such as `double3[]` or `half3[]` points or `int64[]` indices, are audited normally.
+An unusable topology attribute is then treated like a missing one, and the three topology codes count toward `serious_geometry_failures`.
+
+A missing, empty, or unusable attribute is reported once, as its own finding. Checks that would compare against it are skipped rather than run against a count of zero:
+
+- Without usable `points`, face-vertex indices are not range-checked, and `vertex`/`varying` normals and primvars are not length-checked. Negative indices are still reported.
+- Without usable `faceVertexCounts`, `uniform` and `faceVarying` normals and primvars are not length-checked.
+- Without usable counts *and* indices, `face_vertex_count_index_length_mismatch` is not reported.
+
+Otherwise one defect would repeat as a finding for every index and every primvar. Numeric arrays of the right shape, such as `double3[]` or `half3[]` points or `int64[]` indices, are audited normally.
 
 ## Default Thresholds
 
