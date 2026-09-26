@@ -112,7 +112,6 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
     name_counts: Counter[str] = Counter()
     oddity_counts: Counter[str] = Counter()
     parent_child_names: dict[str, list[str]] = defaultdict(list)
-    prim_by_path = {}
 
     for prim in prims:
         path = str(prim.GetPath())
@@ -121,7 +120,6 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
         type_name = prim.GetTypeName() or "<untyped>"
         type_counts[type_name] += 1
         name_counts[name] += 1
-        prim_by_path[path] = prim
         parent = prim.GetParent()
         if parent and parent.IsValid():
             parent_child_names[str(parent.GetPath())].append(name)
@@ -160,7 +158,7 @@ def analyze(stage_path: Path, prefix_style_pattern: str | None = None) -> dict:
             report["hierarchy"]["same_name_parent_child_count"] += 1
             add_example(report["hierarchy"], "same_name_parent_child_examples", norm_path)
 
-        children = [child for child in prim.GetChildren()]
+        children = list(prim.GetChildren())
         if prim.GetTypeName() == "Scope":
             if not children:
                 report["hierarchy"]["leaf_scope_count"] += 1
