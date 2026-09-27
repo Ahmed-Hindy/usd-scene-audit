@@ -22,7 +22,6 @@
    "misses": 0
   },
   "summary_counts": {
-   "out_of_range_face_vertex_indices": 3,
    "missing_points": 1
   },
   "category_counts": {
@@ -30,12 +29,11 @@
   },
   "category_issue_counts": {
    "render_like": {
-    "out_of_range_face_vertex_indices": 3,
     "missing_points": 1
    },
    "collision_like": {}
   },
-  "serious_geometry_failures": 4,
+  "serious_geometry_failures": 1,
   "likely_benign_collision_helper_warnings": 0,
   "check_errors": {
    "count": 0,
@@ -48,28 +46,7 @@
      "normalized_path": "/World/NoPoints",
      "category": "render_like",
      "count": 1,
-     "details": {
-      "out_of_range_index_examples": [
-       0,
-       1,
-       2
-      ]
-     }
-    }
-   ],
-   "out_of_range_face_vertex_indices": [
-    {
-     "path": "/World/NoPoints",
-     "normalized_path": "/World/NoPoints",
-     "category": "render_like",
-     "count": 3,
-     "details": {
-      "out_of_range_index_examples": [
-       0,
-       1,
-       2
-      ]
-     }
+     "details": {}
     }
    ]
   },
@@ -82,18 +59,11 @@
     "face_count": 1,
     "face_vertex_index_count": 3,
     "extent_diagonal": 0.0,
-    "issue_count": 4,
+    "issue_count": 1,
     "issues": {
-     "missing_points": 1,
-     "out_of_range_face_vertex_indices": 3
+     "missing_points": 1
     },
-    "details": {
-     "out_of_range_index_examples": [
-      0,
-      1,
-      2
-     ]
-    }
+    "details": {}
    }
   ],
   "largest_meshes_by_points": [
@@ -105,18 +75,11 @@
     "face_count": 1,
     "face_vertex_index_count": 3,
     "extent_diagonal": 0.0,
-    "issue_count": 4,
+    "issue_count": 1,
     "issues": {
-     "missing_points": 1,
-     "out_of_range_face_vertex_indices": 3
+     "missing_points": 1
     },
-    "details": {
-     "out_of_range_index_examples": [
-      0,
-      1,
-      2
-     ]
-    }
+    "details": {}
    }
   ],
   "largest_meshes_by_faces": [
@@ -128,18 +91,11 @@
     "face_count": 1,
     "face_vertex_index_count": 3,
     "extent_diagonal": 0.0,
-    "issue_count": 4,
+    "issue_count": 1,
     "issues": {
-     "missing_points": 1,
-     "out_of_range_face_vertex_indices": 3
+     "missing_points": 1
     },
-    "details": {
-     "out_of_range_index_examples": [
-      0,
-      1,
-      2
-     ]
-    }
+    "details": {}
    }
   ],
   "largest_meshes_by_extent": [
@@ -151,18 +107,11 @@
     "face_count": 1,
     "face_vertex_index_count": 3,
     "extent_diagonal": 0.0,
-    "issue_count": 4,
+    "issue_count": 1,
     "issues": {
-     "missing_points": 1,
-     "out_of_range_face_vertex_indices": 3
+     "missing_points": 1
     },
-    "details": {
-     "out_of_range_index_examples": [
-      0,
-      1,
-      2
-     ]
-    }
+    "details": {}
    }
   ]
  },
@@ -189,7 +138,6 @@
    "misses": 1
   },
   "summary_counts": {
-   "out_of_range_face_vertex_indices": 3,
    "missing_points": 1
   },
   "category_counts": {
@@ -197,12 +145,11 @@
   },
   "category_issue_counts": {
    "render_like": {
-    "out_of_range_face_vertex_indices": 3,
     "missing_points": 1
    },
    "collision_like": {}
   },
-  "serious_geometry_failures": 4,
+  "serious_geometry_failures": 1,
   "likely_benign_collision_helper_warnings": 0,
   "check_errors": {
    "count": 0,
@@ -215,28 +162,7 @@
      "normalized_path": "/World/NoPoints",
      "category": "render_like",
      "count": 1,
-     "details": {
-      "out_of_range_index_examples": [
-       0,
-       1,
-       2
-      ]
-     }
-    }
-   ],
-   "out_of_range_face_vertex_indices": [
-    {
-     "path": "/World/NoPoints",
-     "normalized_path": "/World/NoPoints",
-     "category": "render_like",
-     "count": 3,
-     "details": {
-      "out_of_range_index_examples": [
-       0,
-       1,
-       2
-      ]
-     }
+     "details": {}
     }
    ]
   },
@@ -249,18 +175,11 @@
     "face_count": 1,
     "face_vertex_index_count": 3,
     "extent_diagonal": 0.0,
-    "issue_count": 4,
+    "issue_count": 1,
     "issues": {
-     "missing_points": 1,
-     "out_of_range_face_vertex_indices": 3
+     "missing_points": 1
     },
-    "details": {
-     "out_of_range_index_examples": [
-      0,
-      1,
-      2
-     ]
-    }
+    "details": {}
    }
   ],
   "largest_meshes_by_points": [
@@ -272,18 +191,11 @@
     "face_count": 1,
     "face_vertex_index_count": 3,
     "extent_diagonal": 0.0,
-    "issue_count": 4,
+    "issue_count": 1,
     "issues": {
-     "missing_points": 1,
-     "out_of_range_face_vertex_indices": 3
+     "missing_points": 1
     },
-    "details": {
-     "out_of_range_index_examples": [
-      0,
-      1,
-      2
-     ]
-    }
+    "details": {}
    }
   ],
   "largest_meshes_by_faces": [
@@ -295,18 +207,11 @@
     "face_count": 1,
     "face_vertex_index_count": 3,
     "extent_diagonal": 0.0,
-    "issue_count": 4,
+    "issue_count": 1,
     "issues": {
-     "missing_points": 1,
-     "out_of_range_face_vertex_indices": 3
+     "missing_points": 1
     },
-    "details": {
-     "out_of_range_index_examples": [
-      0,
-      1,
-      2
-     ]
-    }
+    "details": {}
    }
   ],
   "largest_meshes_by_extent": [
@@ -318,18 +223,11 @@
     "face_count": 1,
     "face_vertex_index_count": 3,
     "extent_diagonal": 0.0,
-    "issue_count": 4,
+    "issue_count": 1,
     "issues": {
-     "missing_points": 1,
-     "out_of_range_face_vertex_indices": 3
+     "missing_points": 1
     },
-    "details": {
-     "out_of_range_index_examples": [
-      0,
-      1,
-      2
-     ]
-    }
+    "details": {}
    }
   ]
  },
@@ -356,7 +254,6 @@
    "misses": 0
   },
   "summary_counts": {
-   "out_of_range_face_vertex_indices": 3,
    "missing_points": 1
   },
   "category_counts": {
@@ -364,12 +261,11 @@
   },
   "category_issue_counts": {
    "render_like": {
-    "out_of_range_face_vertex_indices": 3,
     "missing_points": 1
    },
    "collision_like": {}
   },
-  "serious_geometry_failures": 4,
+  "serious_geometry_failures": 1,
   "likely_benign_collision_helper_warnings": 0,
   "check_errors": {
    "count": 0,
@@ -382,28 +278,7 @@
      "normalized_path": "/World/NoPoints",
      "category": "render_like",
      "count": 1,
-     "details": {
-      "out_of_range_index_examples": [
-       0,
-       1,
-       2
-      ]
-     }
-    }
-   ],
-   "out_of_range_face_vertex_indices": [
-    {
-     "path": "/World/NoPoints",
-     "normalized_path": "/World/NoPoints",
-     "category": "render_like",
-     "count": 3,
-     "details": {
-      "out_of_range_index_examples": [
-       0,
-       1,
-       2
-      ]
-     }
+     "details": {}
     }
    ]
   },
@@ -416,18 +291,11 @@
     "face_count": 1,
     "face_vertex_index_count": 3,
     "extent_diagonal": 0.0,
-    "issue_count": 4,
+    "issue_count": 1,
     "issues": {
-     "missing_points": 1,
-     "out_of_range_face_vertex_indices": 3
+     "missing_points": 1
     },
-    "details": {
-     "out_of_range_index_examples": [
-      0,
-      1,
-      2
-     ]
-    }
+    "details": {}
    }
   ],
   "largest_meshes_by_points": [
@@ -439,18 +307,11 @@
     "face_count": 1,
     "face_vertex_index_count": 3,
     "extent_diagonal": 0.0,
-    "issue_count": 4,
+    "issue_count": 1,
     "issues": {
-     "missing_points": 1,
-     "out_of_range_face_vertex_indices": 3
+     "missing_points": 1
     },
-    "details": {
-     "out_of_range_index_examples": [
-      0,
-      1,
-      2
-     ]
-    }
+    "details": {}
    }
   ],
   "largest_meshes_by_faces": [
@@ -462,18 +323,11 @@
     "face_count": 1,
     "face_vertex_index_count": 3,
     "extent_diagonal": 0.0,
-    "issue_count": 4,
+    "issue_count": 1,
     "issues": {
-     "missing_points": 1,
-     "out_of_range_face_vertex_indices": 3
+     "missing_points": 1
     },
-    "details": {
-     "out_of_range_index_examples": [
-      0,
-      1,
-      2
-     ]
-    }
+    "details": {}
    }
   ],
   "largest_meshes_by_extent": [
@@ -485,18 +339,11 @@
     "face_count": 1,
     "face_vertex_index_count": 3,
     "extent_diagonal": 0.0,
-    "issue_count": 4,
+    "issue_count": 1,
     "issues": {
-     "missing_points": 1,
-     "out_of_range_face_vertex_indices": 3
+     "missing_points": 1
     },
-    "details": {
-     "out_of_range_index_examples": [
-      0,
-      1,
-      2
-     ]
-    }
+    "details": {}
    }
   ]
  },

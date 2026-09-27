@@ -16,6 +16,7 @@
 - `names_hierarchy`: case-collision and duplicate-sibling counts are no longer capped at 80 ([#37](https://github.com/Ahmed-Hindy/usd-scene-audit/issues/37)).
 - `MeshCheckSettings` rejects negative or non-finite thresholds, and `analyze()` validates them before opening the stage.
 - Requesting the Numba engine without Numba installed raises instead of silently reporting no repeated-vertex or zero-area findings.
+- Geometry: missing, empty, or unusable `points`, `faceVertexCounts`, or `faceVertexIndices` are reported once. Checks that compare against them are skipped instead of reporting every index as out of range and every primvar as the wrong length ([#54](https://github.com/Ahmed-Hindy/usd-scene-audit/issues/54)).
 
 ### Deprecated
 
