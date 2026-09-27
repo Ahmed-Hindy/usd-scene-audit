@@ -1357,6 +1357,11 @@ def mesh_record(
     if counts_np is not None and indices_np is not None and expected_index_count != index_count:
         issues["face_vertex_count_index_length_mismatch"] += 1
         details["expected_index_count"] = expected_index_count
+        # The two arrays disagree, so neither the face count nor the face-vertex
+        # count is trustworthy: the mismatch is the finding, and uniform or
+        # faceVarying primvars are not also checked against either side.
+        known_face_count = None
+        expected_index_count = None
 
     with phase_timer.phase("mesh.point_checks"), recorded_failure("point_checks", path, error_log):
         found, found_details = point_issues(points_np, settings.huge_coord_threshold)

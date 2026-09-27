@@ -105,27 +105,72 @@ def test_unusable_face_arrays_do_not_cascade(tmp_path: Path, override, root_caus
     assert not CASCADE_CODES & set(issues)
 
 
-def test_genuine_mismatches_are_still_reported(tmp_path: Path) -> None:
-    """With usable topology, every check that this change can skip still runs."""
+FACE_RATE_PRIMVARS = (
+    'float[] primvars:faceTag = [1] (interpolation = "uniform")',
+    'texCoord2f[] primvars:st = [(0,0), (1,0), (0,1)] (interpolation = "faceVarying")',
+)
+
+
+@pytest.mark.parametrize(
+    ("counts", "indices"),
+    [("[]", "[0, 1, 2]"), ("[3]", "[]"), ("[3, 3]", "[0, 1, 2]")],
+    ids=["empty-counts", "empty-indices", "length-mismatch"],
+)
+def test_inconsistent_face_arrays_report_only_the_mismatch(tmp_path: Path, counts, indices) -> None:
+    """When counts and indices disagree, neither side is trusted for face-rate primvars."""
     stage = _write(
         tmp_path / "stage.usda",
         (
             "M",
             "point3f[] points = [(0,0,0), (1,0,0), (0,1,0)]",
+            f"int[] faceVertexCounts = {counts}",
+            f"int[] faceVertexIndices = {indices}",
+            *FACE_RATE_PRIMVARS,
+        ),
+    )
+
+    assert _issues(geometry.analyze(stage))["/M"] == {"face_vertex_count_index_length_mismatch": 1}
+
+
+def test_face_rate_primvars_on_a_faceless_mesh_are_still_reported(tmp_path: Path) -> None:
+    """Consistent empty face arrays mean zero faces, so face-rate values really do not fit."""
+    stage = _write(
+        tmp_path / "stage.usda",
+        (
+            "M",
+            "point3f[] points = [(0,0,0), (1,0,0), (0,1,0)]",
+            "int[] faceVertexCounts = []",
+            "int[] faceVertexIndices = []",
+            *FACE_RATE_PRIMVARS,
+        ),
+    )
+
+    assert _issues(geometry.analyze(stage))["/M"] == {"primvar_length_mismatch": 2}
+
+
+def test_genuine_mismatches_are_still_reported(tmp_path: Path) -> None:
+    """With usable, consistent topology, every check that this change can skip still runs."""
+    points = "point3f[] points = [(0,0,0), (1,0,0), (0,1,0), (1,1,0)]"
+    stage = _write(
+        tmp_path / "stage.usda",
+        ("OutOfRange", points, "int[] faceVertexCounts = [3]", "int[] faceVertexIndices = [0, 1, 9]"),
+        ("LengthMismatch", points, "int[] faceVertexCounts = [3, 3]", "int[] faceVertexIndices = [0, 1, 2]"),
+        (
+            "Primvars",
+            points,
             "int[] faceVertexCounts = [3, 3]",
-            "int[] faceVertexIndices = [0, 1, 5]",
+            "int[] faceVertexIndices = [0, 1, 2, 2, 1, 3]",
             'normal3f[] normals = [(0,0,1)] (interpolation = "vertex")',
             'float[] primvars:faceTag = [1] (interpolation = "uniform")',
             'texCoord2f[] primvars:st = [(0,0)] (interpolation = "faceVarying")',
         ),
     )
 
-    issues = _issues(geometry.analyze(stage))["/M"]
+    issues = _issues(geometry.analyze(stage))
 
-    assert issues["out_of_range_face_vertex_indices"] == 1
-    assert issues["face_vertex_count_index_length_mismatch"] == 1
-    assert issues["normals_length_mismatch"] == 1
-    assert issues["primvar_length_mismatch"] == 2
+    assert issues["/OutOfRange"] == {"out_of_range_face_vertex_indices": 1}
+    assert issues["/LengthMismatch"] == {"face_vertex_count_index_length_mismatch": 1}
+    assert issues["/Primvars"] == {"normals_length_mismatch": 1, "primvar_length_mismatch": 2}
 
 
 def test_record_counts_stay_integers(tmp_path: Path) -> None:

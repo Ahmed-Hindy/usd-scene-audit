@@ -78,6 +78,7 @@ A missing, empty, or unusable attribute is reported once, as its own finding. Ch
 - Without usable `points`, face-vertex indices are not range-checked, and `vertex`/`varying` normals and primvars are not length-checked. Negative indices are still reported.
 - Without usable `faceVertexCounts`, `uniform` and `faceVarying` normals and primvars are not length-checked.
 - Without usable counts *and* indices, `face_vertex_count_index_length_mismatch` is not reported.
+- When counts and indices are both usable but disagree, including when one of them is empty, `face_vertex_count_index_length_mismatch` is the finding. `uniform` and `faceVarying` normals and primvars are not also checked, because it is not known which side is right. Consistent empty arrays describe a mesh with no faces, so face-rate primvars on it are still reported.
 
 Otherwise one defect would repeat as a finding for every index and every primvar. Numeric arrays of the right shape, such as `double3[]` or `half3[]` points or `int64[]` indices, are audited normally.
 
