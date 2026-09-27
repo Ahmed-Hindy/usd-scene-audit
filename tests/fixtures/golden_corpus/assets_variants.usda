@@ -1,0 +1,48 @@
+#usda 1.0
+(
+    doc = """Asset paths the per-layer asset walk must find, and ones it must not.
+
+    Found: asset[] defaults and time samples, and everything inside variants,
+    selected or not, including nested variants and references authored on a
+    variant. Not found: references a layer deletes or only reorders.
+    """
+)
+
+def "Root" (
+    delete references = @./tex/deleted_only.usda@
+    reorder references = [@./tex/reordered_only.usda@]
+    variants = {
+        string look = "hero"
+    }
+    prepend variantSets = "look"
+)
+{
+    asset[] inputs:textures = [@./tex/found.exr@, @./tex/array_missing.exr@]
+    asset[] inputs:sequence.timeSamples = {
+        1: [@./tex/sampled_missing.exr@],
+    }
+
+    variantSet "look" = {
+        "hero" {
+            def "Body"
+            {
+                asset inputs:diffuse = @./tex/hero_missing.exr@
+            }
+        }
+        "background" (
+            prepend references = @./tex/background_ref_missing.usda@
+            variants = {
+                string lod = "high"
+            }
+            prepend variantSets = "lod"
+        ) {
+            asset inputs:diffuse = @./tex/background_missing.exr@
+
+            variantSet "lod" = {
+                "high" {
+                    asset inputs:detail = @./tex/nested_variant_missing.exr@
+                }
+            }
+        }
+    }
+}

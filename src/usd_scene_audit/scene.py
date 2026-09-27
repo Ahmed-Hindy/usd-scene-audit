@@ -88,14 +88,15 @@ def computed_material_bindings(stage: Usd.Stage, prim_paths: list[str]) -> dict[
     return bindings
 
 
-# Sdf.ListOp fields that can hold references, payloads, or asset paths.
+# Sdf.ListOp fields whose items a layer actually adds. deletedItems removes
+# items and orderedItems only reorders items added elsewhere, so an asset named
+# there is not authored by this layer: counting it reported a reference the
+# layer explicitly deletes as a missing asset.
 LIST_OP_FIELDS = (
     "explicitItems",
     "addedItems",
     "prependedItems",
     "appendedItems",
-    "deletedItems",
-    "orderedItems",
 )
 
 
@@ -120,13 +121,20 @@ def collect_asset_paths(value, assets: set[str]) -> None:
         for key, item in value.items():
             collect_asset_paths(key, assets)
             collect_asset_paths(item, assets)
-    elif isinstance(value, (list, tuple, set)):
+    elif isinstance(value, (list, tuple, set, Sdf.AssetPathArray)):
+        # Sdf.AssetPathArray is an asset[] value, as a default or a time sample.
+        # It is a Vt array, not a Python sequence type, so it needs naming here.
         for item in value:
             collect_asset_paths(item, assets)
 
 
 def collect_spec_asset_paths(layer: Sdf.Layer, spec, assets: set[str], error_log: CheckErrorLog | None) -> None:
-    """Walk one spec's fields, then its child prims and properties."""
+    """Walk one spec's fields, then its child prims, properties, and variants.
+
+    Every variant is walked, selected or not: this collects what the layer
+    authors, and an unselected variant is authored content a consumer can
+    select at any time.
+    """
     for field_name in spec.ListInfoKeys():
         try:
             collect_asset_paths(spec.GetInfo(field_name), assets)
@@ -140,6 +148,9 @@ def collect_spec_asset_paths(layer: Sdf.Layer, spec, assets: set[str], error_log
         collect_spec_asset_paths(layer, child_spec, assets, error_log)
     for prop_spec in getattr(spec, "properties", ()):
         collect_spec_asset_paths(layer, prop_spec, assets, error_log)
+    for variant_set in getattr(spec, "variantSets", {}).values():
+        for variant in variant_set.variants.values():
+            collect_spec_asset_paths(layer, variant.primSpec, assets, error_log)
 
 
 def authored_asset_paths(layer: Sdf.Layer, error_log: CheckErrorLog | None = None) -> set[str]:
